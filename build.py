@@ -73,21 +73,42 @@ def format_date_display(date_str: str) -> str:
         return date_str
 
 
-def load_concerts() -> list[dict]:
-    """Load concerts from YAML, sorted by date ascending (soonest first)."""
+def _parse_date(date_str: str):
+    """Parse YYYY-MM-DD to date, or None."""
+    if not date_str or not isinstance(date_str, str):
+        return None
+    try:
+        return datetime.strptime(date_str.strip()[:10], "%Y-%m-%d").date()
+    except ValueError:
+        return None
+
+
+def load_concerts() -> tuple[list[dict], list[dict]]:
+    """Load concerts from YAML. Returns (upcoming, past), each sorted latest first."""
     path = CONTENT_DIR / "concerts.yaml"
     if not path.exists():
-        return []
+        return [], []
     data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
     items = data.get("concerts", data) if isinstance(data, dict) else data
     if not isinstance(items, list):
-        return []
+        return [], []
+    today = datetime.now().date()
+    upcoming = []
+    past = []
     for c in items:
         c["date_display"] = format_date_display(c.get("date", ""))
+        if c.get("url") and not c.get("tickets"):
+            c["tickets"] = c["url"]
+        d = _parse_date(c.get("date", ""))
+        if d is not None and d >= today:
+            upcoming.append(c)
+        else:
+            past.append(c)
     def date_key(c):
-        d = c.get("date", "")
-        return (d, c.get("venue", ""))
-    return sorted(items, key=date_key)
+        return (c.get("date", ""), c.get("venue", ""))
+    upcoming.sort(key=date_key)
+    past.sort(key=date_key, reverse=True)
+    return upcoming, past
 
 
 def load_albums() -> list[dict]:
@@ -195,7 +216,7 @@ def main() -> None:
     # Load data
     print("  Loading content...")
     pages = load_pages()
-    concerts = load_concerts()
+    upcoming_shows, past_shows = load_concerts()
     albums = load_albums()
 
     # Copy static
@@ -219,7 +240,7 @@ def main() -> None:
             base="",
             **common,
             pages=pages,
-            concerts=concerts[:5],
+            concerts=upcoming_shows[:5],
             albums=albums,
             photos=photos[:6],
         ),
@@ -238,12 +259,12 @@ def main() -> None:
             encoding="utf-8",
         )
 
-    # Concerts page
-    print("  Writing concerts/index.html...")
-    (DIST_DIR / "concerts").mkdir(exist_ok=True)
+    # Shows page (past and upcoming, latest first)
+    print("  Writing shows/index.html...")
+    (DIST_DIR / "shows").mkdir(exist_ok=True)
     template_concerts = env.get_template("concerts.html")
-    (DIST_DIR / "concerts" / "index.html").write_text(
-        template_concerts.render(concerts=concerts, **subdir_common),
+    (DIST_DIR / "shows" / "index.html").write_text(
+        template_concerts.render(upcoming_shows=upcoming_shows, past_shows=past_shows, **subdir_common),
         encoding="utf-8",
     )
 

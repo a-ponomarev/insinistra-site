@@ -27,7 +27,7 @@ This recreates `dist/` and outputs a ready-to-deploy static site. Progress messa
 |------|---------|
 | `templates/` | Jinja2 HTML templates (base, index, page, concerts, albums) |
 | `content/pages/*.md` | Markdown pages with `title` (and optional) YAML frontmatter |
-| `content/concerts.yaml` | Concert list (sorted by date) |
+| `content/concerts.yaml` | Show list (sorted by date, latest first) |
 | `content/albums.yaml` | Album list |
 | `static/` | CSS and assets copied as-is |
 | `photos/raw/` | Source images; generator copies originals and creates 1600px + 400px versions |
@@ -36,7 +36,7 @@ This recreates `dist/` and outputs a ready-to-deploy static site. Progress messa
 
 - `index.html` — homepage
 - `{slug}/index.html` — one per Markdown page (e.g. `about/`, `contact/`)
-- `concerts/index.html` — concerts page
+- `shows/index.html` — shows page (past and upcoming, latest first)
 - `albums/index.html` — albums page
 - `static/` — copied from source
 - `photos/original/`, `photos/1600/`, `photos/thumb/` — processed images

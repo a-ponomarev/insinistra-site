@@ -1,4 +1,69 @@
 concerts:
+  - date: "2022-09-13"
+    venue: Vagon Klub
+    location: Praha
+    facebook: "https://www.facebook.com/events/2022342487938605"
+
+  - date: "2023-05-23"
+    venue: Modrá Vopice
+    location: Praha
+    facebook: "https://www.facebook.com/events/240100585201735"
+
+  - date: "2023-09-15"
+    venue: Melodka
+    location: Brno
+    facebook: "https://www.facebook.com/events/850074629786289"
+
+  - date: "2023-09-16"
+    venue: Klub Mír
+    location: Uherské Hradiště
+    facebook: "https://www.facebook.com/events/975619310389000"
+
+  - date: "2023-09-19"
+    venue: Vagon Klub
+    location: Praha
+    facebook: "https://www.facebook.com/events/186957237743676"
+
+  - date: "2024-06-01"
+    venue: Melodka
+    location: Brno
+    tickets: "https://www.smsticket.cz/vstupenky/45180-dark-symphonies-insinistra-stoker-sarkonia-nova-melodka-brno-insinistra-stoker"
+    facebook: "https://www.facebook.com/events/430466669591384"
+
+  - date: "2024-06-11"
+    venue: Modrá Vopice
+    location: Praha
+    tickets: "https://www.smsticket.cz/vstupenky/45155-dark-symphonies-insinistra-falcar-honoris-causa-musicclub-modra-vopice-praha-insinistra-falcar"
+    facebook: "https://www.facebook.com/events/953564056412487"
+
+  - date: "2024-08-15"
+    venue: Melodka
+    location: Brno
+    facebook: "https://www.facebook.com/events/863964788901606"
+
+  - date: "2024-08-16"
+    venue: Modrá Vopice
+    location: Praha
+    facebook: "https://www.facebook.com/events/830127889076968"
+
+  - date: "2024-10-12"
+    venue: KC Klubovna
+    location: Praha
+    tickets: "https://goout.net/cs/obscura-qalma%2Binsinistra%2Bhole-of-sin/szgxyjx/"
+    facebook: "https://www.facebook.com/events/1242514153403297"
+
+  - date: "2025-06-21"
+    venue: Modrá Vopice
+    location: Solstice Festival, Praha
+    tickets: "https://goout.net/en/solstice-festival-2025/szktdtx/"
+    facebook: "https://www.facebook.com/events/1342729330394991/"
+
+  - date: "2025-08-30"
+    venue: KC Klubovna
+    location: Praha
+    tickets: "https://goout.net/cs/obscura-qalma%2Binsinistra/sziqkwx/"
+    facebook: "https://www.facebook.com/events/1828988744608703"
+
   - date: "2026-05-07"
     venue: Česká 1
     location: Kutná Hora

@@ -248,6 +248,19 @@ h3 {
   display: block;
 }
 
+/* Shows page sections */
+.shows-section {
+  margin-top: 48px;
+}
+
+.shows-section:first-child {
+  margin-top: 0;
+}
+
+.shows-section h2 {
+  margin-bottom: 16px;
+}
+
 /* Concert list */
 .concert-list {
   list-style: none;

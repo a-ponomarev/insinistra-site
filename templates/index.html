@@ -51,7 +51,7 @@
 
 {% if concerts %}
 <section class="section">
-    <h2>Upcoming Concerts</h2>
+    <h2>Shows</h2>
     <ul class="concert-list">
         {% for c in concerts %}
         <li>
@@ -59,12 +59,13 @@
             <span class="concert-info">
                 {% if c.location %}<span class="location">{{ c.location }}</span>{% endif %}
                 {% if c.location and c.location|upper != "TBA" %}<span class="venue">{{ c.venue }}</span>{% endif %}
-                {% if c.url %}<a href="{{ c.url }}" target="_blank" rel="noopener">Tickets</a>{% endif %}
+                {% if c.tickets %}<a href="{{ c.tickets }}" target="_blank" rel="noopener">Tickets</a>{% endif %}
+                {% if c.facebook %}<a href="{{ c.facebook }}" target="_blank" rel="noopener">Facebook</a>{% endif %}
             </span>
         </li>
         {% endfor %}
     </ul>
-    <p class="section-link"><a href="{% if base %}{{ base }}/{% endif %}concerts/index.html" class="btn">All concerts</a></p>
+    <p class="section-link"><a href="{% if base %}{{ base }}/{% endif %}shows/index.html" class="btn">All shows</a></p>
 </section>
 {% endif %}
 </div>
