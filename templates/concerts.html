@@ -6,9 +6,9 @@
 <article class="page">
     <h1>Concerts</h1>
     {% if concerts %}
-    <ul class="concert-list full">
+    <ul class="concert-list">
         {% for c in concerts %}
-        <li class="concert-item">
+        <li>
             <span class="date">{{ c.date }}</span>
             <span class="venue">{{ c.venue }}</span>
             {% if c.location %}<span class="location">{{ c.location }}</span>{% endif %}
@@ -17,7 +17,7 @@
         {% endfor %}
     </ul>
     {% else %}
-    <p>No concerts scheduled yet. Check back soon!</p>
+    <p class="page-body">No concerts scheduled yet. Check back soon!</p>
     {% endif %}
 </article>
 {% endblock %}

@@ -3,9 +3,10 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
+<div class="layout">
 <section class="hero">
-    <h1>Welcome to The Band</h1>
-    <p class="tagline">Music. Live. Loud.</p>
+    <h1>Insinistra</h1>
+    <p class="tagline">Symphonic metal from Prague.</p>
 </section>
 
 {% if photos %}
@@ -24,16 +25,23 @@
 {% if albums %}
 <section class="section">
     <h2>Discography</h2>
-    <ul class="album-list">
+    <div class="album-grid">
         {% for album in albums[:3] %}
-        <li>
-            <strong>{{ album.title }}</strong>
-            {% if album.year %}({{ album.year }}){% endif %}
-            {% if album.description %} — {{ album.description }}{% endif %}
-        </li>
+        <article class="album-card">
+            <a href="{% if base %}{{ base }}/{% endif %}albums/index.html">
+                <div class="album-artwork">
+                    {% if album.artwork %}
+                    <img src="{{ album.artwork }}" alt="{{ album.title }}" loading="lazy">
+                    {% endif %}
+                </div>
+                <p class="album-title">{{ album.title }}</p>
+                <p class="album-meta">{% if album.year %}{{ album.year }}{% endif %}</p>
+                {% if album.description %}<p class="album-description">{{ album.description }}</p>{% endif %}
+            </a>
+        </article>
         {% endfor %}
-    </ul>
-    <p><a href="{% if base %}{{ base }}/{% endif %}albums/index.html">View full discography &rarr;</a></p>
+    </div>
+    <p class="section-link"><a href="{% if base %}{{ base }}/{% endif %}albums/index.html" class="btn">View full discography</a></p>
 </section>
 {% endif %}
 
@@ -46,10 +54,12 @@
             <span class="date">{{ c.date }}</span>
             <span class="venue">{{ c.venue }}</span>
             {% if c.location %}<span class="location">{{ c.location }}</span>{% endif %}
+            {% if c.url %}<a href="{{ c.url }}" target="_blank" rel="noopener">Tickets</a>{% endif %}
         </li>
         {% endfor %}
     </ul>
-    <p><a href="{% if base %}{{ base }}/{% endif %}concerts/index.html">All concerts &rarr;</a></p>
+    <p class="section-link"><a href="{% if base %}{{ base }}/{% endif %}concerts/index.html" class="btn">All concerts</a></p>
 </section>
 {% endif %}
+</div>
 {% endblock %}

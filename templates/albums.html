@@ -6,17 +6,22 @@
 <article class="page">
     <h1>Discography</h1>
     {% if albums %}
-    <ul class="album-list full">
+    <div class="album-grid">
         {% for album in albums %}
-        <li class="album-item">
-            <strong>{{ album.title }}</strong>
-            {% if album.year %}<span class="year">({{ album.year }})</span>{% endif %}
-            {% if album.description %}<p class="description">{{ album.description }}</p>{% endif %}
-        </li>
+        <article class="album-card">
+            <div class="album-artwork">
+                {% if album.artwork %}
+                <img src="{{ album.artwork }}" alt="{{ album.title }}" loading="lazy">
+                {% endif %}
+            </div>
+            <p class="album-title">{{ album.title }}</p>
+            <p class="album-meta">{% if album.year %}{{ album.year }}{% endif %}</p>
+            {% if album.description %}<p class="album-description">{{ album.description }}</p>{% endif %}
+        </article>
         {% endfor %}
-    </ul>
+    </div>
     {% else %}
-    <p>No releases yet.</p>
+    <p class="page-body">No releases yet.</p>
     {% endif %}
 </article>
 {% endblock %}

@@ -3,25 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Band{% endblock %} | The Band</title>
+    <title>{% block title %}Band{% endblock %} | Insinistra</title>
     <link rel="stylesheet" href="{% if base %}{{ base }}/{% endif %}static/style.css">
 </head>
 <body>
     <header class="site-header">
-        <nav class="nav">
-            <a href="{% if base %}{{ base }}/index.html{% else %}index.html{% endif %}">Home</a>
-            {% for p in nav_pages %}
-            <a href="{% if base %}{{ base }}/{% endif %}{{ p.slug }}/index.html">{{ p.title }}</a>
-            {% endfor %}
-            <a href="{% if base %}{{ base }}/{% endif %}concerts/index.html">Concerts</a>
-            <a href="{% if base %}{{ base }}/{% endif %}albums/index.html">Discography</a>
-        </nav>
+        <div class="layout">
+            <a href="{% if base %}{{ base }}/index.html{% else %}index.html{% endif %}" class="site-logo">Insinistra</a>
+            <nav class="nav">
+                <a href="{% if base %}{{ base }}/index.html{% else %}index.html{% endif %}">Home</a>
+                {% for p in nav_pages %}
+                <a href="{% if base %}{{ base }}/{% endif %}{{ p.slug }}/index.html">{{ p.title }}</a>
+                {% endfor %}
+                <a href="{% if base %}{{ base }}/{% endif %}concerts/index.html">Concerts</a>
+                <a href="{% if base %}{{ base }}/{% endif %}albums/index.html">Discography</a>
+            </nav>
+        </div>
     </header>
     <main class="main">
         {% block content %}{% endblock %}
     </main>
     <footer class="site-footer">
-        <p>&copy; {{ current_year }} The Band. Static site.</p>
+        <p>&copy; {{ current_year }} Insinistra.</p>
     </footer>
 </body>
 </html>
