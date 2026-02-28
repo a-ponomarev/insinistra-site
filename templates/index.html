@@ -28,7 +28,11 @@
     <div class="album-grid">
         {% for album in albums[:3] %}
         <article class="album-card">
+            {% if album.url %}
+            <a href="{{ album.url }}" target="_blank">
+            {% else %}
             <a href="{% if base %}{{ base }}/{% endif %}albums/index.html">
+            {% endif %}
                 <div class="album-artwork">
                     {% if album.artwork %}
                     <img src="{% if base %}{{ base }}/{% endif %}static/{{ album.artwork }}" alt="{{ album.title }}" loading="lazy">
