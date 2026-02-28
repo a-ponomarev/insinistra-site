@@ -1,14 +1,28 @@
 concerts:
-  - date: "2025-04-15"
-    venue: The Grand Hall
-    location: London, UK
-    url: "https://example.com/tickets"
-  - date: "2025-03-22"
-    venue: Riverside Arena
-    location: Manchester, UK
-  - date: "2025-03-08"
-    venue: Club Noir
-    location: Bristol, UK
-  - date: "2024-12-31"
-    venue: New Year's Eve Bash
-    location: Edinburgh, UK
+  - date: "2026-05-07"
+    venue: Česká 1
+    location: Kutná Hora, Czech Republic
+
+  - date: "2026-05-09"
+    venue: Klubovna
+    location: Prague, Czech Republic
+
+  - date: "2026-05-23"
+    venue: Willax
+    location: Mladá Boleslav, Czech Republic
+
+  - date: "2026-05-30"
+    venue: M13
+    location: Brno, Czech Republic
+
+  - date: "2026-06-13"
+    venue: Divadlo Pod Lampou
+    location: Plzeň, Czech Republic
+
+  - date: "2026-06-27"
+    venue: TBA
+    location: TBA
+
+  - date: "2026-07-16/2026-07-19"
+    venue: TBA
+    location: TBA

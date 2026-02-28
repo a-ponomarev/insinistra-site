@@ -1,10 +1,28 @@
 albums:
-  - title: "First Light"
-    year: 2024
-    description: Our debut album. Twelve tracks of raw energy.
-  - title: "Demo Tapes"
+  - title: "Snowbound"
+    year: 2018
+    description: Single release.
+
+  - title: "Lullaby for the Damned"
+    year: 2019
+    description: Single release.
+
+  - title: "Art of Slavery"
+    year: 2020
+    description: EP release.
+
+  - title: "The Anthem of Pandemonium"
     year: 2022
-    description: Early recordings and live sessions.
-  - title: "Unplugged"
+    description: Single release.
+
+  - title: "Gates of Oath"
+    year: 2022
+    description: Single release.
+
+  - title: "The Night of the Grand Parade"
+    year: 2022
+    description: Single release.
+
+  - title: "Blue Bird"
     year: 2023
-    description: Acoustic set from the summer tour.
+    description: Single release.

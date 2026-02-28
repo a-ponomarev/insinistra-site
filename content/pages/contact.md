@@ -4,15 +4,29 @@ title: Contact
 
 ## Book us
 
-For **gigs** and **private events**, send an email to:
+For **gigs**, send an email to:
 
-**bookings@theband.example.com**
+**bookings@insinistra.com**
 
 ## Press
 
-**press@theband.example.com**
+**press@insinistra.com**
 
 ## Social
 
-- [Twitter](https://twitter.com)
-- [Instagram](https://instagram.com)
+- [Instagram](https://instagram.com/insinistra/)
+- [Facebook](https://facebook.com/insinistra/)
+- [Bandcamp](https://insinistra.bandcamp.com/)
+- [Bandzone](https://bandzone.cz/insinistra)
+
+## Streaming
+
+- [Spotify](https://open.spotify.com/artist/7twKAgcyHaRn9LUqHMRE07)
+- [YouTube Music](https://music.youtube.com/channel/UCwGXJx49UkjujJKygLCLjSg)
+- [Apple Music](https://music.apple.com/ru/artist/insinistra/1444116339)
+- [Deezer](https://www.deezer.com/en/artist/53793642)
+- [Tidal](https://tidal.com/browse/artist/10557412)
+
+## Video
+
+- [YouTube](https://www.youtube.com/c/insinistra)
