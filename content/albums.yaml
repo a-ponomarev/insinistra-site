@@ -2,27 +2,34 @@ albums:
   - title: "Snowbound"
     date: "2018-11-05"
     description: Single release.
+    artwork: "artwork/snowbound.jpg"
 
   - title: "Lullaby for the Damned"
     date: "2019-02-19"
     description: Single release.
+    artwork: "artwork/lullaby-for-the-damned.jpg"
 
   - title: "Art of Slavery"
     date: "2020-09-11"
     description: EP release.
+    artwork: "artwork/art-of-slavery.jpg"
 
   - title: "The Anthem of Pandemonium"
     date: "2022-02-11"
     description: Single release.
+    artwork: "artwork/the-anthem-of-pandemonium.jpg"
 
   - title: "Gates of Oath"
     date: "2022-04-01"
     description: Single release.
+    artwork: "artwork/gates-of-oath.jpg"
 
   - title: "The Night of the Grand Parade"
     date: "2022-07-15"
     description: Single release.
+    artwork: "artwork/the-night-of-the-grand-parade.jpg"
 
   - title: "Blue Bird"
     date: "2023-04-03"
     description: Single release.
+    artwork: "artwork/blue-bird.png"
