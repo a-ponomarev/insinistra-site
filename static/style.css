@@ -51,7 +51,7 @@ a:hover {
 .site-header {
   background: var(--bg-primary);
   border-bottom: 1px solid var(--border);
-  padding: 16px 0;
+  padding: 10px 0;
 }
 
 .site-header .layout {
@@ -62,14 +62,21 @@ a:hover {
 }
 
 .site-logo {
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--text-primary);
+  display: block;
   text-decoration: none;
+  line-height: 0;
 }
 
 .site-logo:hover {
-  color: var(--text-primary);
+  opacity: 0.9;
+}
+
+.site-logo-img {
+  display: block;
+  height: 48px;
+  width: auto;
+  object-fit: contain;
+  filter: invert(1);
 }
 
 .nav {

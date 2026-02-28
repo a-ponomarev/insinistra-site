@@ -9,7 +9,9 @@
 <body>
     <header class="site-header">
         <div class="layout">
-            <a href="{% if base %}{{ base }}/index.html{% else %}index.html{% endif %}" class="site-logo">Insinistra</a>
+            <a href="{% if base %}{{ base }}/index.html{% else %}index.html{% endif %}" class="site-logo">
+                <img src="{% if base %}{{ base }}/{% endif %}static/logo-text.svg" alt="Insinistra" class="site-logo-img">
+            </a>
             <nav class="nav">
                 <a href="{% if base %}{{ base }}/index.html{% else %}index.html{% endif %}">Home</a>
                 {% for p in nav_pages %}
