@@ -22,6 +22,9 @@
             </nav>
         </div>
     </header>
+    <div class="site-banner">
+        <img src="{% if base %}{{ base }}/{% endif %}static/banner.png" alt="Insinistra" class="banner-img">
+    </div>
     <main class="main">
         {% block content %}{% endblock %}
     </main>
