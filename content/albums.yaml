@@ -2,41 +2,41 @@ albums:
   - title: "Snowbound"
     date: "2018-11-05"
     description: Single
-    artwork: "artwork/snowbound.jpg"
+    artwork: "photos/thumb/artwork/snowbound-thumb.jpg"
     url: "https://insinistra.bandcamp.com/track/snowbound"
 
   - title: "Lullaby for the Damned"
     date: "2019-02-19"
     description: Single
-    artwork: "artwork/lullaby-for-the-damned.jpg"
+    artwork: "photos/thumb/artwork/lullaby-for-the-damned-thumb.jpg"
     url: "https://insinistra.bandcamp.com/track/lullaby-for-the-damned"
 
   - title: "Art of Slavery"
     date: "2020-09-11"
     description: EP
-    artwork: "artwork/art-of-slavery.jpg"
+    artwork: "photos/thumb/artwork/art-of-slavery-thumb.jpg"
     url: "https://insinistra.bandcamp.com/album/art-of-slavery"
 
   - title: "The Anthem of Pandemonium"
     date: "2022-02-11"
     description: Single
-    artwork: "artwork/the-anthem-of-pandemonium.jpg"
+    artwork: "photos/thumb/artwork/the-anthem-of-pandemonium-thumb.jpg"
     url: "https://insinistra.bandcamp.com/album/the-anthem-of-pandemonium"
 
   - title: "Gates of Oath"
     date: "2022-04-01"
     description: Single
-    artwork: "artwork/gates-of-oath.jpg"
+    artwork: "photos/thumb/artwork/gates-of-oath-thumb.jpg"
     url: "https://insinistra.bandcamp.com/album/gates-of-oath"
 
   - title: "The Night of the Grand Parade"
     date: "2022-07-15"
     description: Single
-    artwork: "artwork/the-night-of-the-grand-parade.jpg"
+    artwork: "photos/thumb/artwork/the-night-of-the-grand-parade-thumb.jpg"
     url: "https://insinistra.bandcamp.com/album/the-night-of-the-grand-parade"
 
   - title: "Blue Bird"
     date: "2023-04-03"
     description: Single
-    artwork: "artwork/blue-bird.png"
+    artwork: "photos/thumb/artwork/blue-bird-thumb.jpg"
     url: "https://insinistra.bandcamp.com/album/blue-bird"

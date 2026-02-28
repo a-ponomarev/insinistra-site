@@ -30,7 +30,7 @@
             {% endif %}
                 <div class="album-artwork">
                     {% if album.artwork %}
-                    <img src="{% if base %}{{ base }}/{% endif %}static/{{ album.artwork }}" alt="{{ album.title }}" loading="lazy">
+                    <img src="{% if base %}{{ base }}/{% endif %}{{ album.artwork }}" alt="{{ album.title }}" loading="lazy">
                     {% endif %}
                 </div>
                 <p class="album-title">{{ album.title }}</p>

@@ -144,19 +144,26 @@ def process_photos(dist_photos: Path) -> list[dict]:
     photos = []
     extensions = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
 
-    for path in sorted(PHOTOS_RAW_DIR.iterdir()):
+    for path in sorted(PHOTOS_RAW_DIR.rglob("*")):
         if path.suffix.lower() not in extensions or not path.is_file():
             continue
+        rel = path.relative_to(PHOTOS_RAW_DIR)
         name = path.name
         base = path.stem
         ext = path.suffix.lower()
         if ext == ".jpeg":
             ext = ".jpg"
 
+        # Mirror subdirectory structure under each output bucket
+        subdir = rel.parent
+        (dist_photos / "original" / subdir).mkdir(parents=True, exist_ok=True)
+        (dist_photos / "1600" / subdir).mkdir(parents=True, exist_ok=True)
+        (dist_photos / "thumb" / subdir).mkdir(parents=True, exist_ok=True)
+
         # Copy original
-        dest_orig = dist_photos / "original" / name
+        dest_orig = dist_photos / "original" / subdir / name
         shutil.copy2(path, dest_orig)
-        orig_url = f"photos/original/{name}"
+        orig_url = f"photos/original/{rel.as_posix()}"
 
         # Resized (~1600px) and thumbnail (~400px)
         try:
@@ -174,9 +181,9 @@ def process_photos(dist_photos: Path) -> list[dict]:
                 else:
                     resized = img
                 resized_name = f"{base}-1600.jpg"
-                resized_path = dist_photos / "1600" / resized_name
+                resized_path = dist_photos / "1600" / subdir / resized_name
                 resized.save(resized_path, "JPEG", quality=88)
-                resized_url = f"photos/1600/{resized_name}"
+                resized_url = f"photos/1600/{(subdir / resized_name).as_posix()}"
 
                 # Thumbnail
                 if w > THUMB_WIDTH:
@@ -186,9 +193,9 @@ def process_photos(dist_photos: Path) -> list[dict]:
                 else:
                     thumb = img
                 thumb_name = f"{base}-thumb.jpg"
-                thumb_path = dist_photos / "thumb" / thumb_name
+                thumb_path = dist_photos / "thumb" / subdir / thumb_name
                 thumb.save(thumb_path, "JPEG", quality=85)
-                thumb_url = f"photos/thumb/{thumb_name}"
+                thumb_url = f"photos/thumb/{(subdir / thumb_name).as_posix()}"
         except Exception as e:
             print(f"  Warning: could not process {name}: {e}")
             resized_url = orig_url
@@ -198,7 +205,7 @@ def process_photos(dist_photos: Path) -> list[dict]:
             "original": orig_url,
             "resized": resized_url,
             "thumb": thumb_url,
-            "name": name,
+            "name": str(rel),
         })
 
     return photos
