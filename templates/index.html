@@ -33,7 +33,7 @@
         </li>
         {% endfor %}
     </ul>
-    <p><a href="{{ base }}/albums/">View all albums &rarr;</a></p>
+    <p><a href="{% if base %}{{ base }}/{% endif %}albums/index.html">View all albums &rarr;</a></p>
 </section>
 {% endif %}
 
@@ -49,7 +49,7 @@
         </li>
         {% endfor %}
     </ul>
-    <p><a href="{{ base }}/concerts/">All concerts &rarr;</a></p>
+    <p><a href="{% if base %}{{ base }}/{% endif %}concerts/index.html">All concerts &rarr;</a></p>
 </section>
 {% endif %}
 {% endblock %}

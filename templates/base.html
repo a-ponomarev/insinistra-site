@@ -11,10 +11,10 @@
         <nav class="nav">
             <a href="{% if base %}{{ base }}/index.html{% else %}index.html{% endif %}">Home</a>
             {% for p in nav_pages %}
-            <a href="{{ base }}/{{ p.slug }}/">{{ p.title }}</a>
+            <a href="{% if base %}{{ base }}/{% endif %}{{ p.slug }}/index.html">{{ p.title }}</a>
             {% endfor %}
-            <a href="{{ base }}/concerts/">Concerts</a>
-            <a href="{{ base }}/albums/">Albums</a>
+            <a href="{% if base %}{{ base }}/{% endif %}concerts/index.html">Concerts</a>
+            <a href="{% if base %}{{ base }}/{% endif %}albums/index.html">Albums</a>
         </nav>
     </header>
     <main class="main">
