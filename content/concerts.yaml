@@ -1,28 +1,28 @@
 concerts:
   - date: "2026-05-07"
     venue: Česká 1
-    location: Kutná Hora, Czech Republic
+    location: Kutná Hora
 
   - date: "2026-05-09"
     venue: Klubovna
-    location: Prague, Czech Republic
+    location: Praha
 
   - date: "2026-05-23"
     venue: Willax
-    location: Mladá Boleslav, Czech Republic
+    location: Mladá Boleslav
 
   - date: "2026-05-30"
     venue: M13
-    location: Brno, Czech Republic
+    location: Brno
 
   - date: "2026-06-13"
     venue: Divadlo Pod Lampou
-    location: Plzeň, Czech Republic
+    location: Plzeň
 
   - date: "2026-06-27"
     venue: TBA
     location: TBA
 
-  - date: "2026-07-16/2026-07-19"
+  - date: "2026-07-16"
     venue: TBA
     location: TBA

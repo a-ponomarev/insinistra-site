@@ -256,6 +256,10 @@ h3 {
 }
 
 .concert-list li {
+  display: grid;
+  grid-template-columns: 9ch 1fr;
+  gap: 10px;
+  align-items: baseline;
   padding: 16px 0;
   border-bottom: 1px solid var(--border);
   color: var(--text-primary);
@@ -268,17 +272,21 @@ h3 {
 .concert-list .date {
   color: var(--text-muted);
   font-size: 14px;
-  margin-right: 12px;
 }
 
-.concert-list .venue {
-  font-weight: 600;
+.concert-list .concert-info {
+  min-width: 0;
 }
 
 .concert-list .location {
+  color: var(--text-primary);
+  font-weight: 600;
+  margin-right: 8px;
+}
+
+.concert-list .venue {
   color: var(--text-muted);
   font-size: 14px;
-  margin-left: 8px;
 }
 
 .concert-list a {

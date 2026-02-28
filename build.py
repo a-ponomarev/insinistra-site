@@ -62,8 +62,19 @@ def load_pages() -> list[dict]:
     return pages
 
 
+def format_date_display(date_str: str) -> str:
+    """Format YYYY-MM-DD as '07 Mar 2026'."""
+    if not date_str:
+        return ""
+    try:
+        dt = datetime.strptime(date_str.strip()[:10], "%Y-%m-%d")
+        return dt.strftime("%d %b %Y")
+    except ValueError:
+        return date_str
+
+
 def load_concerts() -> list[dict]:
-    """Load concerts from YAML, sorted by date (newest first)."""
+    """Load concerts from YAML, sorted by date ascending (soonest first)."""
     path = CONTENT_DIR / "concerts.yaml"
     if not path.exists():
         return []
@@ -71,11 +82,12 @@ def load_concerts() -> list[dict]:
     items = data.get("concerts", data) if isinstance(data, dict) else data
     if not isinstance(items, list):
         return []
-    # Sort by date descending
+    for c in items:
+        c["date_display"] = format_date_display(c.get("date", ""))
     def date_key(c):
         d = c.get("date", "")
         return (d, c.get("venue", ""))
-    return sorted(items, key=date_key, reverse=True)
+    return sorted(items, key=date_key)
 
 
 def load_albums() -> list[dict]:
