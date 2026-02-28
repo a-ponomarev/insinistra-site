@@ -79,13 +79,21 @@ def load_concerts() -> list[dict]:
 
 
 def load_albums() -> list[dict]:
-    """Load albums from YAML."""
+    """Load albums from YAML, sorted by date newest first. Derives year for display."""
     path = CONTENT_DIR / "albums.yaml"
     if not path.exists():
         return []
     data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
     items = data.get("albums", data) if isinstance(data, dict) else data
-    return items if isinstance(items, list) else []
+    if not isinstance(items, list):
+        return []
+    for a in items:
+        d = a.get("date") or ""
+        if isinstance(d, str) and len(d) >= 4:
+            a["year"] = int(d[:4])
+        else:
+            a["year"] = None
+    return sorted(items, key=lambda a: a.get("date") or "", reverse=True)
 
 
 def process_photos(dist_photos: Path) -> list[dict]:

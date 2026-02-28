@@ -23,7 +23,7 @@
 
 {% if albums %}
 <section class="section">
-    <h2>Latest Albums</h2>
+    <h2>Discography</h2>
     <ul class="album-list">
         {% for album in albums[:3] %}
         <li>
@@ -33,7 +33,7 @@
         </li>
         {% endfor %}
     </ul>
-    <p><a href="{% if base %}{{ base }}/{% endif %}albums/index.html">View all albums &rarr;</a></p>
+    <p><a href="{% if base %}{{ base }}/{% endif %}albums/index.html">View full discography &rarr;</a></p>
 </section>
 {% endif %}
 

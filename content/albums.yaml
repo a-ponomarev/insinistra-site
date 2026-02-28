@@ -1,28 +1,28 @@
 albums:
   - title: "Snowbound"
-    year: 2018
+    date: "2018-11-05"
     description: Single release.
 
   - title: "Lullaby for the Damned"
-    year: 2019
+    date: "2019-02-19"
     description: Single release.
 
   - title: "Art of Slavery"
-    year: 2020
+    date: "2020-09-11"
     description: EP release.
 
   - title: "The Anthem of Pandemonium"
-    year: 2022
+    date: "2022-02-11"
     description: Single release.
 
   - title: "Gates of Oath"
-    year: 2022
+    date: "2022-04-01"
     description: Single release.
 
   - title: "The Night of the Grand Parade"
-    year: 2022
+    date: "2022-07-15"
     description: Single release.
 
   - title: "Blue Bird"
-    year: 2023
+    date: "2023-04-03"
     description: Single release.
