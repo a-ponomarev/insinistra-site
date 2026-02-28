@@ -1,0 +1,2 @@
+# Put source photos here (.jpg, .png, .webp, .gif).
+# build.py will copy originals and generate 1600px + 400px versions in dist/photos/.

@@ -1,0 +1,162 @@
+/* Band site — minimal, readable */
+:root {
+  --bg: #0f0f0f;
+  --fg: #e8e8e8;
+  --muted: #888;
+  --accent: #c9a227;
+  --gap: 1.5rem;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+}
+
+.site-header {
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding: var(--gap) 0;
+}
+
+.nav {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.nav a {
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.nav a:hover {
+  color: var(--accent);
+}
+
+.main {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.hero {
+  text-align: center;
+  padding: 3rem 0;
+}
+
+.hero h1 {
+  font-size: 2.5rem;
+  margin: 0 0 0.5rem;
+}
+
+.tagline {
+  font-size: 1.25rem;
+  color: var(--muted);
+  margin: 0;
+}
+
+.section {
+  margin-top: 2.5rem;
+}
+
+.section h2 {
+  font-size: 1.25rem;
+  color: var(--muted);
+  margin-bottom: 1rem;
+}
+
+.page h1 {
+  font-size: 2rem;
+  margin-top: 0;
+}
+
+.page-body {
+  margin-top: 1rem;
+}
+
+.page-body p {
+  margin: 1em 0;
+}
+
+.page-body a {
+  color: var(--accent);
+}
+
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.photo-card {
+  display: block;
+  border-radius: 8px;
+  overflow: hidden;
+  aspect-ratio: 4/3;
+  background: #1a1a1a;
+}
+
+.photo-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.concert-list,
+.album-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.concert-list li,
+.album-list li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.concert-list .date,
+.album-list .year {
+  color: var(--muted);
+  margin-right: 0.5rem;
+}
+
+.concert-item .venue,
+.album-item strong {
+  font-weight: 600;
+}
+
+.concert-item a,
+.section a {
+  color: var(--accent);
+  margin-left: 0.5rem;
+}
+
+.album-list .description {
+  margin: 0.25rem 0 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.site-footer {
+  margin-top: 3rem;
+  padding: var(--gap) 1rem;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.site-footer p {
+  margin: 0;
+}

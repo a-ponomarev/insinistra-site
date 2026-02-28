@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Albums{% endblock %}
+
+{% block content %}
+<article class="page">
+    <h1>Albums</h1>
+    {% if albums %}
+    <ul class="album-list full">
+        {% for album in albums %}
+        <li class="album-item">
+            <strong>{{ album.title }}</strong>
+            {% if album.year %}<span class="year">({{ album.year }})</span>{% endif %}
+            {% if album.description %}<p class="description">{{ album.description }}</p>{% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No albums yet.</p>
+    {% endif %}
+</article>
+{% endblock %}

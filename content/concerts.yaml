@@ -1,0 +1,14 @@
+concerts:
+  - date: "2025-04-15"
+    venue: The Grand Hall
+    location: London, UK
+    url: "https://example.com/tickets"
+  - date: "2025-03-22"
+    venue: Riverside Arena
+    location: Manchester, UK
+  - date: "2025-03-08"
+    venue: Club Noir
+    location: Bristol, UK
+  - date: "2024-12-31"
+    venue: New Year's Eve Bash
+    location: Edinburgh, UK

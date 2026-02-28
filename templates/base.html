@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Band{% endblock %} | The Band</title>
+    <link rel="stylesheet" href="{% if base %}{{ base }}/{% endif %}static/style.css">
+</head>
+<body>
+    <header class="site-header">
+        <nav class="nav">
+            <a href="{% if base %}{{ base }}/index.html{% else %}index.html{% endif %}">Home</a>
+            {% for p in nav_pages %}
+            <a href="{{ base }}/{{ p.slug }}/">{{ p.title }}</a>
+            {% endfor %}
+            <a href="{{ base }}/concerts/">Concerts</a>
+            <a href="{{ base }}/albums/">Albums</a>
+        </nav>
+    </header>
+    <main class="main">
+        {% block content %}{% endblock %}
+    </main>
+    <footer class="site-footer">
+        <p>&copy; {{ current_year }} The Band. Static site.</p>
+    </footer>
+</body>
+</html>

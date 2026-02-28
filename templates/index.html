@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <h1>Welcome to The Band</h1>
+    <p class="tagline">Music. Live. Loud.</p>
+</section>
+
+{% if photos %}
+<section class="section gallery-preview">
+    <h2>Photos</h2>
+    <div class="photo-grid">
+        {% for photo in photos %}
+        <a href="{{ photo.resized }}" class="photo-card" target="_blank" rel="noopener">
+            <img src="{{ photo.thumb }}" alt="{{ photo.name }}" loading="lazy">
+        </a>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+{% if albums %}
+<section class="section">
+    <h2>Latest Albums</h2>
+    <ul class="album-list">
+        {% for album in albums[:3] %}
+        <li>
+            <strong>{{ album.title }}</strong>
+            {% if album.year %}({{ album.year }}){% endif %}
+            {% if album.description %} — {{ album.description }}{% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+    <p><a href="{{ base }}/albums/">View all albums &rarr;</a></p>
+</section>
+{% endif %}
+
+{% if concerts %}
+<section class="section">
+    <h2>Upcoming Concerts</h2>
+    <ul class="concert-list">
+        {% for c in concerts %}
+        <li>
+            <span class="date">{{ c.date }}</span>
+            <span class="venue">{{ c.venue }}</span>
+            {% if c.location %}<span class="location">{{ c.location }}</span>{% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+    <p><a href="{{ base }}/concerts/">All concerts &rarr;</a></p>
+</section>
+{% endif %}
+{% endblock %}

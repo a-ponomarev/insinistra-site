@@ -1,0 +1,10 @@
+albums:
+  - title: "First Light"
+    year: 2024
+    description: Our debut album. Twelve tracks of raw energy.
+  - title: "Demo Tapes"
+    year: 2022
+    description: Early recordings and live sessions.
+  - title: "Unplugged"
+    year: 2023
+    description: Acoustic set from the summer tour.
