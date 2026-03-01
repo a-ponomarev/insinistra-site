@@ -30,6 +30,7 @@ body {
   color: var(--text-primary);
   margin: 0;
   padding: 0;
+  padding-left: 56px;
 }
 
 a {
@@ -40,6 +41,39 @@ a {
 
 a:hover {
   color: var(--accent-hover);
+}
+
+/* ─── Social sidebar (fixed left) ─────────────────────────── */
+
+.social-sidebar {
+  position: fixed;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 16px 12px;
+  background: rgba(11, 10, 15, 0.85);
+  border-right: 1px solid var(--border);
+  backdrop-filter: blur(6px);
+}
+
+.social-sidebar a {
+  display: block;
+  color: var(--text-secondary);
+  padding: 4px;
+  transition: color 150ms ease, transform 150ms ease;
+}
+
+.social-sidebar a:hover {
+  color: var(--accent);
+  transform: scale(1.1);
+}
+
+.social-sidebar svg {
+  display: block;
 }
 
 /* ─── Layout ─────────────────────────────────────────────── */
@@ -707,6 +741,20 @@ h3 {
 }
 
 @media (max-width: 560px) {
+  body {
+    padding-left: 48px;
+  }
+
+  .social-sidebar {
+    padding: 12px 8px;
+    gap: 16px;
+  }
+
+  .social-sidebar svg {
+    width: 18px;
+    height: 18px;
+  }
+
   h1 { font-size: 32px; }
   h2 { font-size: 22px; }
 
