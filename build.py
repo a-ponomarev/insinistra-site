@@ -20,7 +20,8 @@ ROOT = Path(__file__).resolve().parent
 TEMPLATES_DIR = ROOT / "templates"
 CONTENT_DIR = ROOT / "content"
 STATIC_DIR = ROOT / "static"
-PHOTOS_RAW_DIR = ROOT / "photos" / "raw"
+PHOTOS_DIR = ROOT / "photos"
+IMAGES_DIR = ROOT / "images"
 DIST_DIR = ROOT / "dist"
 
 # Image sizes
@@ -129,43 +130,38 @@ def load_albums() -> list[dict]:
     return sorted(items, key=lambda a: a.get("date") or "", reverse=True)
 
 
-def process_photos(dist_photos: Path) -> list[dict]:
+def process_images(src_dir: Path, dist_dir: Path, url_prefix: str) -> list[dict]:
     """
-    Copy originals and create resized + thumbnail from photos/raw/.
-    Returns list of photo info dicts for templates.
+    Copy originals and create resized + thumbnail versions from src_dir into dist_dir.
+    Returns list of asset info dicts (used for gallery rendering).
     """
-    if not PHOTOS_RAW_DIR.exists():
+    if not src_dir.exists():
         return []
-    dist_photos.mkdir(parents=True, exist_ok=True)
-    (dist_photos / "original").mkdir(exist_ok=True)
-    (dist_photos / "1600").mkdir(exist_ok=True)
-    (dist_photos / "thumb").mkdir(exist_ok=True)
+    dist_dir.mkdir(parents=True, exist_ok=True)
+    (dist_dir / "original").mkdir(exist_ok=True)
+    (dist_dir / "1600").mkdir(exist_ok=True)
+    (dist_dir / "thumb").mkdir(exist_ok=True)
 
-    photos = []
+    assets = []
     extensions = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
 
-    for path in sorted(PHOTOS_RAW_DIR.rglob("*")):
+    for path in sorted(src_dir.rglob("*")):
         if path.suffix.lower() not in extensions or not path.is_file():
             continue
-        rel = path.relative_to(PHOTOS_RAW_DIR)
+        rel = path.relative_to(src_dir)
         name = path.name
         base = path.stem
-        ext = path.suffix.lower()
-        if ext == ".jpeg":
-            ext = ".jpg"
 
-        # Mirror subdirectory structure under each output bucket
         subdir = rel.parent
-        (dist_photos / "original" / subdir).mkdir(parents=True, exist_ok=True)
-        (dist_photos / "1600" / subdir).mkdir(parents=True, exist_ok=True)
-        (dist_photos / "thumb" / subdir).mkdir(parents=True, exist_ok=True)
+        (dist_dir / "original" / subdir).mkdir(parents=True, exist_ok=True)
+        (dist_dir / "1600" / subdir).mkdir(parents=True, exist_ok=True)
+        (dist_dir / "thumb" / subdir).mkdir(parents=True, exist_ok=True)
 
-        # Copy original
-        dest_orig = dist_photos / "original" / subdir / name
-        shutil.copy2(path, dest_orig)
-        orig_url = f"photos/original/{rel.as_posix()}"
+        shutil.copy2(path, dist_dir / "original" / subdir / name)
+        orig_url = f"{url_prefix}/original/{rel.as_posix()}"
+        resized_url = orig_url
+        thumb_url = orig_url
 
-        # Resized (~1600px) and thumbnail (~400px)
         try:
             with Image.open(path) as img:
                 img = img.convert("RGB") if img.mode in ("RGBA", "P") else img
@@ -173,42 +169,32 @@ def process_photos(dist_photos: Path) -> list[dict]:
                 if w == 0:
                     continue
 
-                # 1600px width
                 if w > RESIZED_WIDTH:
-                    ratio = RESIZED_WIDTH / w
-                    new_size = (RESIZED_WIDTH, int(h * ratio))
-                    resized = img.resize(new_size, Image.Resampling.LANCZOS)
+                    resized = img.resize((RESIZED_WIDTH, int(h * RESIZED_WIDTH / w)), Image.Resampling.LANCZOS)
                 else:
                     resized = img
                 resized_name = f"{base}-1600.jpg"
-                resized_path = dist_photos / "1600" / subdir / resized_name
-                resized.save(resized_path, "JPEG", quality=88)
-                resized_url = f"photos/1600/{(subdir / resized_name).as_posix()}"
+                resized.save(dist_dir / "1600" / subdir / resized_name, "JPEG", quality=88)
+                resized_url = f"{url_prefix}/1600/{(subdir / resized_name).as_posix()}"
 
-                # Thumbnail
                 if w > THUMB_WIDTH:
-                    ratio = THUMB_WIDTH / w
-                    thumb_size = (THUMB_WIDTH, int(h * ratio))
-                    thumb = img.resize(thumb_size, Image.Resampling.LANCZOS)
+                    thumb = img.resize((THUMB_WIDTH, int(h * THUMB_WIDTH / w)), Image.Resampling.LANCZOS)
                 else:
                     thumb = img
                 thumb_name = f"{base}-thumb.jpg"
-                thumb_path = dist_photos / "thumb" / subdir / thumb_name
-                thumb.save(thumb_path, "JPEG", quality=85)
-                thumb_url = f"photos/thumb/{(subdir / thumb_name).as_posix()}"
+                thumb.save(dist_dir / "thumb" / subdir / thumb_name, "JPEG", quality=85)
+                thumb_url = f"{url_prefix}/thumb/{(subdir / thumb_name).as_posix()}"
         except Exception as e:
             print(f"  Warning: could not process {name}: {e}")
-            resized_url = orig_url
-            thumb_url = orig_url
 
-        photos.append({
+        assets.append({
             "original": orig_url,
             "resized": resized_url,
             "thumb": thumb_url,
             "name": str(rel),
         })
 
-    return photos
+    return assets
 
 
 def main() -> None:
@@ -231,10 +217,13 @@ def main() -> None:
         print("  Copying static/...")
         shutil.copytree(STATIC_DIR, DIST_DIR / "static")
 
-    # Process photos
+    # Process photos (gallery)
     print("  Processing photos...")
-    dist_photos = DIST_DIR / "photos"
-    photos = process_photos(dist_photos)
+    photos = process_images(PHOTOS_DIR, DIST_DIR / "photos", "photos")
+
+    # Process images (banner, artwork, etc.)
+    print("  Processing images...")
+    process_images(IMAGES_DIR, DIST_DIR / "images", "images")
 
     common = {"nav_pages": pages, "current_year": datetime.now().year}
     subdir_common = {**common, "base": ".."}
