@@ -3,9 +3,11 @@
 {% block title %}Home{% endblock %}
 
 {% block hero %}
-<section class="hero" style="background-image: url('{% if base %}{{ base }}/{% endif %}images/1600/banner-1600.jpg')">
+<section class="hero" style="background-image: url('{% if base %}{{ base }}/{% endif %}images/original/hero.jpg')">
     <div class="hero-inner">
-        <img src="{% if base %}{{ base }}/{% endif %}static/logo-text.svg" alt="Insinistra" class="hero-logo">
+        <div class="hero-logo-wrap">
+            <img src="{% if base %}{{ base }}/{% endif %}static/logo-text.svg" alt="Insinistra" class="hero-logo">
+        </div>
         <div class="hero-cta">
             <a href="https://insinistra.bandcamp.com/" class="btn" target="_blank" rel="noopener">Listen Now</a>
             <a href="{% if base %}{{ base }}/{% endif %}shows/index.html" class="btn btn-ghost">Upcoming Shows</a>
