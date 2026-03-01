@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{% if base %}{{ base }}/{% endif %}static/style.css">
 </head>
 <body>
-    <header class="site-header">
+    <header class="site-header" id="site-header">
         <div class="layout">
             <a href="{% if base %}{{ base }}/index.html{% else %}index.html{% endif %}" class="site-logo">
                 <img src="{% if base %}{{ base }}/{% endif %}static/logo-text.svg" alt="Insinistra" class="site-logo-img">
@@ -22,14 +22,42 @@
             </nav>
         </div>
     </header>
+
+    {% block hero %}
     <div class="site-banner">
         <img src="{% if base %}{{ base }}/{% endif %}images/1600/banner-1600.jpg" alt="Insinistra" class="banner-img">
     </div>
+    {% endblock %}
+
     <main class="main">
         {% block content %}{% endblock %}
     </main>
+
     <footer class="site-footer">
-        <p>&copy; {{ current_year }} Insinistra.</p>
+        <div class="footer-inner">
+            <nav class="footer-social">
+                <a href="https://instagram.com/insinistra/" target="_blank" rel="noopener">Instagram</a>
+                <a href="https://facebook.com/insinistra/" target="_blank" rel="noopener">Facebook</a>
+                <a href="https://insinistra.bandcamp.com/" target="_blank" rel="noopener">Bandcamp</a>
+                <a href="https://www.youtube.com/c/insinistra" target="_blank" rel="noopener">YouTube</a>
+                <a href="https://open.spotify.com/artist/7twKAgcyHaRn9LUqHMRE07" target="_blank" rel="noopener">Spotify</a>
+            </nav>
+            <div class="footer-contact">
+                <a href="mailto:bookings@insinistra.com">bookings@insinistra.com</a>
+            </div>
+            <p class="footer-copy">&copy; {{ current_year }} Insinistra. All rights reserved.</p>
+        </div>
     </footer>
+
+    <script>
+        (function () {
+            var header = document.getElementById('site-header');
+            function onScroll() {
+                header.classList.toggle('scrolled', window.scrollY > 60);
+            }
+            window.addEventListener('scroll', onScroll, { passive: true });
+            onScroll();
+        })();
+    </script>
 </body>
 </html>

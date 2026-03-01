@@ -2,11 +2,102 @@
 
 {% block title %}Home{% endblock %}
 
+{% block hero %}
+<section class="hero" style="background-image: url('{% if base %}{{ base }}/{% endif %}images/1600/banner-1600.jpg')">
+    <div class="hero-inner">
+        <img src="{% if base %}{{ base }}/{% endif %}static/logo-text.svg" alt="Insinistra" class="hero-logo">
+        <div class="hero-cta">
+            <a href="https://insinistra.bandcamp.com/" class="btn" target="_blank" rel="noopener">Listen Now</a>
+            <a href="{% if base %}{{ base }}/{% endif %}shows/index.html" class="btn btn-ghost">Upcoming Shows</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
 {% block content %}
-<div class="layout">
+
+{% if albums %}
+<section class="section">
+    <div class="layout">
+        <span class="section-label">Latest Release</span>
+        {% set latest = albums[0] %}
+        <div class="featured-release">
+            <div class="featured-artwork">
+                {% if latest.artwork %}
+                <img src="{% if base %}{{ base }}/{% endif %}{{ latest.artwork }}" alt="{{ latest.title }}" loading="lazy">
+                {% endif %}
+            </div>
+            <div class="featured-info">
+                {% if latest.description %}<p class="featured-meta">{{ latest.description }}</p>{% endif %}
+                <h2 class="featured-title">{{ latest.title }}</h2>
+                {% if latest.year %}<p class="featured-meta">{{ latest.year }}</p>{% endif %}
+                {% if latest.url %}
+                <a href="{{ latest.url }}" class="btn" target="_blank" rel="noopener">Listen Now</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% if concerts %}
+<section class="section">
+    <div class="layout">
+        <span class="section-label">Live</span>
+        <h2>Upcoming Shows</h2>
+        <ul class="concert-list">
+            {% for c in concerts %}
+            <li>
+                <span class="col-date">{{ c.date_display }}</span>
+                <span class="col-city">{{ c.location if c.location else '' }}</span>
+                <span class="col-venue">{{ c.venue if c.location and c.location|upper != 'TBA' else '' }}</span>
+                <span class="col-links">
+                    {% if c.tickets %}<a href="{{ c.tickets }}" target="_blank" rel="noopener">Tickets</a>{% endif %}
+                    {% if c.facebook %}<a href="{{ c.facebook }}" target="_blank" rel="noopener">Facebook</a>{% endif %}
+                </span>
+            </li>
+            {% endfor %}
+        </ul>
+        <p class="section-link"><a href="{% if base %}{{ base }}/{% endif %}shows/index.html" class="btn">All Shows</a></p>
+    </div>
+</section>
+{% endif %}
+
+{% if albums %}
+<section class="section">
+    <div class="layout">
+        <span class="section-label">Discography</span>
+        <h2>Music</h2>
+        <div class="album-grid">
+            {% for album in albums[1:5] %}
+            <article class="album-card">
+                {% if album.url %}
+                <a href="{{ album.url }}" target="_blank" rel="noopener">
+                {% else %}
+                <a href="{% if base %}{{ base }}/{% endif %}albums/index.html">
+                {% endif %}
+                    <div class="album-artwork">
+                        {% if album.artwork %}
+                        <img src="{% if base %}{{ base }}/{% endif %}{{ album.artwork }}" alt="{{ album.title }}" loading="lazy">
+                        {% endif %}
+                    </div>
+                    <p class="album-title">{{ album.title }}</p>
+                    <p class="album-meta">{% if album.year %}{{ album.year }}{% endif %}{% if album.description %} &middot; {{ album.description }}{% endif %}</p>
+                </a>
+            </article>
+            {% endfor %}
+        </div>
+        <p class="section-link"><a href="{% if base %}{{ base }}/{% endif %}albums/index.html" class="btn">Full Discography</a></p>
+    </div>
+</section>
+{% endif %}
+
 {% if photos %}
-<section class="section gallery-preview">
-    <h2>Photos</h2>
+<section class="section">
+    <div class="layout">
+        <span class="section-label">Photos</span>
+        <h2>Gallery</h2>
+    </div>
     <div class="photo-grid">
         {% for photo in photos %}
         <a href="{{ photo.resized }}" class="photo-card" target="_blank" rel="noopener">
@@ -17,51 +108,4 @@
 </section>
 {% endif %}
 
-{% if albums %}
-<section class="section">
-    <h2>Discography</h2>
-    <div class="album-grid">
-        {% for album in albums[:3] %}
-        <article class="album-card">
-            {% if album.url %}
-            <a href="{{ album.url }}" target="_blank">
-            {% else %}
-            <a href="{% if base %}{{ base }}/{% endif %}albums/index.html">
-            {% endif %}
-                <div class="album-artwork">
-                    {% if album.artwork %}
-                    <img src="{% if base %}{{ base }}/{% endif %}{{ album.artwork }}" alt="{{ album.title }}" loading="lazy">
-                    {% endif %}
-                </div>
-                <p class="album-title">{{ album.title }}</p>
-                <p class="album-meta">{% if album.year %}{{ album.year }}{% endif %}</p>
-                {% if album.description %}<p class="album-description">{{ album.description }}</p>{% endif %}
-            </a>
-        </article>
-        {% endfor %}
-    </div>
-    <p class="section-link"><a href="{% if base %}{{ base }}/{% endif %}albums/index.html" class="btn">View full discography</a></p>
-</section>
-{% endif %}
-
-{% if concerts %}
-<section class="section">
-    <h2>Shows</h2>
-    <ul class="concert-list">
-        {% for c in concerts %}
-        <li>
-            <span class="date">{{ c.date_display }}</span>
-            <span class="concert-info">
-                {% if c.location %}<span class="location">{{ c.location }}</span>{% endif %}
-                {% if c.location and c.location|upper != "TBA" %}<span class="venue">{{ c.venue }}</span>{% endif %}
-                {% if c.tickets %}<a href="{{ c.tickets }}" target="_blank" rel="noopener">Tickets</a>{% endif %}
-                {% if c.facebook %}<a href="{{ c.facebook }}" target="_blank" rel="noopener">Facebook</a>{% endif %}
-            </span>
-        </li>
-        {% endfor %}
-    </ul>
-    <p class="section-link"><a href="{% if base %}{{ base }}/{% endif %}shows/index.html" class="btn">All shows</a></p>
-</section>
-{% endif %}
-</div>
 {% endblock %}

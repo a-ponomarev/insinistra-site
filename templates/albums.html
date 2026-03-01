@@ -10,19 +10,18 @@
         {% for album in albums %}
         <article class="album-card">
             {% if album.url %}
-            <a href="{{ album.url }}" target="_blank">
+            <a href="{{ album.url }}" target="_blank" rel="noopener">
+            {% else %}
+            <a href="#">
             {% endif %}
-            <div class="album-artwork">
-                {% if album.artwork %}
-                <img src="{% if base %}{{ base }}/{% endif %}{{ album.artwork }}" alt="{{ album.title }}" loading="lazy">
-                {% endif %}
-            </div>
-            <p class="album-title">{{ album.title }}</p>
-            <p class="album-meta">{% if album.year %}{{ album.year }}{% endif %}</p>
-            {% if album.description %}<p class="album-description">{{ album.description }}</p>{% endif %}
-            {% if album.url %}
+                <div class="album-artwork">
+                    {% if album.artwork %}
+                    <img src="{% if base %}{{ base }}/{% endif %}{{ album.artwork }}" alt="{{ album.title }}" loading="lazy">
+                    {% endif %}
+                </div>
+                <p class="album-title">{{ album.title }}</p>
+                <p class="album-meta">{% if album.year %}{{ album.year }}{% endif %}{% if album.description %} &middot; {{ album.description }}{% endif %}</p>
             </a>
-            {% endif %}
         </article>
         {% endfor %}
     </div>
