@@ -2,16 +2,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@400;600&display=swap');
 
 :root {
-  --bg-primary:    #0d0d0d;
-  --bg-secondary:  #141414;
-  --bg-card:       #1a1a1a;
-  --text-primary:  #e0e0e0;
-  --text-secondary:#a8a8a8;
-  --text-muted:    #686868;
-  --accent:        #8c7a5e;
-  --accent-hover:  #a8957a;
-  --border:        #242424;
-  --border-light:  #2e2e2e;
+  --bg-primary:    #0b0a0f;
+  --bg-secondary:  #110f18;
+  --bg-card:       #181520;
+  --text-primary:  #e4e0ee;
+  --text-secondary:#a89ec0;
+  --text-muted:    #6a6080;
+  --accent:        #9b82c8;
+  --accent-hover:  #b89fe0;
+  --border:        #241f30;
+  --border-light:  #302840;
 }
 
 * {
