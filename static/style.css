@@ -649,6 +649,28 @@ h3 {
   margin-bottom: 48px;
 }
 
+.spotify-embed {
+  max-width: 560px;
+  margin-top: 48px;
+  margin-bottom: 48px;
+  margin-left: auto;
+  margin-right: auto;
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3),
+              0 0 0 1px rgba(155, 130, 200, 0.15),
+              0 8px 32px rgba(155, 130, 200, 0.12);
+}
+
+.spotify-embed iframe {
+  display: block;
+  width: 100%;
+  max-width: 560px;
+  height: 352px;
+}
+
 .page-body {
   color: var(--text-secondary);
   font-size: 17px;
