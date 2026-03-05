@@ -1,0 +1,19 @@
+# Band members for the About page. Add a photo in images/members/ (e.g. maria.jpg)
+# and set image to the filename or path relative to images/ (e.g. "members/maria.jpg").
+members:
+  - name: "Maria Shell"
+    role: "Vocals, Orchestrations, Songwriter, Producer"
+    image: "members/maria.jpg"
+
+  - name: "Alexander Ponomarev"
+    role: "Drums, Growls, Mixing, Music Co-Writer"
+    image: "members/alex.jpg"
+
+  - name: "Boris Gut"
+    role: "Bass, Growls"
+    image: "members/boris.jpg"
+
+  - name: "Serge Melnikov"
+    role: "Guitar"
+    image: "members/serge.jpg"
+

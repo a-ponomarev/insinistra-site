@@ -133,6 +133,33 @@ def load_albums() -> list[dict]:
     return sorted(items, key=lambda a: a.get("date") or "", reverse=True)
 
 
+def load_band_members(image_assets: list[dict]) -> list[dict]:
+    """Load band members from YAML and resolve image URLs from image_assets."""
+    path = CONTENT_DIR / "band-members.yaml"
+    if not path.exists():
+        return []
+    data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    members = data.get("members", data) if isinstance(data, dict) else data
+    if not isinstance(members, list):
+        return []
+    # Build lookup: asset name (e.g. "members/maria.jpg") -> thumb/resized URLs
+    # Use lowercase keys so "members/maria.JPG" on disk matches "members/maria.jpg" in YAML
+    asset_by_name = {}
+    for a in image_assets:
+        key = a.get("name", "").replace("\\", "/").lower()
+        asset_by_name[key] = a
+    for m in members:
+        img = (m.get("image") or "").strip().replace("\\", "/").lower()
+        m["image_thumb"] = None
+        m["image_resized"] = None
+        if img:
+            a = asset_by_name.get(img)
+            if a:
+                m["image_thumb"] = a.get("thumb")
+                m["image_resized"] = a.get("resized")
+    return members
+
+
 def process_images(src_dir: Path, dist_dir: Path, url_prefix: str) -> list[dict]:
     """
     Copy originals and create resized + thumbnail versions from src_dir into dist_dir.
@@ -244,7 +271,8 @@ def main() -> None:
 
     # Process images (banner, artwork, etc.)
     print("  Processing images...")
-    process_images(IMAGES_DIR, DIST_DIR / "images", "images")
+    image_assets = process_images(IMAGES_DIR, DIST_DIR / "images", "images")
+    band_members = load_band_members(image_assets)
 
     common = {"nav_pages": pages, "current_year": datetime.now().year}
     subdir_common = {**common, "base": ".."}
@@ -274,11 +302,18 @@ def main() -> None:
         print(f"  Writing {slug}/index.html...")
         out_dir = DIST_DIR / slug
         out_dir.mkdir(parents=True, exist_ok=True)
-        template_page = env.get_template("page.html")
-        (out_dir / "index.html").write_text(
-            template_page.render(page=page, **subdir_common),
-            encoding="utf-8",
-        )
+        if slug == "about" and band_members:
+            template_about = env.get_template("about.html")
+            (out_dir / "index.html").write_text(
+                template_about.render(page=page, band_members=band_members, **subdir_common),
+                encoding="utf-8",
+            )
+        else:
+            template_page = env.get_template("page.html")
+            (out_dir / "index.html").write_text(
+                template_page.render(page=page, **subdir_common),
+                encoding="utf-8",
+            )
 
     # Shows page (past and upcoming, latest first)
     print("  Writing shows/index.html...")

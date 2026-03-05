@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page.title }}{% endblock %}
+
+{% block content %}
+<article class="page page-about">
+    <h1>{{ page.title }}</h1>
+    <div class="page-body">
+        {{ page.content_html | safe }}
+    </div>
+
+    {% if band_members %}
+    <section class="band-members" aria-label="Band members">
+        <h2 class="band-members-title">Band members</h2>
+        <ul class="band-members-grid">
+            {% for member in band_members %}
+            <li class="band-member">
+                <div class="band-member-photo">
+                    {% if member.image_thumb %}
+                    <img src="{{ base }}/{{ member.image_thumb }}" alt="{{ member.name }}" loading="lazy">
+                    {% else %}
+                    <span class="band-member-placeholder" aria-hidden="true">{% set parts = member.name.split() %}{{ parts[0][0] if parts else '?' }}{{ parts[1][0] if parts|length > 1 else '' }}</span>
+                    {% endif %}
+                </div>
+                <div class="band-member-info">
+                    <span class="band-member-name">{{ member.name }}</span>
+                    <span class="band-member-role">{{ member.role }}</span>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %}
+</article>
+{% endblock %}
