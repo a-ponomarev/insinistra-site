@@ -133,6 +133,7 @@ def load_albums() -> list[dict]:
 def process_images(src_dir: Path, dist_dir: Path, url_prefix: str) -> list[dict]:
     """
     Copy originals and create resized + thumbnail versions from src_dir into dist_dir.
+    Skips any image whose target files already exist (already compressed last run).
     Returns list of asset info dicts (used for gallery rendering).
     """
     if not src_dir.exists():
@@ -151,16 +152,32 @@ def process_images(src_dir: Path, dist_dir: Path, url_prefix: str) -> list[dict]
         rel = path.relative_to(src_dir)
         name = path.name
         base = path.stem
-
         subdir = rel.parent
+
+        resized_name = f"{base}-1600.jpg"
+        thumb_name = f"{base}-thumb.jpg"
+        orig_dest = dist_dir / "original" / subdir / name
+        resized_dest = dist_dir / "1600" / subdir / resized_name
+        thumb_dest = dist_dir / "thumb" / subdir / thumb_name
+
+        orig_url = f"{url_prefix}/original/{rel.as_posix()}"
+        resized_url = f"{url_prefix}/1600/{(subdir / resized_name).as_posix()}"
+        thumb_url = f"{url_prefix}/thumb/{(subdir / thumb_name).as_posix()}"
+
+        if orig_dest.exists() and resized_dest.exists() and thumb_dest.exists():
+            assets.append({
+                "original": orig_url,
+                "resized": resized_url,
+                "thumb": thumb_url,
+                "name": str(rel),
+            })
+            continue
+
         (dist_dir / "original" / subdir).mkdir(parents=True, exist_ok=True)
         (dist_dir / "1600" / subdir).mkdir(parents=True, exist_ok=True)
         (dist_dir / "thumb" / subdir).mkdir(parents=True, exist_ok=True)
 
-        shutil.copy2(path, dist_dir / "original" / subdir / name)
-        orig_url = f"{url_prefix}/original/{rel.as_posix()}"
-        resized_url = orig_url
-        thumb_url = orig_url
+        shutil.copy2(path, orig_dest)
 
         try:
             with Image.open(path) as img:
@@ -173,17 +190,13 @@ def process_images(src_dir: Path, dist_dir: Path, url_prefix: str) -> list[dict]
                     resized = img.resize((RESIZED_WIDTH, int(h * RESIZED_WIDTH / w)), Image.Resampling.LANCZOS)
                 else:
                     resized = img
-                resized_name = f"{base}-1600.jpg"
-                resized.save(dist_dir / "1600" / subdir / resized_name, "JPEG", quality=88)
-                resized_url = f"{url_prefix}/1600/{(subdir / resized_name).as_posix()}"
+                resized.save(resized_dest, "JPEG", quality=88)
 
                 if w > THUMB_WIDTH:
                     thumb = img.resize((THUMB_WIDTH, int(h * THUMB_WIDTH / w)), Image.Resampling.LANCZOS)
                 else:
                     thumb = img
-                thumb_name = f"{base}-thumb.jpg"
-                thumb.save(dist_dir / "thumb" / subdir / thumb_name, "JPEG", quality=85)
-                thumb_url = f"{url_prefix}/thumb/{(subdir / thumb_name).as_posix()}"
+                thumb.save(thumb_dest, "JPEG", quality=85)
         except Exception as e:
             print(f"  Warning: could not process {name}: {e}")
 
@@ -199,10 +212,15 @@ def process_images(src_dir: Path, dist_dir: Path, url_prefix: str) -> list[dict]
 
 def main() -> None:
     print("Building band site...")
-    # Recreate dist
+    # Recreate dist but keep photos/ and images/ (skip re-compressing existing outputs)
+    DIST_DIR.mkdir(parents=True, exist_ok=True)
     if DIST_DIR.exists():
-        shutil.rmtree(DIST_DIR)
-    DIST_DIR.mkdir(parents=True)
+        for item in DIST_DIR.iterdir():
+            if item.name not in ("photos", "images"):
+                if item.is_file():
+                    item.unlink()
+                else:
+                    shutil.rmtree(item)
 
     env = Environment(loader=FileSystemLoader(str(TEMPLATES_DIR)))
 
