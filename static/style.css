@@ -601,15 +601,10 @@ h3 {
 /* Shows page sections */
 .shows-section {
   padding: 64px 0;
-  border-bottom: 1px solid var(--border);
-}
-
-.shows-section:last-child {
-  border-bottom: none;
 }
 
 .shows-section h2 {
-  margin-bottom: 0;
+  margin-bottom: 32px;
 }
 
 /* ─── Photo grid ─────────────────────────────────────────── */

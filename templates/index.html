@@ -46,19 +46,7 @@
     <div class="layout">
         <span class="section-label">Live</span>
         <h2>Upcoming Shows</h2>
-        <ul class="concert-list">
-            {% for c in concerts %}
-            <li>
-                <span class="col-date">{{ c.date_display }}</span>
-                <span class="col-city">{{ c.location if c.location else '' }}</span>
-                <span class="col-venue">{{ c.venue if c.location and c.location|upper != 'TBA' else '' }}</span>
-                <span class="col-links">
-                    {% if c.tickets %}<a href="{{ c.tickets }}" target="_blank" rel="noopener">Tickets</a>{% endif %}
-                    {% if c.facebook %}<a href="{{ c.facebook }}" target="_blank" rel="noopener">Facebook</a>{% endif %}
-                </span>
-            </li>
-            {% endfor %}
-        </ul>
+        {% set shows = concerts %}{% include "partials/concert_list.html" %}
         <p class="section-link"><a href="{% if base %}{{ base }}/{% endif %}shows/index.html" class="btn">All Shows</a></p>
     </div>
 </section>

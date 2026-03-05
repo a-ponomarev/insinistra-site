@@ -5,22 +5,9 @@
 {% block content %}
 <article class="page">
     <section class="shows-section">
-        <h1>Upcoming Shows</h1>
+        <h2>Upcoming Shows</h2>
         {% if upcoming_shows %}
-        <ul class="concert-list">
-            {% for c in upcoming_shows %}
-            <li>
-                <span class="col-date">{{ c.date_display }}</span>
-                <span class="col-city">{{ c.location if c.location else '' }}</span>
-                <span class="col-venue">{{ c.venue if c.location and c.location|upper != 'TBA' else '' }}</span>
-                <span class="col-comment">{{ c.comment if c.get('comment') else '' }}</span>
-                <span class="col-links">
-                    <a href="{{ c.tickets or '#' }}" target="_blank" rel="noopener" class="{% if not c.tickets %}is-hidden{% endif %}">Tickets</a>
-                    <a href="{{ c.facebook or '#' }}" target="_blank" rel="noopener" class="{% if not c.facebook %}is-hidden{% endif %}">Facebook</a>
-                </span>
-            </li>
-            {% endfor %}
-        </ul>
+        {% set shows = upcoming_shows %}{% include "partials/concert_list.html" %}
         {% else %}
         <p class="page-body">No upcoming shows.</p>
         {% endif %}
@@ -29,20 +16,7 @@
     <section class="shows-section">
         <h2>Past Shows</h2>
         {% if past_shows %}
-        <ul class="concert-list">
-            {% for c in past_shows %}
-            <li>
-                <span class="col-date">{{ c.date_display }}</span>
-                <span class="col-city">{{ c.location if c.location else '' }}</span>
-                <span class="col-venue">{{ c.venue if c.location and c.location|upper != 'TBA' else '' }}</span>
-                <span class="col-comment">{{ c.comment if c.get('comment') else '' }}</span>
-                <span class="col-links">
-                    <a href="{{ c.tickets or '#' }}" target="_blank" rel="noopener" class="{% if not c.tickets %}is-hidden{% endif %}">Tickets</a>
-                    <a href="{{ c.facebook or '#' }}" target="_blank" rel="noopener" class="{% if not c.facebook %}is-hidden{% endif %}">Facebook</a>
-                </span>
-            </li>
-            {% endfor %}
-        </ul>
+        {% set shows = past_shows %}{% include "partials/concert_list.html" %}
         {% else %}
         <p class="page-body">No past shows.</p>
         {% endif %}

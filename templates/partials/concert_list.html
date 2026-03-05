@@ -1,0 +1,15 @@
+{# Shared concert list markup — used by index.html (Upcoming Shows) and concerts.html (Upcoming + Past). Keep in sync. #}
+<ul class="concert-list">
+    {% for c in shows %}
+    <li>
+        <span class="col-date">{{ c.date_display }}</span>
+        <span class="col-city">{{ c.location if c.location else '' }}</span>
+        <span class="col-venue">{{ c.venue if c.location and c.location|upper != 'TBA' else '' }}</span>
+        <span class="col-comment">{{ c.comment if c.get('comment') else '' }}</span>
+        <span class="col-links">
+            <a href="{{ c.tickets or '#' }}" target="_blank" rel="noopener" class="{% if not c.tickets %}is-hidden{% endif %}">Tickets</a>
+            <a href="{{ c.facebook or '#' }}" target="_blank" rel="noopener" class="{% if not c.facebook %}is-hidden{% endif %}">Facebook</a>
+        </span>
+    </li>
+    {% endfor %}
+</ul>
