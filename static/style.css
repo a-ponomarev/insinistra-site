@@ -20,6 +20,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 80px;
 }
 
 body {
@@ -104,6 +105,7 @@ a:hover {
   background: transparent;
   border-bottom: 1px solid transparent;
   padding: 18px 0;
+  padding-top: calc(18px + env(safe-area-inset-top, 0));
   transition: background 220ms ease, border-color 220ms ease, padding 220ms ease;
 }
 
@@ -162,11 +164,57 @@ a:hover {
   color: var(--text-primary);
 }
 
+/* Hamburger: hidden on desktop */
+.nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nav-toggle-bar {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--text-secondary);
+  transition: background 150ms ease, transform 220ms ease;
+}
+
+.nav-toggle:hover .nav-toggle-bar,
+.nav-toggle[aria-expanded="true"] .nav-toggle-bar {
+  background: var(--text-primary);
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(2) {
+  opacity: 0;
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+.nav-overlay {
+  display: contents;
+}
+
 /* ─── Hero (homepage) ────────────────────────────────────── */
 
 .hero {
   position: relative;
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   align-items: stretch;
   justify-content: center;
@@ -269,14 +317,14 @@ h1, h2, h3 {
 }
 
 h1 {
-  font-size: 60px;
+  font-size: clamp(1.75rem, 5vw, 60px);
   font-weight: 700;
   letter-spacing: 0.04em;
   margin: 0 0 24px;
 }
 
 h2 {
-  font-size: 36px;
+  font-size: clamp(1.375rem, 3.5vw, 36px);
   font-weight: 400;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -648,6 +696,11 @@ h3 {
   background: var(--bg-primary);
   border-top: 1px solid var(--border);
   padding: 56px 32px 40px;
+  padding-bottom: calc(40px + env(safe-area-inset-bottom, 0));
+}
+
+.footer-social-mobile {
+  display: none;
 }
 
 .footer-inner {
@@ -708,10 +761,119 @@ h3 {
   }
 }
 
-@media (max-width: 860px) {
-  h1 { font-size: 42px; }
-  h2 { font-size: 28px; }
+/* Mobile: hide sidebar, show footer social, hamburger nav */
+@media (max-width: 768px) {
+  body {
+    padding-left: 0;
+  }
 
+  .social-sidebar {
+    display: none;
+  }
+
+  .footer-social-mobile {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+  }
+
+  .footer-social-mobile a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 48px;
+    min-height: 48px;
+    padding: 12px;
+    color: var(--text-secondary);
+    transition: color 150ms ease;
+  }
+
+  .footer-social-mobile a:hover {
+    color: var(--accent);
+  }
+
+  .footer-social-mobile svg {
+    display: block;
+    width: 22px;
+    height: 22px;
+  }
+
+  .site-header .layout {
+    position: relative;
+    z-index: 101;
+  }
+
+  .nav-toggle {
+    display: flex;
+    position: relative;
+    z-index: 102;
+  }
+
+  .nav-overlay {
+    display: block;
+    position: fixed;
+    pointer-events: none;
+    inset: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 99;
+    background: rgba(11, 10, 15, 0.98);
+    padding: 80px 24px 24px;
+    padding-top: calc(80px + env(safe-area-inset-top, 0));
+    padding-bottom: calc(24px + env(safe-area-inset-bottom, 0));
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 220ms ease, visibility 220ms ease;
+  }
+
+  .nav-overlay.nav-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .nav-overlay .nav {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .nav-overlay .nav a {
+    display: block;
+    padding: 16px 0;
+    min-height: 48px;
+    font-size: 14px;
+    letter-spacing: 0.12em;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-secondary);
+  }
+
+  .nav-overlay .nav a:last-child {
+    border-bottom: none;
+  }
+
+  .nav-overlay .nav a:hover {
+    color: var(--text-primary);
+  }
+
+  .site-banner {
+    height: min(280px, 40vh);
+  }
+
+  .section {
+    padding: 64px 0;
+  }
+
+  .page {
+    padding: 64px 20px;
+  }
+}
+
+@media (max-width: 860px) {
   .layout {
     padding-left: 20px;
     padding-right: 20px;
@@ -774,45 +936,85 @@ h3 {
 
   .site-footer {
     padding: 40px 20px 32px;
+    padding-bottom: calc(32px + env(safe-area-inset-bottom, 0));
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    padding: 48px 0;
+  }
+
+  .page {
+    padding: 48px 20px;
+  }
+
+  .site-banner {
+    height: min(240px, 38vh);
+  }
+
+  .hero-inner {
+    padding: 24px 16px 40px;
+  }
+
+  .hero-logo {
+    width: min(260px, 80vw);
   }
 }
 
 @media (max-width: 560px) {
-  body {
-    padding-left: 48px;
+  .concert-list li {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto;
+    row-gap: 8px;
+    padding: 16px 0;
   }
 
-  .social-sidebar {
-    padding: 12px 8px;
-    gap: 16px;
+  .concert-list .col-date {
+    grid-row: 2;
   }
 
-  .social-sidebar svg {
-    width: 18px;
-    height: 18px;
+  .concert-list .col-city {
+    grid-row: 1;
   }
 
-  h1 { font-size: 32px; }
-  h2 { font-size: 22px; }
-
-  .hero-logo {
-    width: 260px;
+  .concert-list .col-comment {
+    grid-row: 3;
   }
 
-  .album-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
+  .concert-list .col-links {
+    grid-column: 1;
+    grid-row: 4;
+    justify-content: flex-start;
   }
 
-  .nav {
-    gap: 20px;
+  .concert-list .col-links a {
+    min-height: 44px;
+    padding: 10px 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  .nav a {
-    font-size: 11px;
+  .btn {
+    min-height: 48px;
+    padding: 14px 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .photo-grid {
     grid-template-columns: 1fr;
   }
+}
+
+body.nav-open {
+  overflow: hidden;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
