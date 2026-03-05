@@ -1,0 +1,11 @@
+# YouTube videos to show on the homepage (video ID from the URL)
+videos:
+  # - id: "dQw4w9WgXcQ"
+  #   title: "Optional title"
+  
+  - id: "bs17MJ8wvbc"
+  - id: "XKXn1dlZ9Qo"
+  - id: "CN79Pt1LYFg"
+  - id: "GludUtkqCmw"
+  - id: "CttQ_TKzAu4"
+  - id: "fhvlxz9U2GU"

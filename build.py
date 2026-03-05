@@ -143,6 +143,18 @@ def load_albums() -> list[dict]:
     return sorted(items, key=lambda a: a.get("date") or "", reverse=True)
 
 
+def load_videos() -> list[dict]:
+    """Load YouTube video IDs from content/videos.yaml (list of {id, title?})."""
+    path = CONTENT_DIR / "videos.yaml"
+    if not path.exists():
+        return []
+    data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    items = data.get("videos", data) if isinstance(data, dict) else data
+    if not isinstance(items, list):
+        return []
+    return [v for v in items if isinstance(v, dict) and v.get("id")]
+
+
 def load_band_members(image_assets: list[dict]) -> list[dict]:
     """Load band members from YAML and resolve image URLs from image_assets."""
     path = CONTENT_DIR / "band-members.yaml"
@@ -269,6 +281,7 @@ def main() -> None:
     pages = load_pages()
     upcoming_shows, past_shows = load_concerts()
     albums = load_albums()
+    videos = load_videos()
 
     # Copy static
     if STATIC_DIR.exists():
@@ -301,6 +314,7 @@ def main() -> None:
             albums=albums,
             featured_album=featured_album,
             albums_for_discography=albums_for_discography,
+            videos=videos[:6],
             photos=photos[:6],
         ),
         encoding="utf-8",
