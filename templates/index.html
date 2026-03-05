@@ -18,23 +18,22 @@
 
 {% block content %}
 
-{% if albums %}
-<section class="section">
+{% if featured_album %}
+<section class="section section--featured-release">
     <div class="layout">
-        <span class="section-label">Latest Release</span>
-        {% set latest = albums[0] %}
+        <span class="section-label section-label--large">{{ "Upcoming release" if featured_album.is_upcoming else "Latest release" }}</span>
         <div class="featured-release">
             <div class="featured-artwork">
-                {% if latest.artwork %}
-                <img src="{% if base %}{{ base }}/{% endif %}{{ latest.artwork }}" alt="{{ latest.title }}" loading="lazy">
+                {% if featured_album.artwork %}
+                <img src="{% if base %}{{ base }}/{% endif %}{{ featured_album.artwork }}" alt="{{ featured_album.title }}" loading="lazy">
                 {% endif %}
             </div>
             <div class="featured-info">
-                {% if latest.description %}<p class="featured-meta">{{ latest.description }}</p>{% endif %}
-                <h2 class="featured-title">{{ latest.title }}</h2>
-                {% if latest.year %}<p class="featured-meta">{{ latest.year }}</p>{% endif %}
-                {% if latest.url %}
-                <a href="{{ latest.url }}" class="btn" target="_blank" rel="noopener">Listen Now</a>
+                {% if featured_album.description %}<p class="featured-meta">{{ featured_album.description }}</p>{% endif %}
+                <h2 class="featured-title">{{ featured_album.title }}</h2>
+                {% if featured_album.year %}<p class="featured-meta">{{ featured_album.year }}</p>{% endif %}
+                {% if featured_album.url %}
+                <a href="{{ featured_album.url }}" class="btn" target="_blank" rel="noopener">Listen Now</a>
                 {% endif %}
             </div>
         </div>
@@ -71,7 +70,7 @@
         <span class="section-label">Discography</span>
         <h2>Music</h2>
         <div class="album-grid">
-            {% for album in albums[1:5] %}
+            {% for album in albums_for_discography %}
             <article class="album-card">
                 {% if album.url %}
                 <a href="{{ album.url }}" target="_blank" rel="noopener">

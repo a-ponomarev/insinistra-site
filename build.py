@@ -113,7 +113,7 @@ def load_concerts() -> tuple[list[dict], list[dict]]:
 
 
 def load_albums() -> list[dict]:
-    """Load albums from YAML, sorted by date newest first. Derives year for display."""
+    """Load albums from YAML, sorted by date newest first. Derives year and is_upcoming for display."""
     path = CONTENT_DIR / "albums.yaml"
     if not path.exists():
         return []
@@ -121,12 +121,15 @@ def load_albums() -> list[dict]:
     items = data.get("albums", data) if isinstance(data, dict) else data
     if not isinstance(items, list):
         return []
+    today = datetime.now().date()
     for a in items:
         d = a.get("date") or ""
         if isinstance(d, str) and len(d) >= 4:
             a["year"] = int(d[:4])
         else:
             a["year"] = None
+        parsed = _parse_date(d) if d else None
+        a["is_upcoming"] = parsed is not None and parsed > today
     return sorted(items, key=lambda a: a.get("date") or "", reverse=True)
 
 
@@ -248,6 +251,8 @@ def main() -> None:
 
     # Render homepage
     print("  Writing index.html...")
+    featured_album = next((a for a in albums if a.get("featured")), None)
+    albums_for_discography = [a for a in albums if not a.get("featured")][:4]
     template_index = env.get_template("index.html")
     (DIST_DIR / "index.html").write_text(
         template_index.render(
@@ -256,6 +261,8 @@ def main() -> None:
             pages=pages,
             concerts=upcoming_shows[:5],
             albums=albums,
+            featured_album=featured_album,
+            albums_for_discography=albums_for_discography,
             photos=photos[:6],
         ),
         encoding="utf-8",

@@ -40,3 +40,9 @@ albums:
     description: Single
     artwork: "images/thumb/artwork/blue-bird-thumb.jpg"
     url: "https://insinistra.bandcamp.com/album/blue-bird"
+
+  - title: "Laments And Whispers"
+    date: "2026-05-07"
+    description: EP
+    artwork: "images/thumb/artwork/laments-and-whispers-thumb.jpg"
+    featured: true
