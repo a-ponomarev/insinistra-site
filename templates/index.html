@@ -67,8 +67,8 @@
 {% if albums %}
 <section class="section">
     <div class="layout">
-        <span class="section-label">Discography</span>
-        <h2>Music</h2>
+        <span class="section-label">Music</span>
+        <h2>Discography</h2>
         <div class="album-grid">
             {% for album in albums_for_discography %}
             <article class="album-card">
@@ -102,7 +102,7 @@
     <div class="photo-grid">
         {% for photo in photos %}
         <a href="{{ photo.resized }}" class="photo-card" target="_blank" rel="noopener">
-            <img src="{{ photo.thumb }}" alt="{{ photo.name }}" loading="lazy">
+            <img src="{{ photo.resized }}" alt="{{ photo.name }}" loading="lazy">
         </a>
         {% endfor %}
     </div>
