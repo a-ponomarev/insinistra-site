@@ -94,6 +94,7 @@
             var header = document.getElementById('site-header');
             function onScroll() {
                 header.classList.toggle('scrolled', window.scrollY > 60);
+                header.classList.toggle('logo-visible', window.scrollY > 320);
             }
             window.addEventListener('scroll', onScroll, { passive: true });
             onScroll();
