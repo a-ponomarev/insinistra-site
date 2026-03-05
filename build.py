@@ -41,11 +41,21 @@ def parse_frontmatter(text: str) -> tuple[dict, str]:
         return {}, text
 
 
+def _external_links_new_tab(html: str) -> str:
+    """Add target="_blank" rel="noopener noreferrer" to external links in HTML."""
+    def repl(m):
+        tag = m.group(0)
+        if "target=" in tag:
+            return tag
+        return tag[:-1] + ' target="_blank" rel="noopener noreferrer">'
+    return re.sub(r'<a\s+[^>]*href="https?://[^"]*"[^>]*>', repl, html)
+
+
 def load_markdown_page(path: Path) -> tuple[dict, str]:
     """Load a .md file; return (frontmatter dict, html body)."""
     raw = path.read_text(encoding="utf-8")
     data, body = parse_frontmatter(raw)
-    data["content_html"] = markdown(body)
+    data["content_html"] = _external_links_new_tab(markdown(body))
     return data, data.get("title", path.stem)
 
 
