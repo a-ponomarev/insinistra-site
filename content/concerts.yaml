@@ -82,18 +82,22 @@ concerts:
   - date: "2026-05-09"
     venue: Klubovna
     location: Praha
+    comment: "with After Evolution, Sarkonia"
 
   - date: "2026-05-23"
     venue: Willax
     location: Mladá Boleslav
+    comment: "with After Evolution"
 
   - date: "2026-05-30"
     venue: M13
     location: Brno
+    comment: "with Rosa Nocturna, Stoker"
 
   - date: "2026-06-13"
     venue: Divadlo Pod Lampou
     location: Plzeň
+    comment: "with Thanallian"
 
   - date: "2026-06-27"
     venue: TBA
