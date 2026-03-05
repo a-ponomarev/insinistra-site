@@ -9,11 +9,11 @@ members:
     role: "Drums, Growls, Mixing, Music Co-Writer"
     image: "members/alex.jpg"
 
-  - name: "Boris Gut"
-    role: "Bass, Growls"
-    image: "members/boris.jpg"
-
   - name: "Serge Melnikov"
     role: "Guitar"
     image: "members/serge.jpg"
+
+  - name: "Boris Gut"
+    role: "Bass, Growls"
+    image: "members/boris.jpg"
 
