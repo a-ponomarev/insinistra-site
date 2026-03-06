@@ -5,8 +5,10 @@ Run: python build.py
 Output: dist/ (ready to deploy)
 """
 
+import json
 import re
 import shutil
+from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
 
@@ -274,6 +276,28 @@ def process_images(src_dir: Path, dist_dir: Path, url_prefix: str) -> list[dict]
     return assets
 
 
+def group_photos_by_album(photos: list[dict]) -> tuple[list[dict], list[dict]]:
+    """
+    Group flat photo list by top-level folder (album). Returns (photo_albums, all_photos_ordered).
+    photo_albums: list of {"name": "Live", "photos": [...]}; all_photos_ordered: flat list with indices.
+    """
+    by_album = defaultdict(list)
+    for p in photos:
+        name = (p.get("name") or "").replace("\\", "/")
+        album_key = name.split("/")[0] if "/" in name else "Photos"
+        by_album[album_key].append(p)
+    photo_albums = [{"name": k, "photos": v} for k, v in sorted(by_album.items())]
+    # Assign global index to each photo (for lightbox navigation)
+    idx = 0
+    all_photos_ordered = []
+    for album in photo_albums:
+        for p in album["photos"]:
+            p["index"] = idx
+            all_photos_ordered.append(p)
+            idx += 1
+    return photo_albums, all_photos_ordered
+
+
 def main() -> None:
     print("Building band site...")
     # Recreate dist but keep photos/ and images/ (skip re-compressing existing outputs)
@@ -287,6 +311,7 @@ def main() -> None:
                     shutil.rmtree(item)
 
     env = Environment(loader=FileSystemLoader(str(TEMPLATES_DIR)))
+    env.filters["tojson"] = lambda v: json.dumps(v)
 
     # Load data
     print("  Loading content...")
@@ -303,6 +328,7 @@ def main() -> None:
     # Process photos (gallery)
     print("  Processing photos...")
     photos = process_images(PHOTOS_DIR, DIST_DIR / "photos", "photos")
+    photo_albums, all_photos_ordered = group_photos_by_album(photos)
 
     # Process images (banner, artwork, etc.)
     print("  Processing images...")
@@ -328,7 +354,8 @@ def main() -> None:
             featured_album=featured_album,
             albums_for_discography=albums_for_discography,
             videos=videos[:6],
-            photos=photos[:6],
+            photo_albums=photo_albums,
+            all_photos_ordered=all_photos_ordered,
         ),
         encoding="utf-8",
     )
@@ -367,6 +394,19 @@ def main() -> None:
     template_albums = env.get_template("albums.html")
     (DIST_DIR / "albums" / "index.html").write_text(
         template_albums.render(albums=albums, **subdir_common),
+        encoding="utf-8",
+    )
+
+    # Photos page (full gallery)
+    print("  Writing photos/index.html...")
+    (DIST_DIR / "photos").mkdir(exist_ok=True)
+    template_photos = env.get_template("photos.html")
+    (DIST_DIR / "photos" / "index.html").write_text(
+        template_photos.render(
+            photo_albums=photo_albums,
+            all_photos_ordered=all_photos_ordered,
+            **subdir_common,
+        ),
         encoding="utf-8",
     )
 

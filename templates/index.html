@@ -98,20 +98,10 @@
 </section>
 {% endif %}
 
-{% if photos %}
-<section class="section">
-    <div class="layout">
-        <span class="section-label">Photos</span>
-        <h2>Gallery</h2>
-    </div>
-    <div class="photo-grid">
-        {% for photo in photos %}
-        <a href="{{ photo.resized }}" class="photo-card" target="_blank" rel="noopener">
-            <img src="{{ photo.resized }}" alt="{{ photo.name }}" loading="lazy">
-        </a>
-        {% endfor %}
-    </div>
-</section>
+{% if photo_albums %}
+{% set gallery_limit = 6 %}
+{% set more_photos_url = "photos/index.html" %}
+{% include "partials/gallery.html" with context %}
 {% endif %}
 
 {% endblock %}

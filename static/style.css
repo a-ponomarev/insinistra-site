@@ -668,6 +668,161 @@ h3 {
   filter: brightness(1);
 }
 
+/* Gallery albums (nested folders) */
+.section--gallery .gallery-album {
+  padding-top: 24px;
+  padding-bottom: 16px;
+}
+
+.section--gallery .gallery-album:first-of-type {
+  padding-top: 0;
+}
+
+.gallery-album-title {
+  font-family: Cinzel, serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 16px;
+  letter-spacing: 0.02em;
+}
+
+/* Lightbox */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.lightbox[hidden] {
+  display: none;
+}
+
+body.lightbox-open {
+  overflow: hidden;
+}
+
+.lightbox-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(11, 10, 15, 0.95);
+  cursor: pointer;
+}
+
+.lightbox-content {
+  position: relative;
+  z-index: 1;
+  max-width: 100%;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-img {
+  max-width: 100%;
+  max-height: calc(100vh - 120px);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  border-radius: 4px;
+  box-shadow: 0 8px 48px rgba(0, 0, 0, 0.6);
+}
+
+.lightbox-close {
+  position: absolute;
+  top: -48px;
+  right: 0;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 32px;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: color 150ms ease, background 150ms ease;
+}
+
+.lightbox-close:hover {
+  color: var(--accent);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.lightbox-prev,
+.lightbox-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: none;
+  background: rgba(24, 21, 32, 0.9);
+  color: var(--text-primary);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 50%;
+  border: 1px solid var(--border-light);
+  transition: color 150ms ease, background 150ms ease, border-color 150ms ease;
+}
+
+.lightbox-prev:hover,
+.lightbox-next:hover {
+  color: var(--accent);
+  background: var(--bg-card);
+  border-color: var(--accent);
+}
+
+.lightbox-prev {
+  left: -56px;
+}
+
+.lightbox-next {
+  right: -56px;
+}
+
+@media (max-width: 900px) {
+  .lightbox-prev {
+    left: 8px;
+  }
+  .lightbox-next {
+    right: 8px;
+  }
+  .lightbox-close {
+    top: 8px;
+    right: 8px;
+  }
+}
+
+.lightbox-caption {
+  margin: 16px 0 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-align: center;
+  max-width: 600px;
+}
+
+/* Photo card as button (gallery thumb) */
+.gallery-thumb {
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+}
+
 /* ─── Page content ───────────────────────────────────────── */
 
 .page {
