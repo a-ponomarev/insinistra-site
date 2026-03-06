@@ -34,7 +34,6 @@
         <button type="button" class="lightbox-prev" id="lightbox-prev" aria-label="Previous photo">&larr;</button>
         <img class="lightbox-img" id="lightbox-img" src="" alt="">
         <button type="button" class="lightbox-next" id="lightbox-next" aria-label="Next photo">&rarr;</button>
-        <p class="lightbox-caption" id="lightbox-caption"></p>
     </div>
 </div>
 <script type="application/json" id="gallery-photos">{{ all_photos_ordered | tojson }}</script>
@@ -49,7 +48,6 @@
     var lightbox = document.getElementById('gallery-lightbox');
     var overlay = document.getElementById('lightbox-overlay');
     var img = document.getElementById('lightbox-img');
-    var caption = document.getElementById('lightbox-caption');
     var closeBtn = document.getElementById('lightbox-close');
     var prevBtn = document.getElementById('lightbox-prev');
     var nextBtn = document.getElementById('lightbox-next');
@@ -62,7 +60,6 @@
         if (p) {
             img.src = base ? base + p.resized : p.resized;
             img.alt = p.name || '';
-            caption.textContent = p.name || '';
         }
     }
     function openLightbox(index) {

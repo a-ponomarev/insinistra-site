@@ -724,7 +724,41 @@ body.lightbox-open {
   justify-content: center;
 }
 
+/* Gradient overlays on photo when hovering prev/next arrows */
+.lightbox-content::before,
+.lightbox-content::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 140px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 200ms ease;
+  z-index: 1;
+}
+
+.lightbox-content::before {
+  left: 0;
+  background: linear-gradient(to right, rgba(11, 10, 15, 0.75), transparent);
+}
+
+.lightbox-content::after {
+  right: 0;
+  background: linear-gradient(to left, rgba(11, 10, 15, 0.75), transparent);
+}
+
+.lightbox-content:has(.lightbox-prev:hover)::before {
+  opacity: 1;
+}
+
+.lightbox-content:has(.lightbox-next:hover)::after {
+  opacity: 1;
+}
+
 .lightbox-img {
+  position: relative;
+  z-index: 0;
   max-width: 100%;
   max-height: calc(100vh - 120px);
   width: auto;
@@ -766,29 +800,26 @@ body.lightbox-open {
   height: 48px;
   padding: 0;
   border: none;
-  background: rgba(24, 21, 32, 0.9);
+  background: transparent;
   color: var(--text-primary);
-  font-size: 24px;
+  font-size: 28px;
   line-height: 1;
   cursor: pointer;
-  border-radius: 50%;
-  border: 1px solid var(--border-light);
-  transition: color 150ms ease, background 150ms ease, border-color 150ms ease;
+  transition: color 150ms ease;
+  z-index: 2;
 }
 
 .lightbox-prev:hover,
 .lightbox-next:hover {
   color: var(--accent);
-  background: var(--bg-card);
-  border-color: var(--accent);
 }
 
 .lightbox-prev {
-  left: -56px;
+  left: 16px;
 }
 
 .lightbox-next {
-  right: -56px;
+  right: 16px;
 }
 
 @media (max-width: 900px) {
@@ -802,14 +833,6 @@ body.lightbox-open {
     top: 8px;
     right: 8px;
   }
-}
-
-.lightbox-caption {
-  margin: 16px 0 0;
-  font-size: 14px;
-  color: var(--text-secondary);
-  text-align: center;
-  max-width: 600px;
 }
 
 /* Photo card as button (gallery thumb) */
