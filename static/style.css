@@ -823,6 +823,57 @@ h3 {
   text-transform: uppercase;
 }
 
+/* ─── Reviews / citations (About page) ───────────────────── */
+
+.reviews {
+  margin-top: 64px;
+  padding-top: 48px;
+  border-top: 1px solid var(--border);
+}
+
+.reviews-title {
+  font-family: Cinzel, serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 32px;
+  letter-spacing: 0.04em;
+}
+
+.reviews-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.review-item {
+  margin: 0;
+}
+
+.review-quote {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.review-text {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  margin: 0 0 8px;
+  font-style: italic;
+}
+
+.review-source {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-style: normal;
+  letter-spacing: 0.04em;
+}
+
 /* ─── Section link ───────────────────────────────────────── */
 
 .section-link {

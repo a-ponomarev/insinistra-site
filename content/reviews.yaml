@@ -1,0 +1,11 @@
+# Short review citations for the About page (shown after band members).
+# Add text and optional source (publication, author, or venue).
+reviews:
+  - text: "By miles, the most gripping and entertaining work of symphonic metal that I've heard in years!"
+    source: "Head-banger reviews"
+  - text: "Insinistra shows off a promising young band that grasps what makes this genre work"
+    source: "Metalcrypt"
+  - text: "Great sounding songs with tons of progressive elements, a powerful blend of Western and Eastern vibes, great dynamics and catchy melodies."
+    source: "Metalhead Community Magazine"
+  - text: "Vocals sounded great – very charismatic and loved the melodies. Instrumental was very competent for the genre."
+    source: "Headbangerz Club"

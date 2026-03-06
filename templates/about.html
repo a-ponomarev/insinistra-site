@@ -31,5 +31,22 @@
         </ul>
     </section>
     {% endif %}
+
+    {% if reviews %}
+    <section class="reviews" aria-label="Reviews and citations">
+        <ul class="reviews-list">
+            {% for review in reviews %}
+            <li class="review-item">
+                <blockquote class="review-quote">
+                    <p class="review-text">"{{ review.text }}"</p>
+                    {% if review.source %}
+                    <footer class="review-source">— {{ review.source }}</footer>
+                    {% endif %}
+                </blockquote>
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %}
 </article>
 {% endblock %}

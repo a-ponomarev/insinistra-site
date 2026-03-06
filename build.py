@@ -182,6 +182,18 @@ def load_band_members(image_assets: list[dict]) -> list[dict]:
     return members
 
 
+def load_reviews() -> list[dict]:
+    """Load short review citations from YAML for the About page."""
+    path = CONTENT_DIR / "reviews.yaml"
+    if not path.exists():
+        return []
+    data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    reviews = data.get("reviews", data) if isinstance(data, dict) else data
+    if not isinstance(reviews, list):
+        return []
+    return [r for r in reviews if isinstance(r, dict) and r.get("text")]
+
+
 def process_images(src_dir: Path, dist_dir: Path, url_prefix: str) -> list[dict]:
     """
     Copy originals and create resized + thumbnail versions from src_dir into dist_dir.
@@ -296,6 +308,7 @@ def main() -> None:
     print("  Processing images...")
     image_assets = process_images(IMAGES_DIR, DIST_DIR / "images", "images")
     band_members = load_band_members(image_assets)
+    reviews = load_reviews()
 
     common = {"nav_pages": pages, "current_year": datetime.now().year}
     subdir_common = {**common, "base": ".."}
@@ -326,10 +339,10 @@ def main() -> None:
         print(f"  Writing {slug}/index.html...")
         out_dir = DIST_DIR / slug
         out_dir.mkdir(parents=True, exist_ok=True)
-        if slug == "about" and band_members:
+        if slug == "about":
             template_about = env.get_template("about.html")
             (out_dir / "index.html").write_text(
-                template_about.render(page=page, band_members=band_members, **subdir_common),
+                template_about.render(page=page, band_members=band_members, reviews=reviews, **subdir_common),
                 encoding="utf-8",
             )
         else:
