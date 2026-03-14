@@ -272,6 +272,15 @@ a:hover {
   opacity: 0.96;
 }
 
+@media (min-width: 769px) {
+  .hero.hero--desktop {
+    background-position: center -15px;
+  }
+  .hero-logo-wrap {
+    margin-top: -30px;
+  }
+}
+
 .hero-cta {
   flex-shrink: 0;
   display: flex;
@@ -280,7 +289,7 @@ a:hover {
   justify-content: center;
 }
 
-/* Mobile hero (promo image + gradients); shown only at 768px and below */
+/* Mobile hero (promo image + gradients); shown only at 740px and below */
 .hero-mobile {
   display: none;
   position: relative;
@@ -1215,7 +1224,7 @@ body.lightbox-open {
 }
 
 /* Mobile: hide sidebar, show footer social, hamburger nav */
-@media (max-width: 768px) {
+@media (max-width: 740px) {
   body {
     padding-left: 0;
   }
