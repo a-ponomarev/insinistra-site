@@ -300,6 +300,23 @@ a:hover {
   overflow: hidden;
 }
 
+/* Same bottom viewport gradient as desktop hero */
+.hero-mobile::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.6) 0%,
+    rgba(0, 0, 0, 0.2) 30%,
+    rgba(0, 0, 0, 0.15) 50%,
+    rgba(0, 0, 0, 0.5) 85%,
+    rgba(0, 0, 0, 0.78) 100%
+  );
+}
+
 .hero-mobile__media {
   position: absolute;
   top: 0;
