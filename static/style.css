@@ -642,7 +642,7 @@ h3 {
 
 .concert-list li {
   display: grid;
-  grid-template-columns: 11ch 16ch 16ch auto auto;
+  grid-template-columns: 8ch 12ch 16ch auto auto;
   gap: 0 32px;
   align-items: center;
   padding: 15px 0;
