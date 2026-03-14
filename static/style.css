@@ -397,14 +397,17 @@ a:hover {
   height: 320px;
   overflow: hidden;
   background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .banner-img {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: center 30%;
+  object-fit: contain;
+  object-position: center center;
 }
 
 .site-banner::after {
@@ -1356,7 +1359,7 @@ body.lightbox-open {
   }
 
   .site-banner {
-    height: min(280px, 40vh);
+    height: 280px;
   }
 
   .section {
@@ -1451,6 +1454,12 @@ body.lightbox-open {
   }
 }
 
+@media (max-width: 576px) {
+  .site-banner {
+    display: none;
+  }
+}
+
 @media (max-width: 480px) {
   .section {
     padding: 48px 0;
@@ -1461,7 +1470,7 @@ body.lightbox-open {
   }
 
   .site-banner {
-    height: min(240px, 38vh);
+    height: 240px;
   }
 
   .hero-inner {
