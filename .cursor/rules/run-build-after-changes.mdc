@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Run build after changes
 
-After any edit or change to this project (templates, content, static files, or build script), run the site build:
+After any edit, change, or **undo** (reverted edits) in this project (templates, content, static files, or build script), run the site build:
 
 ```bash
 python build.py
@@ -13,4 +13,4 @@ python build.py
 
 Run this from the project root (`c:\git\insinistra-site`). The build outputs to `dist/`.
 
-Do not skip this step after changes unless the user explicitly asks to skip it.
+Do not skip this step after changes or undos unless the user explicitly asks to skip it.
