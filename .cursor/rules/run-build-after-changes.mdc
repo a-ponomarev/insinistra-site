@@ -1,0 +1,16 @@
+---
+description: Run the static site build after making changes to the project
+alwaysApply: true
+---
+
+# Run build after changes
+
+After any edit or change to this project (templates, content, static files, or build script), run the site build:
+
+```bash
+python build.py
+```
+
+Run this from the project root (`c:\git\insinistra-site`). The build outputs to `dist/`.
+
+Do not skip this step after changes unless the user explicitly asks to skip it.
