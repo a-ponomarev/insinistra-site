@@ -668,6 +668,10 @@ h3 {
   letter-spacing: 0.03em;
 }
 
+.concert-list .col-city-venue {
+  display: contents;
+}
+
 .concert-list .col-venue {
   color: var(--text-secondary);
   font-size: 14px;
@@ -1401,13 +1405,22 @@ body.lightbox-open {
     font-size: 12px;
   }
 
-  .concert-list .col-city {
+  .concert-list .col-city-venue {
+    display: block;
     grid-column: 1;
     grid-row: 1;
   }
 
-  .concert-list .col-venue {
-    display: none;
+  .concert-list .col-city-venue .col-city {
+    display: inline;
+  }
+
+  .concert-list .col-city-venue .col-venue {
+    display: inline;
+  }
+
+  .concert-list .col-city-venue .col-venue:not(:empty)::before {
+    content: " · ";
   }
 
   .concert-list .col-comment {

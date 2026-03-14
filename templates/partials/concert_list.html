@@ -3,8 +3,10 @@
     {% for c in shows %}
     <li>
         <span class="col-date">{{ c.date_display }}</span>
-        <span class="col-city">{{ c.location if c.location else '' }}</span>
-        <span class="col-venue">{{ c.venue if c.location and c.location|upper != 'TBA' else '' }}</span>
+        <span class="col-city-venue">
+            <span class="col-city">{{ c.location if c.location else '' }}</span>
+            <span class="col-venue">{{ c.venue if c.location and c.location|upper != 'TBA' else '' }}</span>
+        </span>
         <span class="col-comment">{{ c.comment if c.get('comment') else '' }}</span>
         <span class="col-links">
             <a href="{{ c.tickets or '#' }}" target="_blank" rel="noopener" class="{% if not c.tickets %}is-hidden{% endif %}">Tickets</a>
