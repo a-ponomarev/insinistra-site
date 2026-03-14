@@ -1454,7 +1454,7 @@ body.lightbox-open {
   }
 }
 
-@media (max-width: 576px) {
+@media (max-width: {{ BANNER_BREAKPOINT }}px) {
   .site-banner {
     display: none;
   }

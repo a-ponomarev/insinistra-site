@@ -13,7 +13,7 @@ from datetime import datetime
 from pathlib import Path
 
 import yaml
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import Environment, FileSystemLoader, Template
 from markdown import markdown
 from PIL import Image
 
@@ -29,6 +29,11 @@ DIST_DIR = ROOT / "dist"
 # Image sizes
 RESIZED_WIDTH = 1600
 THUMB_WIDTH = 400
+
+# Banner: fixed height in CSS (px); hide below viewport width = banner_display_width + sidebar
+BANNER_CSS_HEIGHT_PX = 320
+SOCIAL_SIDEBAR_WIDTH_PX = 56  # body padding-left reserved for .social-sidebar
+BANNER_HIDE_BREAKPOINT_DEFAULT = 576
 
 
 def parse_frontmatter(text: str) -> tuple[dict, str]:
@@ -298,6 +303,26 @@ def group_photos_by_album(photos: list[dict]) -> tuple[list[dict], list[dict]]:
     return photo_albums, all_photos_ordered
 
 
+def get_banner_hide_breakpoint(images_dist: Path) -> int:
+    """
+    Compute max-width breakpoint (px) below which the site banner is hidden.
+    Uses the resized banner image aspect ratio and BANNER_CSS_HEIGHT_PX so that
+    when the viewport is narrower than the banner's display width at that height,
+    the banner is hidden.
+    """
+    banner_path = images_dist / "1600" / "banner-1600.jpg"
+    if not banner_path.exists():
+        return BANNER_HIDE_BREAKPOINT_DEFAULT
+    try:
+        with Image.open(banner_path) as img:
+            w, h = img.size
+        if h <= 0:
+            return BANNER_HIDE_BREAKPOINT_DEFAULT
+        return int(BANNER_CSS_HEIGHT_PX * (w / h) + SOCIAL_SIDEBAR_WIDTH_PX)
+    except Exception:
+        return BANNER_HIDE_BREAKPOINT_DEFAULT
+
+
 def main() -> None:
     print("Building band site...")
     # Recreate dist but keep photos/ and images/ (skip re-compressing existing outputs)
@@ -320,11 +345,6 @@ def main() -> None:
     albums = load_albums()
     videos = load_videos()
 
-    # Copy static
-    if STATIC_DIR.exists():
-        print("  Copying static/...")
-        shutil.copytree(STATIC_DIR, DIST_DIR / "static")
-
     # Process photos (gallery)
     print("  Processing photos...")
     photos = process_images(PHOTOS_DIR, DIST_DIR / "photos", "photos")
@@ -335,6 +355,20 @@ def main() -> None:
     image_assets = process_images(IMAGES_DIR, DIST_DIR / "images", "images")
     band_members = load_band_members(image_assets)
     reviews = load_reviews()
+
+    # Copy static and inject build-time values (e.g. banner breakpoint) into CSS
+    if STATIC_DIR.exists():
+        print("  Copying static/...")
+        shutil.copytree(STATIC_DIR, DIST_DIR / "static")
+    banner_breakpoint = get_banner_hide_breakpoint(DIST_DIR / "images")
+    style_css = DIST_DIR / "static" / "style.css"
+    if style_css.exists():
+        style_content = style_css.read_text(encoding="utf-8")
+        if "BANNER_BREAKPOINT" in style_content:
+            style_css.write_text(
+                Template(style_content).render(BANNER_BREAKPOINT=banner_breakpoint),
+                encoding="utf-8",
+            )
 
     common = {"nav_pages": pages, "current_year": datetime.now().year}
     subdir_common = {**common, "base": ".."}
