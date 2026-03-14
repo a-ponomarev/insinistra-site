@@ -1495,7 +1495,8 @@ body.lightbox-open {
   .concert-list .col-links {
     grid-column: 1;
     grid-row: 4;
-    justify-content: flex-start;
+    justify-content: flex-end; /* with row-reverse, flex-end keeps group on the left */
+    flex-direction: row-reverse;
   }
 
   .concert-list .col-links a {
