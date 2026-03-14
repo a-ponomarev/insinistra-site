@@ -3,8 +3,26 @@
 {% block title %}Home{% endblock %}
 
 {% block hero %}
-<section class="hero" style="background-image: url('{% if base %}{{ base }}/{% endif %}images/original/hero.jpg')">
+<section class="hero hero--desktop" style="background-image: url('{% if base %}{{ base }}/{% endif %}images/original/hero.jpg')">
     <div class="hero-inner">
+        <div class="hero-logo-wrap">
+            <img src="{% if base %}{{ base }}/{% endif %}static/logo-embossed-lilac.png" alt="Insinistra" class="hero-logo">
+        </div>
+        <div class="hero-cta">
+            <a href="https://insinistra.bandcamp.com/" class="btn" target="_blank" rel="noopener">Listen Now</a>
+            <a href="{% if base %}{{ base }}/{% endif %}shows/index.html" class="btn btn-ghost">Upcoming Shows</a>
+        </div>
+    </div>
+</section>
+<section class="hero-mobile">
+    <div class="hero-mobile__media">
+        <div class="hero-mobile__media-frame">
+            <img src="{% if base %}{{ base }}/{% endif %}images/original/hero-mobile.jpg" alt="Insinistra" class="hero-mobile__img">
+            <div class="hero-mobile__gradient hero-mobile__gradient--top" aria-hidden="true"></div>
+            <div class="hero-mobile__gradient hero-mobile__gradient--bottom" aria-hidden="true"></div>
+        </div>
+    </div>
+    <div class="hero-mobile__inner">
         <div class="hero-logo-wrap">
             <img src="{% if base %}{{ base }}/{% endif %}static/logo-embossed-lilac.png" alt="Insinistra" class="hero-logo">
         </div>
