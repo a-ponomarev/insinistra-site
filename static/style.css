@@ -327,25 +327,25 @@ a:hover {
   height: 100%;
   object-fit: cover;
   object-position: center;
-}
-
-.hero-mobile__gradient {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 30%;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.hero-mobile__gradient--top {
-  top: 0;
-  background: linear-gradient(to bottom, #000 0%, #000 55%, rgba(0, 0, 0, 0) 100%);
-}
-
-.hero-mobile__gradient--bottom {
-  bottom: 0;
-  background: linear-gradient(to top, #000 0%, #000 55%, rgba(0, 0, 0, 0) 100%);
+  /* Fade into black via mask to avoid overlay seam/line artifacts */
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 18%,
+    black 52%,
+    transparent 100%
+  );
+  mask-size: 100% 100%;
+  mask-position: center;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 18%,
+    black 52%,
+    transparent 100%
+  );
+  -webkit-mask-size: 100% 100%;
+  -webkit-mask-position: center;
 }
 
 .hero-mobile__inner {
