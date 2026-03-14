@@ -7,13 +7,11 @@
             <span class="col-city">{{ c.location if c.location else '' }}</span>
             <span class="col-venue">{{ c.venue if c.location and c.location|upper != 'TBA' else '' }}</span>
         </span>
-        {% if c.get('comment') %}<span class="col-comment">{{ c.comment }}</span>{% endif %}
-        {% if c.tickets or c.facebook %}
+        <span class="col-comment">{{ c.comment if c.get('comment') else '' }}</span>
         <span class="col-links">
             {% if c.tickets %}<a href="{{ c.tickets }}" target="_blank" rel="noopener">Tickets</a>{% endif %}
             {% if c.facebook %}<a href="{{ c.facebook }}" target="_blank" rel="noopener">Facebook</a>{% endif %}
         </span>
-        {% endif %}
     </li>
     {% endfor %}
 </ul>

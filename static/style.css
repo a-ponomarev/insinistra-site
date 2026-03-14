@@ -642,7 +642,7 @@ h3 {
 
 .concert-list li {
   display: grid;
-  grid-template-columns: 8ch 12ch 16ch auto auto;
+  grid-template-columns: 8ch 12ch 16ch auto 1fr;
   gap: 0 32px;
   align-items: center;
   padding: 15px 0;
@@ -687,6 +687,7 @@ h3 {
   display: flex;
   gap: 12px;
   justify-content: flex-end;
+  justify-self: end;
   white-space: nowrap;
 }
 
@@ -1429,6 +1430,11 @@ body.lightbox-open {
     font-size: 12px;
   }
 
+  .concert-list .col-comment:empty,
+  .concert-list .col-links:empty {
+    display: none;
+  }
+
   .concert-list .col-links {
     grid-column: 2;
     grid-row: 1 / 4;
@@ -1495,7 +1501,8 @@ body.lightbox-open {
   .concert-list .col-links {
     grid-column: 1;
     grid-row: 4;
-    justify-content: flex-end; /* with row-reverse, flex-end keeps group on the left */
+    justify-self: start;
+    justify-content: flex-end;
     flex-direction: row-reverse;
   }
 
