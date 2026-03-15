@@ -202,6 +202,34 @@ def load_reviews() -> list[dict]:
     return [r for r in reviews if isinstance(r, dict) and r.get("text")]
 
 
+def load_epk_config() -> dict:
+    """Load EPK config from content/epk.yaml. Returns dict with defaults for missing keys."""
+    defaults = {
+        "one_liner": "Symphonic metal from Prague.",
+        "short_bio": "",
+        "booking_email": "info@insinistra.com",
+        "booking_contact_name": None,
+        "rider_url": None,
+        "stage_plot_url": None,
+        "featured_video_id": None,
+        "featured_tracks": [],
+        "press_photos": [],
+    }
+    path = CONTENT_DIR / "epk.yaml"
+    if not path.exists():
+        return defaults
+    try:
+        data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+        if not isinstance(data, dict):
+            return defaults
+        for key, value in defaults.items():
+            if key not in data:
+                data[key] = value
+        return data
+    except (yaml.YAMLError, OSError):
+        return defaults
+
+
 def process_images(src_dir: Path, dist_dir: Path, url_prefix: str) -> list[dict]:
     """
     Copy originals and create resized + thumbnail versions from src_dir into dist_dir.
@@ -456,6 +484,43 @@ def main() -> None:
         template_photos.render(
             photo_albums=photo_albums,
             all_photos_ordered=all_photos_ordered,
+            **subdir_common,
+        ),
+        encoding="utf-8",
+    )
+
+    # EPK page (Electronic Press Kit)
+    print("  Writing epk/index.html...")
+    epk_config = load_epk_config()
+    about_page = next((p for p in pages if p.get("slug") == "about"), None)
+    # Press photos: from epk.yaml list (with URL resolution) or filter image_assets by promo/banner/hero
+    def is_press_asset(a: dict) -> bool:
+        n = (a.get("name") or "").replace("\\", "/").lower()
+        return "promo" in n or n.startswith("banner") or n.startswith("hero")
+    yaml_press = epk_config.get("press_photos") or []
+    if yaml_press:
+        asset_by_name = {(a.get("name") or "").replace("\\", "/").lower(): a for a in image_assets}
+        press_photos = []
+        for item in yaml_press:
+            name = (item.get("name") or "").strip().replace("\\", "/").lower()
+            a = asset_by_name.get(name) if name else None
+            if a:
+                press_photos.append({"label": item.get("label") or name, "resized": a.get("resized"), "thumb": a.get("thumb"), "original": a.get("original")})
+    else:
+        press_photos = [{"label": (a.get("name") or "").split("/")[-1], "resized": a.get("resized"), "thumb": a.get("thumb"), "original": a.get("original")} for a in image_assets if is_press_asset(a)]
+    (DIST_DIR / "epk").mkdir(exist_ok=True)
+    template_epk = env.get_template("epk.html")
+    (DIST_DIR / "epk" / "index.html").write_text(
+        template_epk.render(
+            epk=epk_config,
+            about_page=about_page,
+            band_members=band_members,
+            reviews=reviews,
+            albums=albums,
+            videos=videos,
+            upcoming_shows=upcoming_shows[:5],
+            image_assets=image_assets,
+            epk_press_photos=press_photos,
             **subdir_common,
         ),
         encoding="utf-8",

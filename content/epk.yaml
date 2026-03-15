@@ -1,0 +1,34 @@
+# EPK (Electronic Press Kit) config for /epk
+# Used for booking, festivals, and press.
+
+one_liner: "Symphonic metal from Prague — lilac haze between lullaby and nightmare."
+
+short_bio: |
+  Insinistra crafts a symphonic metal experience that is both macabre and sweet:
+  heavy riffs meet lush orchestration, with a voice that moves from tender to fierce.
+  Based in Prague, the band is led by vocalist Maria Shell and drummer Alexander Ponomarev,
+  with guitarist Serge Melnikov and bassist Boris Gut completing the line-up.
+
+booking_email: "booking@insinistra.com"
+# booking_contact_name: "Optional name"
+
+# PDF URLs — add when you have the files (e.g. under static/ or external)
+# rider_url: "https://example.com/insinistra-rider.pdf"
+# stage_plot_url: "https://example.com/insinistra-stage-plot.pdf"
+
+# Optional: highlight one video as "Live performance" (YouTube ID)
+# featured_video_id: "bs17MJ8wvbc"
+
+# Optional: Bandcamp track/album URLs for embedded players (top 2–3)
+# featured_tracks:
+#   - url: "https://insinistra.bandcamp.com/track/blue-bird"
+#     title: "Blue Bird"
+#   - url: "https://insinistra.bandcamp.com/album/art-of-slavery"
+#     title: "Art of Slavery"
+
+# Press photo asset names (relative to images/). If empty, promo/banner/hero are used.
+# press_photos:
+#   - name: "promo-1-1.jpg"
+#     label: "Square"
+#   - name: "promo-2-3.jpg"
+#     label: "Vertical"
