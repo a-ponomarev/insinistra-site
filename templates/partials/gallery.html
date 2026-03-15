@@ -15,7 +15,7 @@
         <div class="photo-grid">
             {% for photo in album.photos %}
             <button type="button" class="photo-card gallery-thumb" data-index="{{ photo.index }}" data-resized="{% if base %}{{ base }}/{% endif %}{{ photo.resized }}" data-name="{{ photo.name }}" aria-label="View {{ photo.name }}">
-                <img src="{% if base %}{{ base }}/{% endif %}{{ photo.thumb }}" alt="{{ photo.name }}" loading="lazy">
+                <img src="{% if base %}{{ base }}/{% endif %}{{ photo.thumb }}" data-thumb="{% if base %}{{ base }}/{% endif %}{{ photo.thumb }}" data-resized="{% if base %}{{ base }}/{% endif %}{{ photo.resized }}" alt="{{ photo.name }}" loading="lazy">
             </button>
             {% endfor %}
         </div>
@@ -45,6 +45,11 @@
     var baseEl = document.getElementById('gallery-base');
     var base = baseEl ? JSON.parse(baseEl.textContent) : '';
     if (base && !base.endsWith('/')) base += '/';
+    var conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    var useHighQuality = conn && (conn.effectiveType === '4g' || conn.effectiveType === '3g') && !conn.saveData;
+    document.querySelectorAll('.gallery-thumb img').forEach(function (img) {
+        img.src = useHighQuality ? (img.getAttribute('data-resized') || img.src) : (img.getAttribute('data-thumb') || img.src);
+    });
     var lightbox = document.getElementById('gallery-lightbox');
     var overlay = document.getElementById('lightbox-overlay');
     var img = document.getElementById('lightbox-img');
