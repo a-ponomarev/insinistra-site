@@ -397,6 +397,7 @@ def main() -> None:
     (DIST_DIR / "index.html").write_text(
         template_index.render(
             base="",
+            is_index=True,
             **common,
             pages=pages,
             concerts=upcoming_shows[:5],
