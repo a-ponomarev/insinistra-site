@@ -28,6 +28,7 @@ DIST_DIR = ROOT / "dist"
 
 # Image sizes
 RESIZED_WIDTH = 1600
+HERO_WIDTH = 3000  # Hero images (desktop + mobile) use this for better quality
 THUMB_WIDTH = 400
 
 # Banner: fixed height in CSS (px); hide below viewport width = banner_display_width + sidebar
@@ -212,6 +213,7 @@ def process_images(src_dir: Path, dist_dir: Path, url_prefix: str) -> list[dict]
     dist_dir.mkdir(parents=True, exist_ok=True)
     (dist_dir / "original").mkdir(exist_ok=True)
     (dist_dir / "1600").mkdir(exist_ok=True)
+    (dist_dir / "3000").mkdir(exist_ok=True)
     (dist_dir / "thumb").mkdir(exist_ok=True)
 
     assets = []
@@ -226,16 +228,22 @@ def process_images(src_dir: Path, dist_dir: Path, url_prefix: str) -> list[dict]
         subdir = rel.parent
 
         resized_name = f"{base}-1600.jpg"
+        hero_name = f"{base}-3000.jpg"
         thumb_name = f"{base}-thumb.jpg"
         orig_dest = dist_dir / "original" / subdir / name
         resized_dest = dist_dir / "1600" / subdir / resized_name
+        hero_dest = dist_dir / "3000" / subdir / hero_name
         thumb_dest = dist_dir / "thumb" / subdir / thumb_name
 
         orig_url = f"{url_prefix}/original/{rel.as_posix()}"
         resized_url = f"{url_prefix}/1600/{(subdir / resized_name).as_posix()}"
         thumb_url = f"{url_prefix}/thumb/{(subdir / thumb_name).as_posix()}"
 
-        if orig_dest.exists() and resized_dest.exists() and thumb_dest.exists():
+        is_hero = base in ("hero", "hero-mobile")
+        skip = orig_dest.exists() and resized_dest.exists() and thumb_dest.exists()
+        if is_hero:
+            skip = skip and hero_dest.exists()
+        if skip:
             assets.append({
                 "original": orig_url,
                 "resized": resized_url,
@@ -246,6 +254,7 @@ def process_images(src_dir: Path, dist_dir: Path, url_prefix: str) -> list[dict]
 
         (dist_dir / "original" / subdir).mkdir(parents=True, exist_ok=True)
         (dist_dir / "1600" / subdir).mkdir(parents=True, exist_ok=True)
+        (dist_dir / "3000" / subdir).mkdir(parents=True, exist_ok=True)
         (dist_dir / "thumb" / subdir).mkdir(parents=True, exist_ok=True)
 
         shutil.copy2(path, orig_dest)
@@ -262,6 +271,13 @@ def process_images(src_dir: Path, dist_dir: Path, url_prefix: str) -> list[dict]
                 else:
                     resized = img
                 resized.save(resized_dest, "JPEG", quality=88)
+
+                if is_hero:
+                    if w > HERO_WIDTH:
+                        hero_img = img.resize((HERO_WIDTH, int(h * HERO_WIDTH / w)), Image.Resampling.LANCZOS)
+                    else:
+                        hero_img = img
+                    hero_img.save(hero_dest, "JPEG", quality=88)
 
                 if w > THUMB_WIDTH:
                     thumb = img.resize((THUMB_WIDTH, int(h * THUMB_WIDTH / w)), Image.Resampling.LANCZOS)
