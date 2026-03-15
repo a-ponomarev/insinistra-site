@@ -1767,6 +1767,10 @@ body:has(.epk-page) .nav-overlay .nav a:hover {
   text-align: center;
 }
 
+.epk-bio-block:has(.epk-full-bio[open]) .epk-short-bio {
+  display: none;
+}
+
 .epk-full-bio {
   margin: 20px auto 0;
   max-width: 640px;
@@ -1774,21 +1778,82 @@ body:has(.epk-page) .nav-overlay .nav a:hover {
 }
 
 .epk-full-bio summary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   font-size: 13px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--accent);
   cursor: pointer;
+  list-style: none;
+  user-select: none;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.epk-full-bio summary::-webkit-details-marker,
+.epk-full-bio summary::marker {
+  display: none;
+}
+
+.epk-full-bio summary:hover {
+  opacity: 0.85;
+}
+
+.epk-full-bio summary::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(-45deg);
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+}
+
+.epk-full-bio[open] summary::before {
+  transform: rotate(135deg);
+}
+
+.epk-full-bio-label-collapse {
+  display: none;
+}
+
+.epk-full-bio[open] .epk-full-bio-label-expand {
+  display: none;
+}
+
+.epk-full-bio[open] .epk-full-bio-label-collapse {
+  display: inline;
 }
 
 .epk-full-bio-body {
-  margin-top: 16px;
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s ease-out;
+  text-align: center;
+}
+
+.epk-full-bio[open] .epk-full-bio-body {
+  grid-template-rows: 1fr;
+}
+
+.epk-full-bio-inner {
+  overflow: hidden;
+  margin-top: 0;
   color: var(--text-secondary);
   line-height: 1.65;
   text-align: center;
 }
 
-.epk-full-bio-body p {
+.epk-full-bio[open] .epk-full-bio-inner {
+  margin-top: 16px;
+  transition: margin-top 0.3s ease-out;
+}
+
+.epk-full-bio-inner p {
   margin: 0 0 12px;
 }
 
@@ -1936,6 +2001,10 @@ body:has(.epk-page) .nav-overlay .nav a:hover {
   margin-top: 16px;
 }
 
+.epk-photos-download {
+  margin: 24px 0 0;
+}
+
 .epk-band-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -2027,6 +2096,12 @@ body:has(.epk-page) .nav-overlay .nav a:hover {
 
 .epk-technical-list li {
   margin: 0;
+}
+
+.epk-technical-link-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .epk-contact-primary {
