@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+
+{% block title %}Electronic Press Kit{% endblock %}
+
+{% block hero %}
+<section class="epk-hero">
+    <div class="epk-hero-inner layout">
+        <h1 class="epk-hero-title">Insinistra</h1>
+        <p class="epk-hero-subtitle">Electronic Press Kit</p>
+        {% if epk.one_liner %}<p class="epk-hero-tagline">{{ epk.one_liner }}</p>{% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<article class="epk-page">
+
+    <section class="epk-section epk-headline">
+        <div class="layout">
+            <h2 class="epk-section-title">About</h2>
+            <div class="epk-bio-block">
+            {% if epk.short_bio %}
+            <div class="epk-short-bio">
+                <p>{{ epk.short_bio | trim | replace('\n', ' ') }}</p>
+            </div>
+            {% endif %}
+            {% if about_page %}
+            <details class="epk-full-bio">
+                <summary>
+                    <span class="epk-full-bio-label epk-full-bio-label-expand">Full bio</span>
+                    <span class="epk-full-bio-label epk-full-bio-label-collapse">Short bio</span>
+                </summary>
+                <div class="epk-full-bio-body">
+                    <div class="epk-full-bio-inner">{{ about_page.content_html | safe }}</div>
+                </div>
+            </details>
+            {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <section class="epk-section epk-listen">
+        <div class="layout">
+            <h2 class="epk-section-title">Listen</h2>
+            <nav class="epk-links" aria-label="Stream on">
+                <a href="https://insinistra.bandcamp.com/" target="_blank" rel="noopener" title="Bandcamp">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M0 18.75l7.437-13.5h16.563l-7.438 13.5z"/></svg>
+                    <span>Bandcamp</span>
+                </a>
+                <a href="https://open.spotify.com/artist/7twKAgcyHaRn9LUqHMRE07" target="_blank" rel="noopener" title="Spotify">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.363 17.363a.75.75 0 0 1-1.028.25c-2.818-1.72-6.35-2.105-10.506-1.146a.75.75 0 1 1-.34-1.462c4.48-1.04 8.334-.616 11.653 1.393a.75.75 0 0 1 .221.965zm1.463-3.2a.9.9 0 0 1-1.234.3c-3.223-1.975-8.14-2.548-11.95-1.39a.9.9 0 1 1-.522-1.72c4.192-1.27 9.62-.63 13.437 1.64a.9.9 0 0 1 .27 1.17zm.12-3.34C15.3 8.5 8.75 8.23 5.05 9.36a1.05 1.05 0 1 1-.61-2.01c4.25-1.29 11.31-1.04 15.78 1.62a1.05 1.05 0 0 1-1.27 1.85z"/></svg>
+                    <span>Spotify</span>
+                </a>
+                <a href="https://music.youtube.com/channel/UCwGXJx49UkjujJKygLCLjSg" target="_blank" rel="noopener" title="YouTube Music">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.376 0 0 5.376 0 12s5.376 12 12 12 12-5.376 12-12S18.624 0 12 0zm0 19.104c-3.924 0-7.104-3.18-7.104-7.104S8.076 4.896 12 4.896s7.104 3.18 7.104 7.104-3.18 7.104-7.104 7.104zm0-13.332c-3.432 0-6.228 2.796-6.228 6.228S8.568 18.228 12 18.228s6.228-2.796 6.228-6.228S15.432 5.772 12 5.772zM9.684 15.54V8.46L17.1 12l-7.416 3.54z"/></svg>
+                    <span>YouTube Music</span>
+                </a>
+                <a href="https://music.apple.com/ru/artist/insinistra/1444116339" target="_blank" rel="noopener" title="Apple Music">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.994 6.124a9.23 9.23 0 00-.24-2.19c-.317-1.31-1.062-2.31-2.18-3.043a5.022 5.022 0 00-1.877-.726 10.496 10.496 0 00-1.564-.15c-.04-.003-.083-.01-.124-.013H5.986c-.152.01-.303.017-.455.026-.747.043-1.49.123-2.193.4-1.336.53-2.3 1.452-2.865 2.78-.192.448-.292.925-.363 1.408-.056.392-.088.785-.1 1.18 0 .032-.007.062-.01.093v12.223c.01.14.017.283.027.424.05.815.154 1.624.497 2.373.65 1.42 1.738 2.353 3.234 2.801.42.127.856.187 1.293.228.555.053 1.11.06 1.667.06h11.03a12.5 12.5 0 001.57-.1c.822-.106 1.596-.35 2.295-.81a5.046 5.046 0 001.88-2.207c.186-.42.293-.87.37-1.324.113-.675.138-1.358.137-2.04-.002-3.8 0-7.595-.003-11.393zm-6.423 3.99v5.712c0 .417-.058.827-.244 1.206-.29.59-.76.962-1.388 1.14-.35.1-.706.157-1.07.173-.95.045-1.773-.6-1.943-1.536a1.88 1.88 0 011.038-2.022c.323-.16.67-.25 1.018-.324.378-.082.758-.153 1.134-.24.274-.063.457-.23.51-.516a.904.904 0 00.02-.193c0-1.815 0-3.63-.002-5.443a.725.725 0 00-.026-.185c-.04-.15-.15-.243-.304-.234-.16.01-.318.035-.475.066-.76.15-1.52.303-2.28.456l-2.325.47-1.374.278c-.016.003-.032.01-.048.013-.277.077-.377.203-.39.49-.002.042 0 .086 0 .13-.002 2.602 0 5.204-.003 7.805 0 .42-.047.836-.215 1.227-.278.64-.77 1.04-1.434 1.233-.35.1-.71.16-1.075.172-.96.036-1.755-.6-1.92-1.544-.14-.812.23-1.685 1.154-2.075.357-.15.73-.232 1.108-.31.287-.06.575-.116.86-.177.383-.083.583-.323.6-.714v-.15c0-2.96 0-5.922.002-8.882 0-.123.013-.25.042-.37.07-.285.273-.448.546-.518.255-.066.515-.112.774-.165.733-.15 1.466-.296 2.2-.444l2.27-.46c.67-.134 1.34-.27 2.01-.403.22-.043.442-.088.663-.106.31-.025.523.17.554.482.008.073.012.148.012.223.002 1.91.002 3.822 0 5.732z"/></svg>
+                    <span>Apple Music</span>
+                </a>
+            </nav>
+            {% set spotify_src = "https://open.spotify.com/embed/playlist/6vInRtMmEvOlk7DGdrN6zK?theme=0" %}
+            {% set spotify_title = "Insinistra Discography on Spotify" %}
+            {% include "partials/spotify_embed.html" %}
+        </div>
+    </section>
+
+    <section class="epk-section epk-video">
+        <div class="layout">
+            <h2 class="epk-section-title">Live performance</h2>
+            {% set video_id = epk.featured_video_id or (videos[0].id if videos else none) %}
+            {% if video_id %}
+            <div class="epk-video-embed">
+                <iframe src="https://www.youtube.com/embed/{{ video_id }}" title="Live performance video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
+            </div>
+            {% if videos and videos|length > 1 %}
+            <p class="epk-more">
+                <a href="{{ base }}/index.html#video">More videos on homepage</a>
+            </p>
+            <p class="epk-more">
+                <a href="https://youtube.com/c/insinistra" target="_blank" rel="noopener" title="YouTube channel" class="epk-more-link-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                    <span>YouTube channel</span>
+                </a>
+            </p>
+            {% endif %}
+            {% else %}
+            <p class="epk-muted">Video available on <a href="https://youtube.com/c/insinistra" target="_blank" rel="noopener">YouTube</a>.</p>
+            {% endif %}
+        </div>
+    </section>
+
+    <section class="epk-section epk-band">
+        <div class="layout">
+            <h2 class="epk-section-title">Line-up</h2>
+            {% if band_members %}
+            <ul class="band-members-grid">
+                {% for member in band_members %}
+                <li class="band-member">
+                    <div class="band-member-photo">
+                        {% if member.image_thumb %}
+                        <img src="{{ base }}/{{ member.image_thumb }}" alt="{{ member.name }}" loading="lazy">
+                        {% else %}
+                        <span class="band-member-placeholder" aria-hidden="true">{% set parts = member.name.split() %}{{ parts[0][0] if parts else '?' }}{{ parts[1][0] if parts|length > 1 else '' }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="band-member-info">
+                        <span class="band-member-name">{{ member.name }}</span>
+                        <span class="band-member-role">{{ member.role }}</span>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+    </section>
+
+    <section class="epk-section epk-reviews">
+        <div class="layout">
+            <h2 class="epk-section-title">Press &amp; reviews</h2>
+            {% if reviews %}
+            <ul class="epk-reviews-list">
+                {% for review in reviews[:4] %}
+                <li class="epk-review-item">
+                    <blockquote class="epk-review-quote">
+                        <p>"{{ review.text }}"</p>
+                        {% if review.source %}<footer>— {{ review.source }}</footer>{% endif %}
+                    </blockquote>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="epk-muted">Press quotes available on request.</p>
+            {% endif %}
+        </div>
+    </section>
+
+    <section class="epk-section epk-shows">
+        <div class="layout">
+            {% if upcoming_shows %}
+            <h2 class="epk-section-title">Upcoming shows</h2>
+            <ul class="concert-list epk-concert-list">
+                {% for c in upcoming_shows %}
+                <li>
+                    <span class="col-date">{{ c.date_display }}</span>
+                    <span class="col-city-venue">
+                        <span class="col-city">{{ c.location if c.location else '' }}</span>
+                        <span class="col-venue">{{ c.venue if c.venue else '' }}</span>
+                    </span>
+                    <span class="col-comment">{{ c.comment if c.get('comment') else '' }}</span>
+                    <span class="col-links">
+                        {% if c.tickets %}<a href="{{ c.tickets }}" target="_blank" rel="noopener">Tickets</a>{% endif %}
+                        {% if c.facebook %}<a href="{{ c.facebook }}" target="_blank" rel="noopener">Facebook</a>{% endif %}
+                    </span>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <h2 class="epk-section-title">Recent shows</h2>
+            {% if recent_shows %}
+            <ul class="concert-list epk-concert-list">
+                {% for c in recent_shows %}
+                <li>
+                    <span class="col-date">{{ c.date_display }}</span>
+                    <span class="col-city-venue">
+                        <span class="col-city">{{ c.location if c.location else '' }}</span>
+                        <span class="col-venue">{{ c.venue if c.venue else '' }}</span>
+                    </span>
+                    <span class="col-comment">{{ c.comment if c.get('comment') else '' }}</span>
+                    <span class="col-links">
+                        {% if c.tickets %}<a href="{{ c.tickets }}" target="_blank" rel="noopener">Tickets</a>{% endif %}
+                        {% if c.facebook %}<a href="{{ c.facebook }}" target="_blank" rel="noopener">Facebook</a>{% endif %}
+                    </span>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="epk-muted">See <a href="{{ base }}/shows/index.html">shows</a> for dates.</p>
+            {% endif %}
+            {% endif %}
+            {% if upcoming_shows or recent_shows %}
+            <p class="epk-more"><a href="{{ base }}/shows/index.html">All shows</a></p>
+            {% endif %}
+        </div>
+    </section>
+
+    <section class="epk-section epk-photos">
+        <div class="layout">
+            <h2 class="epk-section-title">Press photos</h2>
+            {% if photo_albums %}
+            {% include "partials/gallery_content.html" with context %}
+            <p class="epk-photos-download">
+                <a href="mailto:{{ epk.press_email or epk.booking_email }}?subject=Press%20kit%20request" class="epk-technical-link-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M5 19h14"/></svg><span>Download press kit</span></a>
+            </p>
+            {% else %}
+            <p class="epk-muted">Press photos available on request.</p>
+            {% endif %}
+        </div>
+    </section>
+
+    <section class="epk-section epk-technical">
+        <div class="layout">
+            <h2 class="epk-section-title">Technical</h2>
+            <ul class="epk-technical-list">
+                {% if epk.rider_url %}
+                <li><a href="{{ epk.rider_url }}" target="_blank" rel="noopener">Technical rider (PDF)</a></li>
+                {% endif %}
+                {% if epk.stage_plot_url %}
+                <li><a href="{{ epk.stage_plot_url }}" target="_blank" rel="noopener" class="epk-technical-link-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M5 19h14"/></svg><span>Download stage plan</span></a></li>
+                {% else %}
+                <li><a href="mailto:{{ epk.booking_email }}?subject=Stage%20plan%20request" class="epk-technical-link-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M5 19h14"/></svg><span>Download stage plan</span></a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </section>
+
+    <section class="epk-section epk-contact">
+        <div class="layout">
+            <h2 class="epk-section-title">Booking &amp; contact</h2>
+            <p class="epk-contact-primary">
+                {% if epk.booking_contact_name %}<span class="epk-contact-name">{{ epk.booking_contact_name }}</span><br>{% endif %}
+                <a href="mailto:{{ epk.booking_email }}">{{ epk.booking_email }}</a>
+                {% if epk.press_email %}<br><a href="mailto:{{ epk.press_email }}">{{ epk.press_email }}</a>{% endif %}
+            </p>
+        </div>
+    </section>
+
+</article>
+{% endblock %}
