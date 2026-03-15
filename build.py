@@ -239,7 +239,7 @@ def process_images(src_dir: Path, dist_dir: Path, url_prefix: str) -> list[dict]
         resized_url = f"{url_prefix}/1600/{(subdir / resized_name).as_posix()}"
         thumb_url = f"{url_prefix}/thumb/{(subdir / thumb_name).as_posix()}"
 
-        is_hero = base in ("hero", "hero-mobile")
+        is_hero = base in ("hero", "hero-mobile", "banner")
         skip = orig_dest.exists() and resized_dest.exists() and thumb_dest.exists()
         if is_hero:
             skip = skip and hero_dest.exists()
