@@ -774,9 +774,14 @@ h3 {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
   display: block;
   transition: transform 350ms ease, filter 350ms ease;
   filter: brightness(0.85);
+}
+
+.photo-card img.portrait {
+  object-position: top;
 }
 
 .photo-card:hover img {
