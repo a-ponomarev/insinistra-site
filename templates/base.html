@@ -20,19 +20,19 @@
                 <span class="nav-toggle-bar"></span>
                 <span class="nav-toggle-bar"></span>
             </button>
-            <div class="nav-overlay" id="nav-overlay">
-                <nav class="nav">
-                    <a href="{% if base %}{{ base }}/index.html{% else %}index.html{% endif %}">Home</a>
-                    {% for p in nav_pages %}
-                    <a href="{% if base %}{{ base }}/{% endif %}{{ p.slug }}/index.html">{{ p.title }}</a>
-                    {% endfor %}
-                    <a href="{% if base %}{{ base }}/{% endif %}shows/index.html">Shows</a>
-                    <a href="{% if base %}{{ base }}/{% endif %}albums/index.html">Discography</a>
-                    <a href="{% if base %}{{ base }}/{% endif %}photos/index.html">Photos</a>
-                </nav>
-            </div>
         </div>
     </header>
+    <div class="nav-overlay" id="nav-overlay">
+        <nav class="nav">
+            <a href="{% if base %}{{ base }}/index.html{% else %}index.html{% endif %}">Home</a>
+            {% for p in nav_pages %}
+            <a href="{% if base %}{{ base }}/{% endif %}{{ p.slug }}/index.html">{{ p.title }}</a>
+            {% endfor %}
+            <a href="{% if base %}{{ base }}/{% endif %}shows/index.html">Shows</a>
+            <a href="{% if base %}{{ base }}/{% endif %}albums/index.html">Discography</a>
+            <a href="{% if base %}{{ base }}/{% endif %}photos/index.html">Photos</a>
+        </nav>
+    </div>
 
     {% block hero %}
     <div class="site-banner">

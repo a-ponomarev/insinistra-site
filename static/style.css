@@ -1282,7 +1282,7 @@ body.lightbox-open {
     right: 0;
     bottom: 0;
     z-index: 99;
-    background: rgba(11, 10, 15, 0.98);
+    background: rgb(11, 10, 15);
     padding: 80px 24px 24px;
     padding-top: calc(80px + env(safe-area-inset-top, 0));
     padding-bottom: calc(24px + env(safe-area-inset-bottom, 0));
@@ -1295,6 +1295,11 @@ body.lightbox-open {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
+    z-index: 100;
+  }
+
+  body.nav-open .site-header {
+    z-index: 101;
   }
 
   .nav-overlay .nav {
@@ -1345,7 +1350,7 @@ body:has(.epk-page) .nav-overlay {
   right: 0;
   bottom: 0;
   z-index: 99;
-  background: rgba(11, 10, 15, 0.98);
+  background: rgb(11, 10, 15);
   padding: 80px 24px 24px;
   padding-top: calc(80px + env(safe-area-inset-top, 0));
   padding-bottom: calc(24px + env(safe-area-inset-bottom, 0));
@@ -1358,6 +1363,11 @@ body:has(.epk-page) .nav-overlay.nav-open {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
+  z-index: 100;
+}
+
+body:has(.epk-page).nav-open .site-header {
+  z-index: 101;
 }
 
 body:has(.epk-page) .nav-overlay .nav {
