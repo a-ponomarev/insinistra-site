@@ -1250,7 +1250,7 @@ body.lightbox-open {
     grid-template-columns: repeat(3, 1fr);
   }
   .band-members-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -1739,7 +1739,7 @@ body:has(.epk-page) .nav-overlay .nav a:hover {
 
 .epk-section-title {
   font-family: Cinzel, serif;
-  font-size: 11px;
+  font-size: 22px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--accent);
@@ -1801,6 +1801,13 @@ body:has(.epk-page) .nav-overlay .nav a:hover {
   letter-spacing: 0.06em;
 }
 
+.epk-more .epk-more-link-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  vertical-align: middle;
+}
+
 .epk-muted {
   color: var(--text-muted);
   font-size: 14px;
@@ -1844,13 +1851,24 @@ body:has(.epk-page) .nav-overlay .nav a:hover {
 }
 
 .epk-links {
-  margin: 0;
-  font-size: 14px;
-  color: var(--text-secondary);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  margin: 0 0 24px;
 }
 
 .epk-links a {
-  margin-right: 0.25em;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  transition: color 150ms ease;
+}
+
+.epk-links a:hover {
+  color: var(--text-primary);
 }
 
 .epk-video-embed {
