@@ -1398,6 +1398,7 @@ body.lightbox-open {
 
   body.nav-open .site-header {
     z-index: 101;
+    backdrop-filter: none; /* so nav-overlay position:fixed is viewport-relative, not header-relative */
   }
 
   .nav-overlay .nav {
@@ -1466,6 +1467,7 @@ body:has(.epk-page) .nav-overlay.nav-open {
 
 body:has(.epk-page).nav-open .site-header {
   z-index: 101;
+  backdrop-filter: none; /* so nav-overlay position:fixed is viewport-relative, not header-relative */
 }
 
 body:has(.epk-page) .nav-overlay .nav {
