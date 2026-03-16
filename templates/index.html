@@ -119,7 +119,9 @@
 {% if photo_albums %}
 {% set gallery_limit = 6 %}
 {% set more_photos_url = "photos/index.html" %}
-{% include "partials/gallery.html" with context %}
+<section class="section section--gallery">
+    {% include "partials/gallery_content.html" with context %}
+</section>
 {% endif %}
 
 {% endblock %}
