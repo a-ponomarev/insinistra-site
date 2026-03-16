@@ -120,7 +120,10 @@
 {% set gallery_limit = 6 %}
 {% set more_photos_url = "photos/index.html" %}
 <section class="section section--gallery">
-    {% include "partials/gallery_content.html" with context %}
+    <div class="layout">
+        <h2>Photo</h2>
+        {% include "partials/gallery_content.html" with context %}
+    </div>
 </section>
 {% endif %}
 
