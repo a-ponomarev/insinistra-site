@@ -24,6 +24,7 @@
                     <a href="{% if base %}{{ base }}/{% endif %}shows/index.html">Shows</a>
                     <a href="{% if base %}{{ base }}/{% endif %}albums/index.html">Discography</a>
                     <a href="{% if base %}{{ base }}/{% endif %}photos/index.html">Photos</a>
+                    <a href="{% if base %}{{ base }}/{% endif %}epk/index.html">EPK</a>
                 </nav>
             </div>
             <button type="button" class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false">
@@ -53,8 +54,6 @@
             {% endif %}
             <div class="footer-contact">
                 <a href="mailto:info@insinistra.com">info@insinistra.com</a>
-                <span class="footer-sep" aria-hidden="true"> · </span>
-                <a href="{% if base %}{{ base }}/{% endif %}epk/index.html">EPK</a>
             </div>
             <p class="footer-copy">&copy; {{ current_year }} Insinistra. All rights reserved.</p>
         </div>
