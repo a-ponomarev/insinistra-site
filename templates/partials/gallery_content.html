@@ -6,7 +6,7 @@
 {% endif %}
 {% for album in albums_to_render %}
 <div class="gallery-album layout">
-    <h3 class="gallery-album-title">{{ album.name }}</h3>
+    {% if gallery_limit is not defined or gallery_limit is none %}<h3 class="gallery-album-title">{{ album.name }}</h3>{% endif %}
     <div class="photo-grid">
         {% for photo in album.photos %}
         <button type="button" class="photo-card gallery-thumb" data-index="{{ photo.index }}" data-resized="{% if base %}{{ base }}/{% endif %}{{ photo.resized }}" data-name="{{ photo.name }}" aria-label="View {{ photo.name }}">

@@ -490,6 +490,12 @@ h3 {
   text-align: center;
 }
 
+/* Equal space before and after section titles (match section padding) */
+.section .layout > h2 {
+  margin-top: 0;
+  margin-bottom: 40px;
+}
+
 .section--featured-release .section-label--large,
 .section--featured-release .featured-title {
   text-align: center;
@@ -520,7 +526,7 @@ h3 {
 /* ─── Sections ───────────────────────────────────────────── */
 
 .section {
-  padding: 96px 0;
+  padding: 40px 0;
   border-bottom: 1px solid var(--border);
 }
 
@@ -766,7 +772,7 @@ h3 {
 }
 
 .shows-section h2 {
-  margin-bottom: 32px;
+  margin-bottom: 40px;
 }
 
 /* ─── Video grid ─────────────────────────────────────────── */
@@ -837,12 +843,8 @@ h3 {
 
 /* Gallery albums (nested folders) */
 .section--gallery .gallery-album {
-  padding-top: 24px;
-  padding-bottom: 16px;
-}
-
-.section--gallery .gallery-album:first-of-type {
   padding-top: 0;
+  padding-bottom: 16px;
 }
 
 .gallery-album-title {

@@ -65,7 +65,6 @@
 {% if concerts %}
 <section class="section">
     <div class="layout">
-        <span class="section-label">Live</span>
         <h2>Upcoming Shows</h2>
         {% set shows = concerts %}{% include "partials/concert_list.html" %}
         <p class="section-link"><a href="{% if base %}{{ base }}/{% endif %}shows/index.html" class="btn">All Shows</a></p>
@@ -76,8 +75,7 @@
 {% if albums %}
 <section class="section">
     <div class="layout">
-        <span class="section-label">Music</span>
-        <h2>Discography</h2>
+        <h2>Music</h2>
         <div class="album-grid">
             {% for album in albums_for_discography %}
             <article class="album-card">
@@ -105,8 +103,7 @@
 {% if videos %}
 <section class="section" id="video">
     <div class="layout">
-        <span class="section-label">Video</span>
-        <h2>Watch</h2>
+        <h2>Video</h2>
         <div class="video-grid">
             {% for video in videos %}
             <div class="video-embed">
