@@ -768,7 +768,7 @@ h3 {
 
 /* Shows page sections */
 .shows-section {
-  padding: 64px 0;
+  padding: 0 0 40px;
 }
 
 .shows-section h2 {
@@ -1023,6 +1023,11 @@ body.lightbox-open {
   margin-left: auto;
   margin-right: auto;
   padding: 56px 32px;
+}
+
+/* Shows page: reduced padding */
+.page:has(.shows-section) {
+  padding: 40px;
 }
 
 .page h1 {
@@ -1589,6 +1594,10 @@ body:has(.epk-page) .nav-overlay .nav a:hover {
     padding: 64px 20px;
   }
 
+  .page:has(.shows-section) {
+    padding: 40px 20px;
+  }
+
   .layout {
     padding-left: 20px;
     padding-right: 20px;
@@ -1694,6 +1703,10 @@ body:has(.epk-page) .nav-overlay .nav a:hover {
 
   .page {
     padding: 48px 20px;
+  }
+
+  .page:has(.shows-section) {
+    padding: 40px 20px;
   }
 
   .hero-inner {
