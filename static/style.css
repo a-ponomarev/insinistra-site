@@ -290,14 +290,18 @@ a:hover {
 }
 
 /* Mobile hero (promo image + gradients); shown only at 740px and below */
+/* Use 100dvh + -webkit-fill-available so iPhone/Safari fills visible viewport (no next block peeking) */
 .hero-mobile {
   display: none;
   position: relative;
   width: 100%;
   height: 100vh;
   height: 100svh;
+  height: 100dvh;
   min-height: 100vh;
   min-height: 100svh;
+  min-height: 100dvh;
+  min-height: -webkit-fill-available;
   background: #000;
   overflow: hidden;
 }
