@@ -102,12 +102,11 @@ a:hover {
   left: 0;
   width: 100%;
   z-index: 100;
-  background: rgba(13, 13, 13, 0.96);
-  backdrop-filter: blur(6px);
-  border-bottom: 1px solid var(--border);
+  background: transparent;
+  border-bottom: 1px solid transparent;
   padding: 10px 0;
   padding-top: calc(18px + env(safe-area-inset-top, 0));
-  transition: padding 220ms ease;
+  transition: background 220ms ease, border-color 220ms ease, padding 220ms ease;
 }
 
 .site-header.scrolled {
