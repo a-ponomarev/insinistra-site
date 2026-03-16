@@ -483,6 +483,40 @@ h3 {
   font-size: 14px;
 }
 
+/* Center all section titles and page titles */
+.section .layout > .section-label,
+.section .layout > h2,
+.section .layout > .section-link {
+  text-align: center;
+}
+
+.section--featured-release .section-label--large,
+.section--featured-release .featured-title {
+  text-align: center;
+}
+
+.section--featured-release .featured-info {
+  align-items: center;
+}
+
+.section--gallery .layout .section-label,
+.section--gallery .layout h2 {
+  text-align: center;
+}
+
+.gallery-album-title {
+  text-align: center;
+}
+
+.band-members-title,
+.reviews-title {
+  text-align: center;
+}
+
+.shows-section h2 {
+  text-align: center;
+}
+
 /* ─── Sections ───────────────────────────────────────────── */
 
 .section {
@@ -990,6 +1024,7 @@ body.lightbox-open {
 }
 
 .page h1 {
+  text-align: center;
   margin-bottom: 48px;
 }
 
