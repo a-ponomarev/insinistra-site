@@ -1022,7 +1022,7 @@ body.lightbox-open {
   max-width: 1300px;
   margin-left: auto;
   margin-right: auto;
-  padding: 96px 32px;
+  padding: 56px 32px;
 }
 
 .page h1 {
@@ -1057,6 +1057,8 @@ body.lightbox-open {
   font-size: 17px;
   line-height: 1.75;
   max-width: 740px;
+  margin: 0 auto;
+  text-align: center;
 }
 
 .page-body p {
@@ -1069,6 +1071,21 @@ body.lightbox-open {
 
 .page-body a:hover {
   color: var(--accent-hover);
+}
+
+/* Download icon for drive.google.com links (contact page) */
+.page-body a[href*="drive.google.com"]::before {
+  content: '';
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.35em;
+  vertical-align: -0.2em;
+  background-color: currentColor;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3v12m0 0l-4-4m4 4l4-4'/%3E%3Cpath d='M5 19h14'/%3E%3C/svg%3E") no-repeat center;
+  mask-size: contain;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3v12m0 0l-4-4m4 4l4-4'/%3E%3Cpath d='M5 19h14'/%3E%3C/svg%3E") no-repeat center;
+  -webkit-mask-size: contain;
 }
 
 .page-body strong {
@@ -1094,7 +1111,7 @@ body.lightbox-open {
 
 .band-members {
   margin-top: 64px;
-  padding-top: 48px;
+  padding-top: 40px;
   border-top: 1px solid var(--border);
 }
 
@@ -1103,7 +1120,7 @@ body.lightbox-open {
   font-size: 22px;
   font-weight: 700;
   color: var(--text-primary);
-  margin: 0 0 32px;
+  margin: 0 0 40px;
   letter-spacing: 0.04em;
 }
 
@@ -1176,8 +1193,12 @@ body.lightbox-open {
 
 .reviews {
   margin-top: 64px;
+  margin-left: auto;
+  margin-right: auto;
   padding-top: 48px;
   border-top: 1px solid var(--border);
+  max-width: 740px;
+  text-align: center;
 }
 
 .reviews-title {
@@ -1206,6 +1227,7 @@ body.lightbox-open {
   margin: 0;
   padding: 0;
   border: none;
+  text-align: center;
 }
 
 .review-text {
