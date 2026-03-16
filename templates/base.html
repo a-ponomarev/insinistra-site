@@ -11,20 +11,20 @@
         {% include "partials/social_links.html" %}
     </aside>
     <header class="site-header" id="site-header">
+        {% set root = (base ~ '/') if base else '' %}
         <div class="layout">
-            <a href="{% if base %}{{ base }}/index.html{% else %}index.html{% endif %}" class="site-logo">
+            <a href="{{ root if root else '.' }}" class="site-logo">
                 <img src="{% if base %}{{ base }}/{% endif %}static/logo-text.svg" alt="Insinistra" class="site-logo-img">
             </a>
             <div class="nav-overlay" id="nav-overlay">
                 <nav class="nav">
-                    <a href="{% if base %}{{ base }}/index.html{% else %}index.html{% endif %}">Home</a>
-                    {% for p in nav_pages %}
-                    <a href="{% if base %}{{ base }}/{% endif %}{{ p.slug }}/index.html">{{ p.title }}</a>
-                    {% endfor %}
-                    <a href="{% if base %}{{ base }}/{% endif %}shows/index.html">Shows</a>
-                    <a href="{% if base %}{{ base }}/{% endif %}albums/index.html">Discography</a>
-                    <a href="{% if base %}{{ base }}/{% endif %}photos/index.html">Photos</a>
-                    <a href="{% if base %}{{ base }}/{% endif %}epk/index.html">EPK</a>
+                    <a href="{{ root if root else '.' }}">Home</a>
+                    <a href="{{ root }}about/">About</a>
+                    <a href="{{ root }}shows/">Shows</a>
+                    <a href="{{ root }}albums/">Discography</a>
+                    <a href="{{ root }}photos/">Photos</a>
+                    <a href="{{ root }}contact/">Contact</a>
+                    <a href="{{ root }}epk/">EPK</a>
                 </nav>
             </div>
             <button type="button" class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false">
@@ -53,7 +53,7 @@
             <div class="footer-contact">
                 <a href="mailto:info@insinistra.com">info@insinistra.com</a>
             </div>
-            <p class="footer-copy">&copy; {{ current_year }} Insinistra. All rights reserved.</p>
+            <p class="footer-copy">&copy; {{ copyright_year }} Insinistra. All rights reserved.</p>
         </div>
     </footer>
 

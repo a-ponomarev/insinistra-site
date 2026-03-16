@@ -413,7 +413,14 @@ def main() -> None:
                 encoding="utf-8",
             )
 
-    common = {"nav_pages": pages, "current_year": datetime.now().year}
+    current_year = datetime.now().year
+    copyright_start_year = 2026
+    copyright_year = (
+        str(copyright_start_year)
+        if current_year <= copyright_start_year
+        else f"{copyright_start_year}\u2013{current_year}"
+    )
+    common = {"current_year": current_year, "copyright_year": copyright_year}
     subdir_common = {**common, "base": ".."}
 
     # Render homepage
