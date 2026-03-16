@@ -103,8 +103,10 @@ concerts:
     comment: "with Thanallian"
 
   - date: "2026-06-27"
-    venue: TBA
-    location: TBA
+    venue: Modrá Vopice
+    location: Solstice Festival, Praha
+    tickets: "https://goout.net/en/solstice-festival-2026/szktdtx/"
+    facebook: "https://www.facebook.com/events/875390824962499"
 
   - date: "2026-07-16"
     venue: TBA
