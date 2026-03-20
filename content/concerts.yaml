@@ -79,6 +79,7 @@ concerts:
     venue: Česká 1
     location: Kutná Hora
     comment: "with Honoris Causa"
+    facebook: "https://www.facebook.com/events/1532997238827510"
 
   - date: "2026-05-09"
     venue: Klubovna
@@ -90,6 +91,7 @@ concerts:
     venue: Willax
     location: Mladá Boleslav
     comment: "with After Evolution"
+    facebook: "https://www.facebook.com/events/949411454098552" 
 
   - date: "2026-05-30"
     venue: M13
@@ -101,6 +103,7 @@ concerts:
     venue: Divadlo Pod Lampou
     location: Plzeň
     comment: "with Thanallian"
+    facebook: "https://facebook.com/events/1846523289385860" 
 
   - date: "2026-06-27"
     venue: Modrá Vopice
