@@ -63,8 +63,8 @@ concerts:
     facebook: "https://www.facebook.com/events/1242514153403297"
 
   - date: "2025-06-21"
-    venue: Modrá Vopice
-    location: Solstice Festival, Praha
+    venue: Solstice Festival
+    location: Praha
     tickets: "https://goout.net/en/solstice-festival-2025/szktdtx/"
     facebook: "https://www.facebook.com/events/1342729330394991/"
 
@@ -78,7 +78,7 @@ concerts:
   - date: "2026-05-07"
     venue: Česká 1
     location: Kutná Hora
-    comment: "with Honoris Causa"
+    comment: "with Honoris Causa, Falcar"
     facebook: "https://www.facebook.com/events/1532997238827510"
 
   - date: "2026-05-09"
@@ -106,8 +106,8 @@ concerts:
     facebook: "https://facebook.com/events/1846523289385860" 
 
   - date: "2026-06-27"
-    venue: Modrá Vopice
-    location: Solstice Festival, Praha
+    venue: Solstice Festival
+    location: Praha
     tickets: "https://goout.net/en/solstice-festival-2026/szktdtx/"
     facebook: "https://www.facebook.com/events/875390824962499"
 
