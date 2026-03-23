@@ -821,13 +821,17 @@ h3 {
 /* ─── Photo grid ─────────────────────────────────────────── */
 
 .photo-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 4px;
 }
 
 .photo-card {
   display: block;
+  flex: 0 0 calc((100% - 8px) / 3);
+  max-width: calc((100% - 8px) / 3);
+  min-width: 0;
   overflow: hidden;
   aspect-ratio: 3/2;
   background: var(--bg-card);
@@ -1025,6 +1029,10 @@ body.lightbox-open {
   width: 100%;
   text-align: left;
   font: inherit;
+}
+
+.photo-grid .gallery-thumb {
+  width: auto;
 }
 
 /* ─── Page content ───────────────────────────────────────── */
@@ -1790,8 +1798,9 @@ body:has(.epk-page) .nav-overlay .nav a:hover {
     gap: 24px;
   }
 
-  .photo-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .photo-card {
+    flex: 0 0 calc((100% - 4px) / 2);
+    max-width: calc((100% - 4px) / 2);
   }
 
   .site-footer {
@@ -1912,9 +1921,15 @@ body:has(.epk-page) .nav-overlay .nav a:hover {
     justify-content: center;
   }
 
-  .photo-grid {
-    grid-template-columns: 1fr;
+  .photo-card {
+    flex: 0 0 100%;
+    max-width: 100%;
   }
+
+  .photo-grid .gallery-thumb {
+    width: 100%;
+  }
+
   .band-members-grid {
     grid-template-columns: 1fr;
   }
