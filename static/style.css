@@ -94,6 +94,11 @@ a:hover {
   padding-right: 32px;
 }
 
+/* Upcoming shows block: 1000px on home (matches shows page + EPK) */
+.section .layout:has(.concert-list) {
+  max-width: 1000px;
+}
+
 /* ─── Navigation ─────────────────────────────────────────── */
 
 .site-header {
@@ -697,7 +702,7 @@ h3 {
 
 .concert-list li {
   display: grid;
-  grid-template-columns: 8ch 12ch 16ch auto 1fr;
+  grid-template-columns: 8ch 13ch 16ch auto 1fr;
   gap: 0 32px;
   align-items: center;
   padding: 15px 0;
@@ -766,9 +771,12 @@ h3 {
   pointer-events: none;
 }
 
-/* Shows page sections */
+/* Shows page sections — same width as home / EPK concert block */
 .shows-section {
   padding: 0 0 40px;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .shows-section h2 {
@@ -1879,6 +1887,25 @@ body:has(.epk-page) .nav-overlay .nav a:hover {
   text-align: center;
 }
 
+/* Match home/shows: 1000px block, centered title + CTA, left-aligned concert grid */
+.epk-page .epk-section.epk-shows .layout {
+  max-width: 1000px;
+}
+
+.epk-section.epk-shows .layout > h2 {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 40px;
+}
+
+.epk-section.epk-shows .concert-list {
+  text-align: start;
+}
+
+.epk-section.epk-shows .section-link {
+  text-align: center;
+}
+
 .epk-section {
   padding: 56px 0;
   border-bottom: 1px solid var(--border);
@@ -2227,12 +2254,6 @@ body:has(.epk-page) .nav-overlay .nav a:hover {
   font-size: 12px;
   color: var(--text-muted);
   letter-spacing: 0.04em;
-}
-
-.epk-concert-list {
-  max-width: 640px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .epk-technical-list {

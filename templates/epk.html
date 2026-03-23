@@ -139,48 +139,18 @@
     <section class="epk-section epk-shows">
         <div class="layout">
             {% if upcoming_shows %}
-            <h2 class="epk-section-title">Upcoming shows</h2>
-            <ul class="concert-list epk-concert-list">
-                {% for c in upcoming_shows %}
-                <li>
-                    <span class="col-date">{{ c.date_display }}</span>
-                    <span class="col-city-venue">
-                        <span class="col-city">{{ c.location if c.location else '' }}</span>
-                        <span class="col-venue">{{ c.venue if c.venue else '' }}</span>
-                    </span>
-                    <span class="col-comment">{{ c.comment if c.get('comment') else '' }}</span>
-                    <span class="col-links">
-                        {% if c.tickets %}<a href="{{ c.tickets }}" target="_blank" rel="noopener">Tickets</a>{% endif %}
-                        {% if c.facebook %}<a href="{{ c.facebook }}" target="_blank" rel="noopener">Facebook</a>{% endif %}
-                    </span>
-                </li>
-                {% endfor %}
-            </ul>
+            <h2>Upcoming Shows</h2>
+            {% set shows = upcoming_shows %}{% include "partials/concert_list.html" %}
             {% else %}
-            <h2 class="epk-section-title">Recent shows</h2>
+            <h2>Recent shows</h2>
             {% if recent_shows %}
-            <ul class="concert-list epk-concert-list">
-                {% for c in recent_shows %}
-                <li>
-                    <span class="col-date">{{ c.date_display }}</span>
-                    <span class="col-city-venue">
-                        <span class="col-city">{{ c.location if c.location else '' }}</span>
-                        <span class="col-venue">{{ c.venue if c.venue else '' }}</span>
-                    </span>
-                    <span class="col-comment">{{ c.comment if c.get('comment') else '' }}</span>
-                    <span class="col-links">
-                        {% if c.tickets %}<a href="{{ c.tickets }}" target="_blank" rel="noopener">Tickets</a>{% endif %}
-                        {% if c.facebook %}<a href="{{ c.facebook }}" target="_blank" rel="noopener">Facebook</a>{% endif %}
-                    </span>
-                </li>
-                {% endfor %}
-            </ul>
+            {% set shows = recent_shows %}{% include "partials/concert_list.html" %}
             {% else %}
             <p class="epk-muted">See <a href="{{ base }}/shows/index.html">shows</a> for dates.</p>
             {% endif %}
             {% endif %}
             {% if upcoming_shows or recent_shows %}
-            <p class="epk-more"><a href="{{ base }}/shows/index.html">All shows</a></p>
+            <p class="section-link"><a href="{{ base }}/shows/index.html" class="btn">All Shows</a></p>
             {% endif %}
         </div>
     </section>
