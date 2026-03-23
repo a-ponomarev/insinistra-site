@@ -1,0 +1,13 @@
+# Gallery photo grid: vertical crop for portrait thumbnails (CSS object-position).
+# Allowed: top | center | bottom
+portrait_crop: top
+
+# Optional: override the default for specific files. Keys = path under photos/ (forward slashes),
+# same as shown in gallery / build output (e.g. Live/Insinistra Vocalist 1.jpeg).
+# Invalid values for a path are skipped (that photo uses the global default).
+# portrait_crop_overrides:
+#   "Live/Insinistra Vocalist 1.jpeg": center
+#   "Promo/foo.jpg": bottom
+
+portrait_crop_overrides:
+  "Live/Insinistra Vocalist 1.jpeg": center

@@ -848,7 +848,7 @@ h3 {
 }
 
 .photo-card img.portrait {
-  object-position: top;
+  object-position: var(--photo-crop, var(--gallery-portrait-crop, top));
 }
 
 .photo-card:hover img {

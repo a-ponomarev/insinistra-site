@@ -36,6 +36,16 @@ BANNER_CSS_HEIGHT_PX = 320
 SOCIAL_SIDEBAR_WIDTH_PX = 56  # body padding-left reserved for .social-sidebar
 BANNER_HIDE_BREAKPOINT_DEFAULT = 576
 
+VALID_PORTRAIT_CROPS = frozenset({"top", "center", "bottom"})
+
+
+def _normalize_portrait_crop(value) -> str | None:
+    """Return a valid crop keyword or None if missing/invalid."""
+    if value is None or not isinstance(value, str):
+        return None
+    s = value.strip().lower()
+    return s if s in VALID_PORTRAIT_CROPS else None
+
 
 def parse_frontmatter(text: str) -> tuple[dict, str]:
     """Extract YAML frontmatter from Markdown. Returns (data, body)."""
@@ -233,6 +243,52 @@ def load_epk_config() -> dict:
         return defaults
 
 
+def load_gallery_config() -> dict:
+    """Load gallery UI config from content/gallery.yaml (portrait thumb crop)."""
+    defaults = {
+        "portrait_crop": "top",
+        "portrait_crop_overrides": {},
+    }
+    path = CONTENT_DIR / "gallery.yaml"
+    if not path.exists():
+        return {"portrait_crop": defaults["portrait_crop"], "portrait_crop_overrides": {}}
+    try:
+        data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+        if not isinstance(data, dict):
+            return {"portrait_crop": defaults["portrait_crop"], "portrait_crop_overrides": {}}
+        for key, value in defaults.items():
+            if key not in data:
+                data[key] = value
+        pc = _normalize_portrait_crop(data.get("portrait_crop")) or "top"
+        data["portrait_crop"] = pc
+        raw_ov = data.get("portrait_crop_overrides")
+        overrides: dict[str, str] = {}
+        if isinstance(raw_ov, dict):
+            for k, v in raw_ov.items():
+                if k is None:
+                    continue
+                key_norm = str(k).strip().replace("\\", "/")
+                val = _normalize_portrait_crop(v)
+                if val:
+                    overrides[key_norm] = val
+        data["portrait_crop_overrides"] = overrides
+        return data
+    except (yaml.YAMLError, OSError):
+        return {"portrait_crop": defaults["portrait_crop"], "portrait_crop_overrides": {}}
+
+
+def apply_gallery_portrait_overrides(photo_albums: list[dict], gallery_config: dict) -> None:
+    """Set photo['portrait_crop'] only when a valid per-path override exists."""
+    ov = gallery_config.get("portrait_crop_overrides") or {}
+    for album in photo_albums:
+        for p in album.get("photos", []):
+            norm = (p.get("name") or "").replace("\\", "/")
+            if norm in ov:
+                p["portrait_crop"] = ov[norm]
+            else:
+                p.pop("portrait_crop", None)
+
+
 def process_images(src_dir: Path, dist_dir: Path, url_prefix: str) -> list[dict]:
     """
     Copy originals and create resized + thumbnail versions from src_dir into dist_dir.
@@ -388,6 +444,7 @@ def main() -> None:
     # Load data
     print("  Loading content...")
     epk_config = load_epk_config()
+    gallery_config = load_gallery_config()
     pages = load_pages(
         {
             "press_kit_url": epk_config.get("press_kit_url") or "",
@@ -402,6 +459,7 @@ def main() -> None:
     print("  Processing photos...")
     photos = process_images(PHOTOS_DIR, DIST_DIR / "photos", "photos")
     photo_albums, all_photos_ordered = group_photos_by_album(photos)
+    apply_gallery_portrait_overrides(photo_albums, gallery_config)
 
     # Process images (banner, artwork, etc.)
     print("  Processing images...")
@@ -430,7 +488,11 @@ def main() -> None:
         if current_year <= copyright_start_year
         else f"{copyright_start_year}\u2013{current_year}"
     )
-    common = {"current_year": current_year, "copyright_year": copyright_year}
+    common = {
+        "current_year": current_year,
+        "copyright_year": copyright_year,
+        "gallery_portrait_crop": gallery_config["portrait_crop"],
+    }
     subdir_common = {**common, "base": ".."}
 
     # Render homepage

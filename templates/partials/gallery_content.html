@@ -10,7 +10,7 @@
     <div class="photo-grid">
         {% for photo in album.photos %}
         <button type="button" class="photo-card gallery-thumb" data-index="{{ photo.index }}" data-resized="{% if base %}{{ base }}/{% endif %}{{ photo.resized }}" data-name="{{ photo.name }}" aria-label="View {{ photo.name }}">
-            <img src="{% if base %}{{ base }}/{% endif %}{{ photo.thumb }}" data-thumb="{% if base %}{{ base }}/{% endif %}{{ photo.thumb }}" data-resized="{% if base %}{{ base }}/{% endif %}{{ photo.resized }}" alt="{{ photo.name }}" loading="lazy">
+            <img src="{% if base %}{{ base }}/{% endif %}{{ photo.thumb }}" data-thumb="{% if base %}{{ base }}/{% endif %}{{ photo.thumb }}" data-resized="{% if base %}{{ base }}/{% endif %}{{ photo.resized }}" alt="{{ photo.name }}" loading="lazy"{% if photo.portrait_crop is defined %} style="--photo-crop: {{ photo.portrait_crop }}"{% endif %}>
         </button>
         {% endfor %}
     </div>
