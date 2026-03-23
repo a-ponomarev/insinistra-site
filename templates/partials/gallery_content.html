@@ -39,15 +39,13 @@
     var baseEl = document.getElementById('gallery-base');
     var base = baseEl ? JSON.parse(baseEl.textContent) : '';
     if (base && !base.endsWith('/')) base += '/';
-    var conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-    var useHighQuality = conn && (conn.effectiveType === '4g' || conn.effectiveType === '3g') && !conn.saveData;
     function setPortraitClass(img) {
         if (img.naturalWidth && img.naturalHeight && img.naturalHeight > img.naturalWidth) {
             img.classList.add('portrait');
         }
     }
     document.querySelectorAll('.gallery-thumb img').forEach(function (img) {
-        img.src = useHighQuality ? (img.getAttribute('data-resized') || img.src) : (img.getAttribute('data-thumb') || img.src);
+        img.src = img.getAttribute('data-resized') || img.src;
         img.addEventListener('load', function () { setPortraitClass(img); });
         if (img.complete && img.naturalWidth) setPortraitClass(img);
     });
