@@ -633,14 +633,17 @@ h3 {
 /* ─── Album grid ─────────────────────────────────────────── */
 
 .album-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 32px;
 }
 
 .album-card {
   background: transparent;
   padding: 0;
+  flex: 0 1 calc((100% - 96px) / 4);
+  min-width: 0;
 }
 
 .album-card a {
@@ -1357,8 +1360,8 @@ body.lightbox-open {
     grid-template-columns: 340px 1fr;
     gap: 48px;
   }
-  .album-grid {
-    grid-template-columns: repeat(3, 1fr);
+  .album-card {
+    flex: 0 1 calc((100% - 64px) / 3);
   }
   .band-members-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -1776,8 +1779,11 @@ body:has(.epk-page) .nav-overlay .nav a:hover {
   }
 
   .album-grid {
-    grid-template-columns: repeat(2, 1fr);
     gap: 20px;
+  }
+
+  .album-card {
+    flex: 0 1 calc((100% - 20px) / 2);
   }
   .band-members-grid {
     grid-template-columns: repeat(2, 1fr);
