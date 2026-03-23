@@ -1567,6 +1567,56 @@ body:has(.epk-page) .nav-overlay .nav a:hover {
   }
 }
 
+/* Concert list: desktop table is cramped below 1000px — use stacked "middle" layout (narrow centered step is max-width: 560px) */
+@media (max-width: 1000px) {
+  .concert-list li {
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto auto;
+    row-gap: 4px;
+  }
+
+  .concert-list .col-date {
+    grid-column: 1;
+    grid-row: 3;
+    font-size: 12px;
+  }
+
+  .concert-list .col-city-venue {
+    display: block;
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .concert-list .col-city-venue .col-city {
+    display: inline;
+  }
+
+  .concert-list .col-city-venue .col-venue {
+    display: inline;
+  }
+
+  .concert-list .col-city-venue .col-venue:not(:empty)::before {
+    content: " · ";
+  }
+
+  .concert-list .col-comment {
+    grid-column: 1;
+    grid-row: 2;
+    font-size: 12px;
+  }
+
+  .concert-list .col-comment:empty,
+  .concert-list .col-links:empty {
+    display: none;
+  }
+
+  .concert-list .col-links {
+    grid-column: 2;
+    grid-row: 1 / 4;
+    align-items: center;
+  }
+}
+
 /* Mobile: hide sidebar, show footer social */
 @media (max-width: 740px) {
   body {
@@ -1734,53 +1784,6 @@ body:has(.epk-page) .nav-overlay .nav a:hover {
     gap: 24px;
   }
 
-  .concert-list li {
-    grid-template-columns: 1fr auto;
-    grid-template-rows: auto auto auto;
-    row-gap: 4px;
-  }
-
-  .concert-list .col-date {
-    grid-column: 1;
-    grid-row: 3;
-    font-size: 12px;
-  }
-
-  .concert-list .col-city-venue {
-    display: block;
-    grid-column: 1;
-    grid-row: 1;
-  }
-
-  .concert-list .col-city-venue .col-city {
-    display: inline;
-  }
-
-  .concert-list .col-city-venue .col-venue {
-    display: inline;
-  }
-
-  .concert-list .col-city-venue .col-venue:not(:empty)::before {
-    content: " · ";
-  }
-
-  .concert-list .col-comment {
-    grid-column: 1;
-    grid-row: 2;
-    font-size: 12px;
-  }
-
-  .concert-list .col-comment:empty,
-  .concert-list .col-links:empty {
-    display: none;
-  }
-
-  .concert-list .col-links {
-    grid-column: 2;
-    grid-row: 1 / 4;
-    align-items: center;
-  }
-
   .photo-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -1788,6 +1791,21 @@ body:has(.epk-page) .nav-overlay .nav a:hover {
   .site-footer {
     padding: 30px 20px 32px;
     padding-bottom: calc(32px + env(safe-area-inset-bottom, 0));
+  }
+}
+
+/* Shows list: fixed width in middle breakpoint only (stacked row layout, not desktop table nor narrow centered) */
+@media (max-width: 1000px) and (min-width: 561px) {
+  .section .layout:has(.concert-list) {
+    max-width: 450px;
+  }
+
+  .shows-section {
+    max-width: 450px;
+  }
+
+  .epk-page .epk-section.epk-shows .layout {
+    max-width: 450px;
   }
 }
 
