@@ -1841,11 +1841,17 @@ body:has(.epk-page) .nav-overlay .nav a:hover {
 }
 
 @media (max-width: 560px) {
+  .concert-list,
+  .epk-section.epk-shows .concert-list {
+    text-align: center;
+  }
+
   .concert-list li {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto auto auto;
     row-gap: 8px;
     padding: 16px 0;
+    justify-items: center;
   }
 
   .concert-list .col-date {
@@ -1863,9 +1869,10 @@ body:has(.epk-page) .nav-overlay .nav a:hover {
   .concert-list .col-links {
     grid-column: 1;
     grid-row: 4;
-    justify-self: start;
-    justify-content: flex-end;
-    flex-direction: row-reverse;
+    justify-self: center;
+    justify-content: center;
+    flex-direction: row;
+    flex-wrap: wrap;
   }
 
   .concert-list .col-links a {
