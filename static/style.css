@@ -1841,6 +1841,11 @@ body:has(.epk-page) .nav-overlay .nav a:hover {
 }
 
 @media (max-width: 560px) {
+  /* Black strip on the right: keep banner art clear of fixed hamburger (48px + .layout gutter) */
+  .site-banner {
+    padding-right: calc(48px + env(safe-area-inset-right, 0px));
+  }
+
   .concert-list,
   .epk-section.epk-shows .concert-list {
     text-align: center;
