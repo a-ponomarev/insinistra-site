@@ -1433,6 +1433,37 @@ body.lightbox-open {
   .nav-overlay .nav a:hover {
     color: var(--text-primary);
   }
+
+  /* Right-side drawer with scrim (tablet / small laptop); fullscreen below 561px */
+  @media (min-width: 561px) {
+    .nav-overlay {
+      --nav-drawer-width: min(300px, 85vw);
+      display: flex;
+      justify-content: flex-end;
+      align-items: stretch;
+      padding: 0;
+      background: rgba(11, 10, 15, 0.55);
+    }
+
+    .nav-overlay .nav {
+      width: var(--nav-drawer-width);
+      max-width: 100%;
+      min-height: 100%;
+      background: var(--bg-primary);
+      border-left: 1px solid var(--border);
+      box-shadow: -8px 0 32px rgba(0, 0, 0, 0.4);
+      padding: calc(80px + env(safe-area-inset-top, 0)) 24px
+        calc(24px + env(safe-area-inset-bottom, 0));
+      flex-shrink: 0;
+      overflow-y: auto;
+      transform: translateX(100%);
+      transition: transform 220ms ease;
+    }
+
+    .nav-overlay.nav-open .nav {
+      transform: translateX(0);
+    }
+  }
 }
 
 /* EPK page: always show sandwich nav (same as narrow viewport) */
@@ -1501,6 +1532,39 @@ body:has(.epk-page) .nav-overlay .nav a:last-child {
 
 body:has(.epk-page) .nav-overlay .nav a:hover {
   color: var(--text-primary);
+}
+
+@media (min-width: 561px) {
+  body:has(.epk-page) {
+    --nav-drawer-width: min(300px, 85vw);
+  }
+
+  body:has(.epk-page) .nav-overlay {
+    display: flex;
+    justify-content: flex-end;
+    align-items: stretch;
+    padding: 0;
+    background: rgba(11, 10, 15, 0.55);
+  }
+
+  body:has(.epk-page) .nav-overlay .nav {
+    width: var(--nav-drawer-width);
+    max-width: 100%;
+    min-height: 100%;
+    background: var(--bg-primary);
+    border-left: 1px solid var(--border);
+    box-shadow: -8px 0 32px rgba(0, 0, 0, 0.4);
+    padding: calc(80px + env(safe-area-inset-top, 0)) 24px
+      calc(24px + env(safe-area-inset-bottom, 0));
+    flex-shrink: 0;
+    overflow-y: auto;
+    transform: translateX(100%);
+    transition: transform 220ms ease;
+  }
+
+  body:has(.epk-page) .nav-overlay.nav-open .nav {
+    transform: translateX(0);
+  }
 }
 
 /* Mobile: hide sidebar, show footer social */
