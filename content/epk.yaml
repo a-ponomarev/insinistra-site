@@ -13,9 +13,12 @@ booking_email: "booking@insinistra.com"
 press_email: "press@insinistra.com"
 # booking_contact_name: "Optional name"
 
+# Press kit & stage plan (Google Drive); also used by contact page via build
+press_kit_url: "https://drive.google.com/drive/u/1/folders/1gppHvnarnz9bukETE6Lh4Dhenvk-cX8-"
+stage_plot_url: "https://drive.google.com/drive/u/1/folders/1hL0tfW4y3NDbdyukyFaSUYSj_pPYc0z2"
+
 # PDF URLs — add when you have the files (e.g. under static/ or external)
 # rider_url: "https://example.com/insinistra-rider.pdf"
-# stage_plot_url: "https://example.com/insinistra-stage-plot.pdf"
 
 # Optional: highlight one video as "Live performance" (YouTube ID)
 # featured_video_id: "bs17MJ8wvbc"

@@ -161,7 +161,11 @@
             {% if photo_albums %}
             {% include "partials/gallery_content.html" with context %}
             <p class="epk-photos-download">
+                {% if epk.press_kit_url %}
+                <a href="{{ epk.press_kit_url }}" target="_blank" rel="noopener noreferrer" class="epk-technical-link-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M5 19h14"/></svg><span>Download press kit</span></a>
+                {% else %}
                 <a href="mailto:{{ epk.press_email or epk.booking_email }}?subject=Press%20kit%20request" class="epk-technical-link-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M5 19h14"/></svg><span>Download press kit</span></a>
+                {% endif %}
             </p>
             {% else %}
             <p class="epk-muted">Press photos available on request.</p>
@@ -177,7 +181,7 @@
                 <li><a href="{{ epk.rider_url }}" target="_blank" rel="noopener">Technical rider (PDF)</a></li>
                 {% endif %}
                 {% if epk.stage_plot_url %}
-                <li><a href="{{ epk.stage_plot_url }}" target="_blank" rel="noopener" class="epk-technical-link-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M5 19h14"/></svg><span>Download stage plan</span></a></li>
+                <li><a href="{{ epk.stage_plot_url }}" target="_blank" rel="noopener noreferrer" class="epk-technical-link-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M5 19h14"/></svg><span>Download stage plan</span></a></li>
                 {% else %}
                 <li><a href="mailto:{{ epk.booking_email }}?subject=Stage%20plan%20request" class="epk-technical-link-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M5 19h14"/></svg><span>Download stage plan</span></a></li>
                 {% endif %}

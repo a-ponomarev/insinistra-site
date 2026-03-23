@@ -59,22 +59,24 @@ def _external_links_new_tab(html: str) -> str:
     return re.sub(r'<a\s+[^>]*href="https?://[^"]*"[^>]*>', repl, html)
 
 
-def load_markdown_page(path: Path) -> tuple[dict, str]:
+def load_markdown_page(path: Path, body_context: dict | None = None) -> tuple[dict, str]:
     """Load a .md file; return (frontmatter dict, html body)."""
     raw = path.read_text(encoding="utf-8")
     data, body = parse_frontmatter(raw)
+    if body_context and data.get("jinja_body"):
+        body = Template(body).render(**body_context)
     data["content_html"] = _external_links_new_tab(markdown(body))
     return data, data.get("title", path.stem)
 
 
-def load_pages() -> list[dict]:
+def load_pages(body_context: dict | None = None) -> list[dict]:
     """Load all Markdown pages from content/pages/."""
     pages_dir = CONTENT_DIR / "pages"
     if not pages_dir.exists():
         return []
     pages = []
     for path in sorted(pages_dir.glob("*.md")):
-        data, title = load_markdown_page(path)
+        data, title = load_markdown_page(path, body_context)
         data["slug"] = path.stem
         data["title"] = title
         pages.append(data)
@@ -213,6 +215,8 @@ def load_epk_config() -> dict:
         "featured_video_id": None,
         "featured_tracks": [],
         "press_photos": [],
+        "press_kit_url": "",
+        "stage_plot_url": "",
     }
     path = CONTENT_DIR / "epk.yaml"
     if not path.exists():
@@ -383,7 +387,13 @@ def main() -> None:
 
     # Load data
     print("  Loading content...")
-    pages = load_pages()
+    epk_config = load_epk_config()
+    pages = load_pages(
+        {
+            "press_kit_url": epk_config.get("press_kit_url") or "",
+            "stage_plot_url": epk_config.get("stage_plot_url") or "",
+        }
+    )
     upcoming_shows, past_shows = load_concerts()
     albums = load_albums()
     videos = load_videos()
@@ -497,7 +507,6 @@ def main() -> None:
 
     # EPK page (Electronic Press Kit)
     print("  Writing epk/index.html...")
-    epk_config = load_epk_config()
     about_page = next((p for p in pages if p.get("slug") == "about"), None)
     # Press photos: from epk.yaml list (with URL resolution) or filter image_assets by promo/banner/hero
     def is_press_asset(a: dict) -> bool:
