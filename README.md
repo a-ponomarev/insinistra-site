@@ -2,6 +2,8 @@
 
 A minimal Python static site generator for band websites. Generates a fully static site from Jinja2 templates, Markdown pages, and YAML data.
 
+Planned improvements and priorities: see [ROADMAP.md](ROADMAP.md).
+
 ## Requirements
 
 - Python 3.11+
