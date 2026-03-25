@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Page not found{% endblock %}
+
+{% block extra_head %}
+<meta name="robots" content="noindex">
+{% endblock %}
+
+{% block content %}
+<article class="page page-not-found">
+    <div class="page-not-found__middle">
+        <p class="page-not-found__code" aria-hidden="true"><span class="page-not-found__code-inner">404</span></p>
+        <div class="page-not-found__divider" role="presentation"></div>
+        <h1 class="page-not-found__heading visually-hidden">404 — Page not found</h1>
+        <p class="page-not-found__lead">Nothing lives at this address.</p>
+        <a href="." class="btn">Back to home</a>
+    </div>
+    <div class="hero-social-mobile" aria-label="Social links">
+        {% include "partials/social_links.html" %}
+    </div>
+</article>
+{% endblock %}
