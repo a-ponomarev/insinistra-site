@@ -11,6 +11,7 @@ import shutil
 from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
+from urllib.parse import urljoin
 
 import yaml
 from jinja2 import Environment, FileSystemLoader, Template
@@ -86,6 +87,8 @@ def load_site_config() -> dict:
             "Insinistra — symphonic metal from Prague. Official site: music, shows, and press."
         ),
         "meta_descriptions": {},
+        "site_url": "",
+        "default_og_image": "images/1600/banner-1600.jpg",
     }
     path = CONTENT_DIR / "site.yaml"
     if not path.exists():
@@ -122,6 +125,43 @@ def resolve_meta_description(slug: str, page: dict | None, site: dict) -> str:
     if isinstance(routes.get(slug), str) and routes[slug].strip():
         return _clean_meta_description(routes[slug])
     return _clean_meta_description(site.get("default_meta_description") or "")
+
+
+def social_meta_context(
+    site: dict,
+    *,
+    path_segment: str,
+    title_part: str,
+    meta_description: str,
+    og_image_rel: str | None = None,
+) -> dict:
+    """
+    Open Graph + Twitter Card values for base.html.
+    If site_url is empty, social_meta_enabled is False (no tags — set site_url in site.yaml for production).
+    """
+    site_url = (site.get("site_url") or "").strip().rstrip("/")
+    if not site_url:
+        return {"social_meta_enabled": False}
+    img = (og_image_rel or site.get("default_og_image") or "").strip().lstrip("/")
+    seg = (path_segment or "").strip().strip("/")
+    canonical = f"{seg}/" if seg else ""
+    base = site_url + "/"
+    og_url = urljoin(base, canonical)
+    og_image = urljoin(base, img) if img else ""
+    title = f"{title_part} | Insinistra"
+    desc = meta_description or ""
+    return {
+        "social_meta_enabled": True,
+        "og_type": "website",
+        "og_title": title,
+        "og_description": desc,
+        "og_image": og_image,
+        "og_url": og_url,
+        "twitter_card": "summary_large_image",
+        "twitter_title": title,
+        "twitter_description": desc,
+        "twitter_image": og_image,
+    }
 
 
 def load_pages(body_context: dict | None = None) -> list[dict]:
@@ -546,11 +586,18 @@ def main() -> None:
     featured_album = next((a for a in albums if a.get("featured")), None)
     albums_for_discography = [a for a in albums if not a.get("featured")][:4]
     template_index = env.get_template("index.html")
+    home_desc = resolve_meta_description("home", None, site_config)
     (DIST_DIR / "index.html").write_text(
         template_index.render(
             base="",
             is_index=True,
-            meta_description=resolve_meta_description("home", None, site_config),
+            meta_description=home_desc,
+            **social_meta_context(
+                site_config,
+                path_segment="",
+                title_part="Home",
+                meta_description=home_desc,
+            ),
             **common,
             pages=pages,
             concerts=upcoming_shows[:5],
@@ -571,6 +618,12 @@ def main() -> None:
         out_dir = DIST_DIR / slug
         out_dir.mkdir(parents=True, exist_ok=True)
         meta_desc = resolve_meta_description(slug, page, site_config)
+        sm = social_meta_context(
+            site_config,
+            path_segment=slug,
+            title_part=page.get("title") or slug,
+            meta_description=meta_desc,
+        )
         if slug == "about":
             template_about = env.get_template("about.html")
             (out_dir / "index.html").write_text(
@@ -579,6 +632,7 @@ def main() -> None:
                     band_members=band_members,
                     reviews=reviews,
                     meta_description=meta_desc,
+                    **sm,
                     **subdir_common,
                 ),
                 encoding="utf-8",
@@ -586,7 +640,7 @@ def main() -> None:
         else:
             template_page = env.get_template("page.html")
             (out_dir / "index.html").write_text(
-                template_page.render(page=page, meta_description=meta_desc, **subdir_common),
+                template_page.render(page=page, meta_description=meta_desc, **sm, **subdir_common),
                 encoding="utf-8",
             )
 
@@ -594,11 +648,18 @@ def main() -> None:
     print("  Writing shows/index.html...")
     (DIST_DIR / "shows").mkdir(exist_ok=True)
     template_concerts = env.get_template("concerts.html")
+    shows_desc = resolve_meta_description("shows", None, site_config)
     (DIST_DIR / "shows" / "index.html").write_text(
         template_concerts.render(
             upcoming_shows=upcoming_shows,
             past_shows=past_shows,
-            meta_description=resolve_meta_description("shows", None, site_config),
+            meta_description=shows_desc,
+            **social_meta_context(
+                site_config,
+                path_segment="shows",
+                title_part="Shows",
+                meta_description=shows_desc,
+            ),
             **subdir_common,
         ),
         encoding="utf-8",
@@ -608,10 +669,17 @@ def main() -> None:
     print("  Writing albums/index.html...")
     (DIST_DIR / "albums").mkdir(exist_ok=True)
     template_albums = env.get_template("albums.html")
+    albums_desc = resolve_meta_description("albums", None, site_config)
     (DIST_DIR / "albums" / "index.html").write_text(
         template_albums.render(
             albums=albums,
-            meta_description=resolve_meta_description("albums", None, site_config),
+            meta_description=albums_desc,
+            **social_meta_context(
+                site_config,
+                path_segment="albums",
+                title_part="Discography",
+                meta_description=albums_desc,
+            ),
             **subdir_common,
         ),
         encoding="utf-8",
@@ -621,11 +689,18 @@ def main() -> None:
     print("  Writing photos/index.html...")
     (DIST_DIR / "photos").mkdir(exist_ok=True)
     template_photos = env.get_template("photos.html")
+    photos_desc = resolve_meta_description("photos", None, site_config)
     (DIST_DIR / "photos" / "index.html").write_text(
         template_photos.render(
             photo_albums=photo_albums,
             all_photos_ordered=all_photos_ordered,
-            meta_description=resolve_meta_description("photos", None, site_config),
+            meta_description=photos_desc,
+            **social_meta_context(
+                site_config,
+                path_segment="photos",
+                title_part="Photos",
+                meta_description=photos_desc,
+            ),
             **subdir_common,
         ),
         encoding="utf-8",
@@ -651,6 +726,7 @@ def main() -> None:
         press_photos = [{"label": (a.get("name") or "").split("/")[-1], "resized": a.get("resized"), "thumb": a.get("thumb"), "original": a.get("original")} for a in image_assets if is_press_asset(a)]
     (DIST_DIR / "epk").mkdir(exist_ok=True)
     template_epk = env.get_template("epk.html")
+    epk_desc = resolve_meta_description("epk", None, site_config)
     (DIST_DIR / "epk" / "index.html").write_text(
         template_epk.render(
             epk=epk_config,
@@ -665,7 +741,13 @@ def main() -> None:
             all_photos_ordered=all_photos_ordered,
             image_assets=image_assets,
             epk_press_photos=press_photos,
-            meta_description=resolve_meta_description("epk", None, site_config),
+            meta_description=epk_desc,
+            **social_meta_context(
+                site_config,
+                path_segment="epk",
+                title_part="Electronic Press Kit",
+                meta_description=epk_desc,
+            ),
             **subdir_common,
         ),
         encoding="utf-8",

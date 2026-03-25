@@ -1,6 +1,11 @@
 # Site-wide defaults for <meta name="description"> and route fallbacks.
 # Override any route or add new keys under meta_descriptions as needed.
 # Markdown pages can set `description` in frontmatter to override the entry for that slug.
+#
+# Open Graph / Twitter: set site_url to the public HTTPS origin (no trailing slash).
+# If empty, og:* and twitter:* tags are omitted. default_og_image is a path under the site root.
+site_url: "https://insinistra.com"
+default_og_image: "images/1600/banner-1600.jpg"
 
 default_meta_description: >-
   Insinistra — symphonic metal from Prague. Official site: music, tour dates,

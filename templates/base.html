@@ -6,6 +6,26 @@
     {% if meta_description %}
     <meta name="description" content="{{ meta_description }}">
     {% endif %}
+    {% if social_meta_enabled %}
+    <meta property="og:site_name" content="Insinistra">
+    <meta property="og:type" content="{{ og_type }}">
+    <meta property="og:title" content="{{ og_title }}">
+    {% if og_description %}
+    <meta property="og:description" content="{{ og_description }}">
+    {% endif %}
+    {% if og_image %}
+    <meta property="og:image" content="{{ og_image }}">
+    {% endif %}
+    <meta property="og:url" content="{{ og_url }}">
+    <meta name="twitter:card" content="{{ twitter_card }}">
+    <meta name="twitter:title" content="{{ twitter_title }}">
+    {% if twitter_description %}
+    <meta name="twitter:description" content="{{ twitter_description }}">
+    {% endif %}
+    {% if twitter_image %}
+    <meta name="twitter:image" content="{{ twitter_image }}">
+    {% endif %}
+    {% endif %}
     <title>{% block title %}Band{% endblock %} | Insinistra</title>
     <link rel="stylesheet" href="{% if base %}{{ base }}/{% endif %}static/style.css">
     <style>:root { --gallery-portrait-crop: {{ gallery_portrait_crop|default('top') }}; }</style>

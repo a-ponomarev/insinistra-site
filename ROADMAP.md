@@ -7,7 +7,7 @@ Prioritized follow-ups for the official band static site, aligned with [TECH_REQ
 ## Key points (executive summary)
 
 - **Strengths today**: Solid information architecture (Home, About, Shows, Discography, Photos, Contact, EPK); broad DSP and social coverage; manual tour listings in YAML; EPK for press; image pipeline and gallery; GoatCounter analytics; fully static output suitable for CDN hosting.
-- **Biggest discovery gap**: Almost no **SEO or link-preview metadata** (descriptions, Open Graph, canonical URLs) and no **JSON-LD** (`MusicGroup`, events, releases) — this is where many label campaigns invest for search and sharing.
+- **Discovery / SEO**: Per-page meta descriptions plus **Open Graph and Twitter Card** tags (when `site_url` is set in `site.yaml`). Still to add: **canonical URLs**, **JSON-LD** (`MusicGroup`, events, releases), and **sitemap / robots** — common next steps for campaigns and rich results.
 - **Crawl hygiene**: No generated **sitemap.xml** or **robots.txt** yet; worth adding given `/slug/index.html` URL patterns.
 - **Fan and campaign tooling**: No mailing list CTA, merch link, smart links / pre-saves, or embedded players — add as campaigns need them.
 
@@ -24,7 +24,7 @@ Prioritized follow-ups for the official band static site, aligned with [TECH_REQ
 ## P1 — Discoverability
 
 - [x] **Per-page `<title>` and meta description** — `content/site.yaml` (`default_meta_description`, `meta_descriptions` per route); Markdown `description` in frontmatter overrides. Rendered in [`templates/base.html`](templates/base.html); [`build.py`](build.py) passes `meta_description` per page.
-- [ ] **Open Graph and Twitter Card tags** (at minimum `og:title`, `og:description`, `og:image`, `og:url`; plus Twitter equivalents or `twitter:card`).
+- [x] **Open Graph and Twitter Card tags** — `site_url` and `default_og_image` in [`content/site.yaml`](content/site.yaml); [`build.py`](build.py) `social_meta_context()`; tags in [`templates/base.html`](templates/base.html) (`og:*`, `twitter:card` / title / description / image). Tags omitted when `site_url` is empty.
 - [ ] **Canonical URL** per page using the live site base URL (configurable at build time).
 - [ ] **JSON-LD (JSON-LD in `<script type="application/ld+json">`)**:
   - [ ] `MusicGroup` on the home (or global) template with `sameAs` pointing to official social and DSP URLs.
