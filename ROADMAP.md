@@ -7,8 +7,8 @@ Prioritized follow-ups for the official band static site, aligned with [TECH_REQ
 ## Key points (executive summary)
 
 - **Strengths today**: Solid information architecture (Home, About, Shows, Discography, Photos, Contact, EPK); broad DSP and social coverage; manual tour listings in YAML; EPK for press; image pipeline and gallery; GoatCounter analytics; fully static output suitable for CDN hosting.
-- **Discovery / SEO**: Per-page meta descriptions plus **Open Graph and Twitter Card** tags (when `site_url` is set in `site.yaml`). Still to add: **canonical URLs**, **JSON-LD** (`MusicGroup`, events, releases), and **sitemap / robots** — common next steps for campaigns and rich results.
-- **Crawl hygiene**: No generated **sitemap.xml** or **robots.txt** yet; worth adding given `/slug/index.html` URL patterns.
+- **Discovery / SEO**: Per-page meta descriptions plus **Open Graph and Twitter Card**, **canonical URLs**, and **JSON-LD** (`MusicGroup` on all pages when `site_url` is set; `MusicEvent` on shows; `MusicAlbum` on discography). **`sitemap.xml`** and **`robots.txt`** are generated in `dist/` when `site_url` is set.
+- **Crawl hygiene**: Sitemap lists HTML entry points; `robots.txt` references the sitemap. Omitted when `site_url` is empty (local builds without a public origin).
 - **Fan and campaign tooling**: No mailing list CTA, merch link, smart links / pre-saves, or embedded players — add as campaigns need them.
 
 ---
@@ -25,12 +25,12 @@ Prioritized follow-ups for the official band static site, aligned with [TECH_REQ
 
 - [x] **Per-page `<title>` and meta description** — `content/site.yaml` (`default_meta_description`, `meta_descriptions` per route); Markdown `description` in frontmatter overrides. Rendered in [`templates/base.html`](templates/base.html); [`build.py`](build.py) passes `meta_description` per page.
 - [x] **Open Graph and Twitter Card tags** — `site_url` and `default_og_image` in [`content/site.yaml`](content/site.yaml); [`build.py`](build.py) `social_meta_context()`; tags in [`templates/base.html`](templates/base.html) (`og:*`, `twitter:card` / title / description / image). Tags omitted when `site_url` is empty.
-- [ ] **Canonical URL** per page using the live site base URL (configurable at build time).
-- [ ] **JSON-LD (JSON-LD in `<script type="application/ld+json">`)**:
-  - [ ] `MusicGroup` on the home (or global) template with `sameAs` pointing to official social and DSP URLs.
-  - [ ] `MusicEvent` for upcoming shows (venue, date, ticket URL when present).
-  - [ ] Optional `MusicAlbum` / `MusicRecording` for releases on the discography or album detail flows, if you add stable URLs per release.
-- [ ] **Generated `sitemap.xml` and `robots.txt`** in `dist/` listing HTML entry points.
+- [x] **Canonical URL** per page using the live site base URL (`site_url` in `site.yaml`, optional `SITE_URL` env override at build time); `<link rel="canonical">` in [`templates/base.html`](templates/base.html); same path logic as `og:url` in [`build.py`](build.py) `social_meta_context()`.
+- [x] **JSON-LD** (`<script type="application/ld+json">` in [`templates/base.html`](templates/base.html)):
+  - [x] `MusicGroup` on every page when `site_url` is set; `sameAs` from [`content/site.yaml`](content/site.yaml) (`same_as` list — keep aligned with [`templates/partials/social_links.html`](templates/partials/social_links.html)).
+  - [x] `MusicEvent` for each **upcoming** show on [`templates/concerts.html`](templates/concerts.html) (`startDate`, venue / locality, ticket `Offer` when `tickets` URL exists, event `url` from tickets or Facebook).
+  - [x] `MusicAlbum` for each release on the discography page ([`templates/albums.html`](templates/albums.html)) with Bandcamp `url`, `datePublished`, `image` when artwork path is set; stable fragment `@id` under `/albums/#…` (per-release site URLs can be added later).
+- [x] **Generated `sitemap.xml` and `robots.txt`** in `dist/` when `site_url` is set — see [`build.py`](build.py) `write_sitemap_xml` / `write_robots_txt`.
 
 ---
 

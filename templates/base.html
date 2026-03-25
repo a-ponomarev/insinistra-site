@@ -6,6 +6,9 @@
     {% if meta_description %}
     <meta name="description" content="{{ meta_description }}">
     {% endif %}
+    {% if canonical_url %}
+    <link rel="canonical" href="{{ canonical_url }}">
+    {% endif %}
     {% if social_meta_enabled %}
     <meta property="og:site_name" content="Insinistra">
     <meta property="og:type" content="{{ og_type }}">
@@ -25,6 +28,9 @@
     {% if twitter_image %}
     <meta name="twitter:image" content="{{ twitter_image }}">
     {% endif %}
+    {% endif %}
+    {% if structured_data_json %}
+    <script type="application/ld+json">{{ structured_data_json|safe }}</script>
     {% endif %}
     <title>{% block title %}Band{% endblock %} | Insinistra</title>
     <link rel="stylesheet" href="{% if base %}{{ base }}/{% endif %}static/style.css">

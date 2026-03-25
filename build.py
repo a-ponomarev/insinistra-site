@@ -6,12 +6,14 @@ Output: dist/ (ready to deploy)
 """
 
 import json
+import os
 import re
 import shutil
 from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
 from urllib.parse import urljoin
+from xml.sax.saxutils import escape
 
 import yaml
 from jinja2 import Environment, FileSystemLoader, Template
@@ -80,6 +82,13 @@ def load_markdown_page(path: Path, body_context: dict | None = None) -> tuple[di
     return data, data.get("title", path.stem)
 
 
+def _apply_site_url_env(site: dict) -> None:
+    """Override site_url from SITE_URL when set (build-time staging/production)."""
+    env_site = os.environ.get("SITE_URL", "").strip()
+    if env_site:
+        site["site_url"] = env_site.rstrip("/")
+
+
 def load_site_config() -> dict:
     """Load site.yaml for SEO defaults (meta descriptions per route)."""
     defaults = {
@@ -89,23 +98,39 @@ def load_site_config() -> dict:
         "meta_descriptions": {},
         "site_url": "",
         "default_og_image": "images/1600/banner-1600.jpg",
+        "same_as": [],
     }
     path = CONTENT_DIR / "site.yaml"
     if not path.exists():
-        return defaults
+        out = defaults.copy()
+        _apply_site_url_env(out)
+        return out
     try:
         data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
         if not isinstance(data, dict):
-            return defaults
-        merged = {**defaults, **{k: v for k, v in data.items() if k != "meta_descriptions"}}
+            out = defaults.copy()
+            _apply_site_url_env(out)
+            return out
+        merged = {
+            **defaults,
+            **{k: v for k, v in data.items() if k not in ("meta_descriptions", "same_as")},
+        }
         route_defaults = defaults["meta_descriptions"].copy()
         extra = data.get("meta_descriptions")
         if isinstance(extra, dict):
             route_defaults.update(extra)
         merged["meta_descriptions"] = route_defaults
+        sa = data.get("same_as")
+        if isinstance(sa, list):
+            merged["same_as"] = [str(x).strip() for x in sa if str(x).strip()]
+        else:
+            merged["same_as"] = list(defaults["same_as"])
+        _apply_site_url_env(merged)
         return merged
     except (yaml.YAMLError, OSError):
-        return defaults
+        out = defaults.copy()
+        _apply_site_url_env(out)
+        return out
 
 
 def _clean_meta_description(text: str) -> str:
@@ -136,12 +161,12 @@ def social_meta_context(
     og_image_rel: str | None = None,
 ) -> dict:
     """
-    Open Graph + Twitter Card values for base.html.
-    If site_url is empty, social_meta_enabled is False (no tags — set site_url in site.yaml for production).
+    Open Graph + Twitter Card + canonical URL for base.html.
+    If site_url is empty, social_meta_enabled is False and canonical_url is empty (set site_url in site.yaml or SITE_URL env for production).
     """
     site_url = (site.get("site_url") or "").strip().rstrip("/")
     if not site_url:
-        return {"social_meta_enabled": False}
+        return {"social_meta_enabled": False, "canonical_url": ""}
     img = (og_image_rel or site.get("default_og_image") or "").strip().lstrip("/")
     seg = (path_segment or "").strip().strip("/")
     canonical = f"{seg}/" if seg else ""
@@ -152,6 +177,7 @@ def social_meta_context(
     desc = meta_description or ""
     return {
         "social_meta_enabled": True,
+        "canonical_url": og_url,
         "og_type": "website",
         "og_title": title,
         "og_description": desc,
@@ -162,6 +188,157 @@ def social_meta_context(
         "twitter_description": desc,
         "twitter_image": og_image,
     }
+
+
+def page_canonical_url(site_url: str, path_segment: str) -> str:
+    """Absolute URL for a site path (trailing slash), matching social_meta canonical rules."""
+    base = (site_url or "").strip().rstrip("/")
+    if not base:
+        return ""
+    seg = (path_segment or "").strip().strip("/")
+    canonical = f"{seg}/" if seg else ""
+    return urljoin(base + "/", canonical)
+
+
+def _music_group_node(site: dict) -> dict | None:
+    site_url = (site.get("site_url") or "").strip().rstrip("/")
+    if not site_url:
+        return None
+    same_raw = site.get("same_as") or []
+    same_as: list[str] = []
+    seen: set[str] = set()
+    if isinstance(same_raw, list):
+        for x in same_raw:
+            if not isinstance(x, str):
+                continue
+            u = x.strip()
+            if u and u not in seen:
+                seen.add(u)
+                same_as.append(u)
+    return {
+        "@type": "MusicGroup",
+        "@id": f"{site_url}/#music-group",
+        "name": "Insinistra",
+        "url": f"{site_url}/",
+        "sameAs": same_as,
+    }
+
+
+def _music_events_nodes(site: dict, upcoming_shows: list[dict]) -> list[dict]:
+    site_url = (site.get("site_url") or "").strip().rstrip("/")
+    if not site_url:
+        return []
+    mg_id = f"{site_url}/#music-group"
+    nodes: list[dict] = []
+    for i, c in enumerate(upcoming_shows):
+        date_raw = (c.get("date") or "")[:10]
+        if len(date_raw) < 10:
+            continue
+        venue = (c.get("venue") or "").strip() or "Venue TBA"
+        locality = (c.get("location") or "").strip()
+        evt: dict = {
+            "@type": "MusicEvent",
+            "@id": f"{site_url}/shows/#event-{date_raw}-{i}",
+            "name": f"Insinistra at {venue}",
+            "startDate": date_raw,
+            "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+            "eventStatus": "https://schema.org/EventScheduled",
+            "location": {
+                "@type": "Place",
+                "name": venue,
+            },
+            "performer": {"@id": mg_id},
+        }
+        if locality:
+            evt["location"]["address"] = {
+                "@type": "PostalAddress",
+                "addressLocality": locality,
+            }
+        ticket_url = (c.get("tickets") or "").strip()
+        fb = (c.get("facebook") or "").strip()
+        primary = (
+            ticket_url if ticket_url.startswith("http") else (fb if fb.startswith("http") else "")
+        )
+        if primary:
+            evt["url"] = primary
+        if ticket_url.startswith("http"):
+            evt["offers"] = {
+                "@type": "Offer",
+                "url": ticket_url,
+                "availability": "https://schema.org/InStock",
+            }
+        nodes.append(evt)
+    return nodes
+
+
+def _music_album_nodes(site: dict, albums: list[dict]) -> list[dict]:
+    site_url = (site.get("site_url") or "").strip().rstrip("/")
+    if not site_url:
+        return []
+    mg_id = f"{site_url}/#music-group"
+    nodes: list[dict] = []
+    for a in albums:
+        title = (a.get("title") or "").strip()
+        if not title:
+            continue
+        slug = re.sub(r"[^a-z0-9]+", "-", title.lower()).strip("-") or "release"
+        ext_url = (a.get("url") or "").strip()
+        node: dict = {
+            "@type": "MusicAlbum",
+            "@id": f"{site_url}/albums/#{slug}",
+            "name": title,
+            "byArtist": {"@id": mg_id},
+        }
+        date_pub = (a.get("date") or "")[:10]
+        if len(date_pub) >= 10:
+            node["datePublished"] = date_pub
+        img_rel = (a.get("artwork") or "").strip().lstrip("/")
+        if img_rel:
+            node["image"] = urljoin(site_url + "/", img_rel)
+        if ext_url.startswith("http"):
+            node["url"] = ext_url
+        nodes.append(node)
+    return nodes
+
+
+def structured_data_script_json(site: dict, extra_nodes: list[dict] | None = None) -> str:
+    """application/ld+json document, or empty string when site_url is unset."""
+    mg = _music_group_node(site)
+    if not mg:
+        return ""
+    graph: list[dict] = [mg]
+    if extra_nodes:
+        graph.extend(extra_nodes)
+    return json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False)
+
+
+def write_sitemap_xml(dist_dir: Path, site_url: str, page_slugs: list[str], extra_segments: list[str]) -> None:
+    base = site_url.strip().rstrip("/")
+    lastmod = datetime.now().date().isoformat()
+    urls: list[str] = [page_canonical_url(base, "")]
+    for slug in sorted(page_slugs):
+        urls.append(page_canonical_url(base, slug))
+    for seg in sorted(extra_segments):
+        urls.append(page_canonical_url(base, seg))
+    lines = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    ]
+    for loc in urls:
+        lines.append("  <url>")
+        lines.append(f"    <loc>{escape(loc)}</loc>")
+        lines.append(f"    <lastmod>{lastmod}</lastmod>")
+        lines.append("  </url>")
+    lines.append("</urlset>")
+    (dist_dir / "sitemap.xml").write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def write_robots_txt(dist_dir: Path, site_url: str) -> None:
+    base = site_url.strip().rstrip("/")
+    (dist_dir / "robots.txt").write_text(
+        f"User-agent: *\nAllow: /\n\nSitemap: {base}/sitemap.xml\n",
+        encoding="utf-8",
+    )
 
 
 def load_pages(body_context: dict | None = None) -> list[dict]:
@@ -607,6 +784,7 @@ def main() -> None:
             videos=videos[:6],
             photo_albums=photo_albums,
             all_photos_ordered=all_photos_ordered,
+            structured_data_json=structured_data_script_json(site_config),
         ),
         encoding="utf-8",
     )
@@ -632,6 +810,7 @@ def main() -> None:
                     band_members=band_members,
                     reviews=reviews,
                     meta_description=meta_desc,
+                    structured_data_json=structured_data_script_json(site_config),
                     **sm,
                     **subdir_common,
                 ),
@@ -640,7 +819,13 @@ def main() -> None:
         else:
             template_page = env.get_template("page.html")
             (out_dir / "index.html").write_text(
-                template_page.render(page=page, meta_description=meta_desc, **sm, **subdir_common),
+                template_page.render(
+                    page=page,
+                    meta_description=meta_desc,
+                    structured_data_json=structured_data_script_json(site_config),
+                    **sm,
+                    **subdir_common,
+                ),
                 encoding="utf-8",
             )
 
@@ -654,6 +839,9 @@ def main() -> None:
             upcoming_shows=upcoming_shows,
             past_shows=past_shows,
             meta_description=shows_desc,
+            structured_data_json=structured_data_script_json(
+                site_config, _music_events_nodes(site_config, upcoming_shows)
+            ),
             **social_meta_context(
                 site_config,
                 path_segment="shows",
@@ -674,6 +862,9 @@ def main() -> None:
         template_albums.render(
             albums=albums,
             meta_description=albums_desc,
+            structured_data_json=structured_data_script_json(
+                site_config, _music_album_nodes(site_config, albums)
+            ),
             **social_meta_context(
                 site_config,
                 path_segment="albums",
@@ -695,6 +886,7 @@ def main() -> None:
             photo_albums=photo_albums,
             all_photos_ordered=all_photos_ordered,
             meta_description=photos_desc,
+            structured_data_json=structured_data_script_json(site_config),
             **social_meta_context(
                 site_config,
                 path_segment="photos",
@@ -742,6 +934,7 @@ def main() -> None:
             image_assets=image_assets,
             epk_press_photos=press_photos,
             meta_description=epk_desc,
+            structured_data_json=structured_data_script_json(site_config),
             **social_meta_context(
                 site_config,
                 path_segment="epk",
@@ -752,6 +945,17 @@ def main() -> None:
         ),
         encoding="utf-8",
     )
+
+    site_url = (site_config.get("site_url") or "").strip()
+    if site_url:
+        print("  Writing sitemap.xml, robots.txt...")
+        write_sitemap_xml(
+            DIST_DIR,
+            site_url,
+            [p["slug"] for p in pages],
+            ["shows", "albums", "photos", "epk"],
+        )
+        write_robots_txt(DIST_DIR, site_url)
 
     print("Done. Site is in dist/")
 

@@ -2,10 +2,23 @@
 # Override any route or add new keys under meta_descriptions as needed.
 # Markdown pages can set `description` in frontmatter to override the entry for that slug.
 #
-# Open Graph / Twitter: set site_url to the public HTTPS origin (no trailing slash).
-# If empty, og:* and twitter:* tags are omitted. default_og_image is a path under the site root.
+# Open Graph / Twitter / canonical: set site_url to the public HTTPS origin (no trailing slash).
+# If empty, og:*, twitter:*, and <link rel="canonical"> are omitted.
+# Override at build time: SITE_URL=https://example.com python build.py
+# default_og_image is a path under the site root.
 site_url: "https://insinistra.com"
 default_og_image: "images/1600/banner-1600.jpg"
+
+# JSON-LD MusicGroup sameAs — official profiles (keep in sync with templates/partials/social_links.html).
+same_as:
+  - "https://instagram.com/insinistra/"
+  - "https://facebook.com/insinistra/"
+  - "https://tiktok.com/@insinistra"
+  - "https://youtube.com/c/insinistra"
+  - "https://open.spotify.com/artist/7twKAgcyHaRn9LUqHMRE07"
+  - "https://music.youtube.com/channel/UCwGXJx49UkjujJKygLCLjSg"
+  - "https://music.apple.com/ru/artist/insinistra/1444116339"
+  - "https://insinistra.bandcamp.com/"
 
 default_meta_description: >-
   Insinistra — symphonic metal from Prague. Official site: music, tour dates,
