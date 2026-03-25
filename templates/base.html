@@ -36,6 +36,7 @@
     <title>{% block title %}Band{% endblock %} | Insinistra</title>
     <link rel="stylesheet" href="{% if base %}{{ base }}/{% endif %}static/style.css">
     <style>:root { --gallery-portrait-crop: {{ gallery_portrait_crop|default('top') }}; }</style>
+    {% block extra_head %}{% endblock %}
 </head>
 <body>
     <aside class="social-sidebar" aria-label="Social links">
@@ -66,15 +67,17 @@
         </div>
     </header>
 
-    {% block hero %}
-    <div class="site-banner">
-        <img src="{% if base %}{{ base }}/{% endif %}images/3000/banner-3000.jpg" alt="Insinistra" class="banner-img">
-    </div>
-    {% endblock %}
+    <div class="site-content-wrap">
+        {% block hero %}
+        <div class="site-banner">
+            <img src="{% if base %}{{ base }}/{% endif %}images/3000/banner-3000.jpg" alt="Insinistra" class="banner-img">
+        </div>
+        {% endblock %}
 
-    <main class="main">
-        {% block content %}{% endblock %}
-    </main>
+        <main class="main">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
 
     <footer class="site-footer">
         <div class="footer-inner">

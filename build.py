@@ -789,6 +789,20 @@ def main() -> None:
         encoding="utf-8",
     )
 
+    print("  Writing 404.html...")
+    template_404 = env.get_template("404.html")
+    not_found_desc = "Page not found — Insinistra."
+    (DIST_DIR / "404.html").write_text(
+        template_404.render(
+            base="",
+            meta_description=not_found_desc,
+            social_meta_enabled=False,
+            canonical_url="",
+            **common,
+        ),
+        encoding="utf-8",
+    )
+
     # Render each Markdown page (e.g. about -> about/index.html)
     for page in pages:
         slug = page["slug"]

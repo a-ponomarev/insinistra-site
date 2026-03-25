@@ -444,6 +444,22 @@ a:hover {
   padding-bottom: 0;
 }
 
+/* Hero/banner + main fill at least one viewport so footer stays below first screen */
+.site-content-wrap {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100svh;
+  min-height: 100dvh;
+}
+
+.site-content-wrap > .main {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
 /* ─── Typography ─────────────────────────────────────────── */
 
 h1, h2, h3 {
@@ -1119,6 +1135,119 @@ body.lightbox-open {
   color: var(--accent-hover);
 }
 
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  clip: rect(0, 0, 0, 0); /* fallback */
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ─── 404 (not found) ─────────────────────────────────────── */
+
+.page-not-found {
+  position: relative;
+  text-align: center;
+  padding-top: 48px;
+  padding-bottom: 72px;
+}
+
+.page-not-found::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  max-width: 640px;
+  margin: 0 auto;
+  background: radial-gradient(
+    ellipse 70% 50% at 50% 35%,
+    rgba(155, 130, 200, 0.06) 0%,
+    transparent 65%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.page-not-found > *:not(.visually-hidden) {
+  position: relative;
+  z-index: 1;
+}
+
+.page-not-found__middle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.page.page-not-found h1.visually-hidden {
+  margin: -1px;
+}
+
+.page-not-found__code {
+  display: flex;
+  justify-content: center;
+  margin: 0 0 0.15em;
+  padding: 0;
+}
+
+.page-not-found__code-inner {
+  font-family: Cinzel, 'Times New Roman', serif;
+  font-size: clamp(4.5rem, 14vw, 7.5rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.35em;
+  /* Letter-spacing adds space after the last glyph; pull back so flex center is optical center */
+  margin-right: -0.35em;
+  color: var(--text-secondary);
+  text-shadow:
+    0 0 40px rgba(155, 130, 200, 0.25),
+    0 0 80px rgba(155, 130, 200, 0.08);
+}
+
+.page-not-found__divider {
+  width: 120px;
+  margin: 28px auto 32px;
+  border: none;
+  padding: 0;
+  height: auto;
+}
+
+.page-not-found__divider::before {
+  content: '';
+  display: block;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--accent) 42%,
+    var(--accent) 58%,
+    transparent
+  );
+  box-shadow: 0 0 14px rgba(155, 130, 200, 0.18);
+}
+
+.page-not-found__divider::after {
+  content: '';
+  display: block;
+  height: 1px;
+  margin-top: 8px;
+  background: var(--border);
+  opacity: 0.85;
+}
+
+.page-not-found__lead {
+  font-size: 18px;
+  color: var(--text-muted);
+  margin: 0 0 40px;
+  max-width: 28em;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* Download icon for drive.google.com links (contact page) */
 .page-body a[href*="drive.google.com"]::before {
   content: '';
@@ -1746,6 +1875,43 @@ body:has(.epk-page) .nav-overlay .nav a:hover {
     display: block;
     width: 22px;
     height: 22px;
+  }
+
+  /* 404: first screen like mobile home hero — content centered, socials at bottom */
+  body:has(.page-not-found) .page-not-found {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    padding-top: 32px;
+    padding-bottom: 0;
+  }
+
+  body:has(.page-not-found) .page-not-found__middle {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 0;
+  }
+
+  body:has(.page-not-found) .page-not-found .hero-social-mobile {
+    flex-shrink: 0;
+    margin-top: auto;
+    padding-top: 28px;
+    padding-bottom: max(16px, env(safe-area-inset-bottom, 0px));
+    margin-left: -20px;
+    margin-right: -20px;
+    width: calc(100% + 40px);
+    max-width: none;
+    padding-left: 20px;
+    padding-right: 20px;
+    box-sizing: border-box;
+  }
+
+  body:has(.page-not-found) .footer-social-mobile {
+    display: none;
   }
 
   .section {
