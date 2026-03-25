@@ -6,7 +6,7 @@ members:
     image: "members/maria.jpg"
 
   - name: "Alexander Ponomarev"
-    role: "Drums, Growls, Mixing, Music Co-Writer"
+    role: "Drums, Growls, Mixing, Music\u00A0Co\u2011Writer"
     image: "members/alex.jpg"
 
   - name: "Serge Melnikov"
