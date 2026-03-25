@@ -456,11 +456,13 @@ def load_band_members(image_assets: list[dict]) -> list[dict]:
         img = (m.get("image") or "").strip().replace("\\", "/").lower()
         m["image_thumb"] = None
         m["image_resized"] = None
+        m["image_original"] = None
         if img:
             a = asset_by_name.get(img)
             if a:
                 m["image_thumb"] = a.get("thumb")
                 m["image_resized"] = a.get("resized")
+                m["image_original"] = a.get("original")
     return members
 
 
@@ -544,11 +546,48 @@ def apply_gallery_portrait_overrides(photo_albums: list[dict], gallery_config: d
     ov = gallery_config.get("portrait_crop_overrides") or {}
     for album in photo_albums:
         for p in album.get("photos", []):
-            norm = (p.get("name") or "").replace("\\", "/")
+            norm = (p.get("portrait_source") or p.get("name") or "").replace("\\", "/")
             if norm in ov:
-                p["portrait_crop"] = ov[norm]
+                val = _normalize_portrait_crop(ov.get(norm))
+                if val:
+                    p["portrait_crop"] = val
+                else:
+                    p.pop("portrait_crop", None)
             else:
                 p.pop("portrait_crop", None)
+
+
+def band_members_gallery(band_members: list[dict]) -> tuple[list[dict], list[dict]]:
+    """
+    Build photo_albums / all_photos_ordered for the band lightbox (About page).
+    Sets gallery_index on each member who has resolved thumb + resized URLs.
+    """
+    photos: list[dict] = []
+    idx = 0
+    for m in band_members:
+        m.pop("gallery_index", None)
+        thumb = m.get("image_thumb")
+        resized = m.get("image_resized")
+        if not thumb or not resized:
+            continue
+        img_key = (m.get("image") or "").strip().replace("\\", "/")
+        original = m.get("image_original") or resized
+        item = {
+            "name": m["name"],
+            "role": (m.get("role") or "").strip(),
+            "thumb": thumb,
+            "resized": resized,
+            "lightbox_src": original,
+            "portrait_source": img_key,
+            "index": idx,
+        }
+        photos.append(item)
+        m["gallery_index"] = idx
+        idx += 1
+    if not photos:
+        return [], []
+    album = {"name": "Band members", "photos": photos}
+    return [album], photos
 
 
 def process_images(src_dir: Path, dist_dir: Path, url_prefix: str) -> list[dict]:
@@ -728,6 +767,19 @@ def main() -> None:
     print("  Processing images...")
     image_assets = process_images(IMAGES_DIR, DIST_DIR / "images", "images")
     band_members = load_band_members(image_assets)
+    band_photo_albums, band_photos_ordered = band_members_gallery(band_members)
+    apply_gallery_portrait_overrides(band_photo_albums, gallery_config)
+    for m in band_members:
+        gi = m.get("gallery_index")
+        if gi is None:
+            m.pop("portrait_crop", None)
+            continue
+        if 0 <= gi < len(band_photos_ordered):
+            pc = band_photos_ordered[gi].get("portrait_crop")
+            if pc:
+                m["portrait_crop"] = pc
+            else:
+                m.pop("portrait_crop", None)
     reviews = load_reviews()
 
     # Copy static and inject build-time values (e.g. banner breakpoint) into CSS
@@ -822,6 +874,8 @@ def main() -> None:
                 template_about.render(
                     page=page,
                     band_members=band_members,
+                    band_photo_albums=band_photo_albums,
+                    band_photos_ordered=band_photos_ordered,
                     reviews=reviews,
                     meta_description=meta_desc,
                     structured_data_json=structured_data_script_json(site_config),

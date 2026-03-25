@@ -16,7 +16,11 @@
             {% for member in band_members %}
             <li class="band-member">
                 <div class="band-member-photo">
-                    {% if member.image_thumb %}
+                    {% if member.image_thumb and member.gallery_index is defined %}
+                    <button type="button" class="gallery-thumb band-member-photo-trigger" data-index="{{ member.gallery_index }}" data-resized="{{ base }}/{{ member.image_resized }}" data-name="{{ member.name }}" aria-label="View larger photo of {{ member.name }}">
+                        <img src="{{ base }}/{{ member.image_thumb }}" data-thumb="{{ base }}/{{ member.image_thumb }}" data-resized="{{ base }}/{{ member.image_resized }}" alt="{{ member.name }}" loading="lazy"{% if member.portrait_crop is defined %} style="--photo-crop: {{ member.portrait_crop }}"{% endif %}>
+                    </button>
+                    {% elif member.image_thumb %}
                     <img src="{{ base }}/{{ member.image_thumb }}" alt="{{ member.name }}" loading="lazy">
                     {% else %}
                     <span class="band-member-placeholder" aria-hidden="true">{% set parts = member.name.split() %}{{ parts[0][0] if parts else '?' }}{{ parts[1][0] if parts|length > 1 else '' }}</span>
@@ -30,6 +34,12 @@
             {% endfor %}
         </ul>
     </section>
+    {% endif %}
+
+    {% if band_photos_ordered %}
+    {% with photo_albums=band_photo_albums, all_photos_ordered=band_photos_ordered, gallery_embed_only=true %}
+    {% include "partials/gallery_content.html" %}
+    {% endwith %}
     {% endif %}
 
     {% if reviews %}

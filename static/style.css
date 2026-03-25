@@ -924,6 +924,40 @@ body.lightbox-open {
   justify-content: center;
 }
 
+.lightbox-figure {
+  position: relative;
+  z-index: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 100%;
+}
+
+.lightbox-caption {
+  margin-top: 16px;
+  padding: 0 12px;
+  max-width: min(100%, 36rem);
+  text-align: center;
+  color: var(--text-primary);
+}
+
+.lightbox-caption-name {
+  display: block;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 2px;
+}
+
+.lightbox-caption-role {
+  display: block;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
 /* Gradient overlays on photo when hovering prev/next arrows */
 .lightbox-content::before,
 .lightbox-content::after {
@@ -960,8 +994,8 @@ body.lightbox-open {
   position: relative;
   z-index: 0;
   max-width: 100%;
-  max-height: calc(100vh - 120px);
-  max-height: calc(100svh - 120px);
+  max-height: calc(100vh - 200px);
+  max-height: calc(100svh - 200px);
   width: auto;
   height: auto;
   object-fit: contain;
@@ -1333,6 +1367,27 @@ body.lightbox-open {
   height: auto;
   display: block;
   vertical-align: middle;
+}
+
+.band-member-photo .gallery-thumb {
+  width: 100%;
+  display: block;
+}
+
+.band-member-photo-trigger img {
+  transition: transform 220ms ease, filter 220ms ease;
+  filter: brightness(0.92);
+}
+
+.band-member-photo-trigger:hover img,
+.band-member-photo-trigger:focus-visible img {
+  transform: scale(1.02);
+  filter: brightness(1);
+}
+
+.band-member-photo-trigger:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 
 .band-member-placeholder {

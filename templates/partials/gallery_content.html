@@ -1,4 +1,6 @@
-{# Inner gallery: albums grid + lightbox. Pass gallery_limit to show only first N photos of first album (e.g. on index). No section wrapper. #}
+{# Inner gallery: albums grid + lightbox. Pass gallery_limit to show only first N photos of first album (e.g. on index). Pass gallery_embed_only to ship only lightbox + script (triggers live elsewhere). No section wrapper. #}
+{% set gallery_embed_only = gallery_embed_only | default(false) %}
+{% if not gallery_embed_only %}
 {% if gallery_limit is defined and gallery_limit is not none %}
     {% set albums_to_render = [{"name": photo_albums[0].name, "photos": photo_albums[0].photos[:gallery_limit]}] %}
 {% else %}
@@ -21,12 +23,16 @@
     <p class="section-link"><a href="{% if base %}{{ base }}/{% endif %}{{ more_photos_url }}" class="btn">More photos</a></p>
 </div>
 {% endif %}
+{% endif %}
 <div class="lightbox" id="gallery-lightbox" role="dialog" aria-modal="true" aria-label="Photo gallery" hidden>
     <div class="lightbox-overlay" id="lightbox-overlay"></div>
     <div class="lightbox-content">
         <button type="button" class="lightbox-close" id="lightbox-close" aria-label="Close">&times;</button>
         <button type="button" class="lightbox-prev" id="lightbox-prev" aria-label="Previous photo">&larr;</button>
-        <img class="lightbox-img" id="lightbox-img" src="" alt="">
+        <div class="lightbox-figure">
+            <img class="lightbox-img" id="lightbox-img" src="" alt="">
+            <div class="lightbox-caption" id="lightbox-caption" hidden></div>
+        </div>
         <button type="button" class="lightbox-next" id="lightbox-next" aria-label="Next photo">&rarr;</button>
     </div>
 </div>
@@ -44,7 +50,7 @@
             img.classList.add('portrait');
         }
     }
-    document.querySelectorAll('.gallery-thumb img').forEach(function (img) {
+    document.querySelectorAll('.photo-grid .gallery-thumb img').forEach(function (img) {
         img.src = img.getAttribute('data-resized') || img.src;
         img.addEventListener('load', function () { setPortraitClass(img); });
         if (img.complete && img.naturalWidth) setPortraitClass(img);
@@ -52,18 +58,38 @@
     var lightbox = document.getElementById('gallery-lightbox');
     var overlay = document.getElementById('lightbox-overlay');
     var img = document.getElementById('lightbox-img');
+    var captionEl = document.getElementById('lightbox-caption');
     var closeBtn = document.getElementById('lightbox-close');
     var prevBtn = document.getElementById('lightbox-prev');
     var nextBtn = document.getElementById('lightbox-next');
     var currentIndex = 0;
+    function setCaption(p) {
+        if (!captionEl) return;
+        captionEl.textContent = '';
+        if (p && p.role) {
+            captionEl.hidden = false;
+            var nameEl = document.createElement('strong');
+            nameEl.className = 'lightbox-caption-name';
+            nameEl.textContent = p.name || '';
+            captionEl.appendChild(nameEl);
+            var roleEl = document.createElement('span');
+            roleEl.className = 'lightbox-caption-role';
+            roleEl.textContent = p.role;
+            captionEl.appendChild(roleEl);
+        } else {
+            captionEl.hidden = true;
+        }
+    }
     function showPhoto(i) {
         if (i < 0) i = photos.length - 1;
         if (i >= photos.length) i = 0;
         currentIndex = i;
         var p = photos[i];
         if (p) {
-            img.src = base ? base + p.resized : p.resized;
+            var path = p.lightbox_src || p.resized;
+            img.src = base ? base + path : path;
             img.alt = p.name || '';
+            setCaption(p);
         }
     }
     function openLightbox(index) {
@@ -76,6 +102,10 @@
     function closeLightbox() {
         lightbox.hidden = true;
         document.body.classList.remove('lightbox-open');
+        if (captionEl) {
+            captionEl.hidden = true;
+            captionEl.textContent = '';
+        }
     }
     if (overlay) overlay.addEventListener('click', closeLightbox);
     if (closeBtn) closeBtn.addEventListener('click', closeLightbox);
