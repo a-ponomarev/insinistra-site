@@ -6,7 +6,7 @@ Prioritized follow-ups for the official band static site, aligned with [TECH_REQ
 
 ## Key points (executive summary)
 
-- **Strengths today**: Solid information architecture (Home, About, Shows, Discography, Photos, Contact, EPK); broad DSP and social coverage; manual tour data plus Bandsintown follow snippet; EPK for press; image pipeline and gallery; GoatCounter analytics; fully static output suitable for CDN hosting.
+- **Strengths today**: Solid information architecture (Home, About, Shows, Discography, Photos, Contact, EPK); broad DSP and social coverage; manual tour listings in YAML; EPK for press; image pipeline and gallery; GoatCounter analytics; fully static output suitable for CDN hosting.
 - **Biggest discovery gap**: Almost no **SEO or link-preview metadata** (descriptions, Open Graph, canonical URLs) and no **JSON-LD** (`MusicGroup`, events, releases) — this is where many label campaigns invest for search and sharing.
 - **Crawl hygiene**: No generated **sitemap.xml** or **robots.txt** yet; worth adding given `/slug/index.html` URL patterns.
 - **Fan and campaign tooling**: No mailing list CTA, merch link, smart links / pre-saves, or embedded players — add as campaigns need them.
@@ -23,7 +23,7 @@ Prioritized follow-ups for the official band static site, aligned with [TECH_REQ
 
 ## P1 — Discoverability
 
-- [ ] **Per-page `<title>` and meta description** (extend `base.html` / blocks; source text from frontmatter or a small `site.yaml`).
+- [x] **Per-page `<title>` and meta description** — `content/site.yaml` (`default_meta_description`, `meta_descriptions` per route); Markdown `description` in frontmatter overrides. Rendered in [`templates/base.html`](templates/base.html); [`build.py`](build.py) passes `meta_description` per page.
 - [ ] **Open Graph and Twitter Card tags** (at minimum `og:title`, `og:description`, `og:image`, `og:url`; plus Twitter equivalents or `twitter:card`).
 - [ ] **Canonical URL** per page using the live site base URL (configurable at build time).
 - [ ] **JSON-LD (JSON-LD in `<script type="application/ld+json">`)**:
@@ -40,7 +40,7 @@ Prioritized follow-ups for the official band static site, aligned with [TECH_REQ
 - [ ] **Optional embeds**: Spotify (or Apple Music) player on featured release or album pages.
 - [ ] **Newsletter signup** (Mailchimp, Brevo, etc.) in footer or home — coordinate with privacy copy if emails are collected.
 - [ ] **Merch store** link in nav or footer when a store exists.
-- [ ] **Tour UX**: optional Bandsintown events widget or Songkick embed to complement YAML; optional `.ics` download for upcoming dates.
+- [ ] **Tour UX**: optional third-party tour widget (e.g. Songkick embed) to complement YAML; optional `.ics` download for upcoming dates.
 
 ---
 
@@ -48,7 +48,7 @@ Prioritized follow-ups for the official band static site, aligned with [TECH_REQ
 
 - [ ] **Branded `404.html`** if the host supports custom error pages.
 - [ ] **Privacy policy** (short page) if newsletter or non-essential cookies are added; GoatCounter is relatively privacy-friendly but document what you use.
-- [ ] **Accessibility**: meaningful `title` on the Bandsintown iframe (replace generic “newsletter-widget” in pasted embed code); keyboard/focus checks on nav and modals.
+- [ ] **Accessibility**: meaningful `title` attributes on any embedded widgets; keyboard/focus checks on nav and modals.
 - [ ] **Refresh [TECH_REQUIREMENTS.md](TECH_REQUIREMENTS.md)** to match the real input paths (`photos/`, `images/`, extra templates and content files) so new contributors are not misled.
 
 ---

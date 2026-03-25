@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    {% if meta_description %}
+    <meta name="description" content="{{ meta_description }}">
+    {% endif %}
     <title>{% block title %}Band{% endblock %} | Insinistra</title>
     <link rel="stylesheet" href="{% if base %}{{ base }}/{% endif %}static/style.css">
     <style>:root { --gallery-portrait-crop: {{ gallery_portrait_crop|default('top') }}; }</style>

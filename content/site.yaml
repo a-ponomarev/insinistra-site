@@ -1,0 +1,28 @@
+# Site-wide defaults for <meta name="description"> and route fallbacks.
+# Override any route or add new keys under meta_descriptions as needed.
+# Markdown pages can set `description` in frontmatter to override the entry for that slug.
+
+default_meta_description: >-
+  Insinistra — symphonic metal from Prague. Official site: music, tour dates,
+  photos, videos, and press kit.
+
+meta_descriptions:
+  home: >-
+    Official Insinistra home — symphonic metal from Prague. Latest release,
+    upcoming shows, music videos, and links to stream on Spotify, Apple Music, and Bandcamp.
+  shows: >-
+    Insinistra live dates — upcoming concerts and past shows, with ticket and
+    event links where available.
+  albums: >-
+    Insinistra discography — singles, EPs, and releases. Stream on Bandcamp,
+    Spotify, Apple Music, and other platforms.
+  photos: >-
+    Insinistra photo gallery — live shots and promo imagery from the band.
+  epk: >-
+    Electronic press kit for Insinistra — short bio, streaming links, press photos,
+    videos, and booking and press contacts for festivals and media.
+  about: >-
+    About Insinistra — symphonic metal from Prague. Band bio, line-up, and the
+    sound between lullaby and nightmare.
+  contact: >-
+    Contact Insinistra — booking, press, and general email. Press kit and stage plan downloads.

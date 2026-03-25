@@ -79,6 +79,51 @@ def load_markdown_page(path: Path, body_context: dict | None = None) -> tuple[di
     return data, data.get("title", path.stem)
 
 
+def load_site_config() -> dict:
+    """Load site.yaml for SEO defaults (meta descriptions per route)."""
+    defaults = {
+        "default_meta_description": (
+            "Insinistra — symphonic metal from Prague. Official site: music, shows, and press."
+        ),
+        "meta_descriptions": {},
+    }
+    path = CONTENT_DIR / "site.yaml"
+    if not path.exists():
+        return defaults
+    try:
+        data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+        if not isinstance(data, dict):
+            return defaults
+        merged = {**defaults, **{k: v for k, v in data.items() if k != "meta_descriptions"}}
+        route_defaults = defaults["meta_descriptions"].copy()
+        extra = data.get("meta_descriptions")
+        if isinstance(extra, dict):
+            route_defaults.update(extra)
+        merged["meta_descriptions"] = route_defaults
+        return merged
+    except (yaml.YAMLError, OSError):
+        return defaults
+
+
+def _clean_meta_description(text: str) -> str:
+    """Plain single-line meta description, capped for search snippets."""
+    if not text or not isinstance(text, str):
+        return ""
+    return " ".join(text.split()).strip()[:320]
+
+
+def resolve_meta_description(slug: str, page: dict | None, site: dict) -> str:
+    """Frontmatter description wins, then site.meta_descriptions[slug], then default."""
+    if page:
+        d = page.get("description")
+        if isinstance(d, str) and d.strip():
+            return _clean_meta_description(d)
+    routes = site.get("meta_descriptions") or {}
+    if isinstance(routes.get(slug), str) and routes[slug].strip():
+        return _clean_meta_description(routes[slug])
+    return _clean_meta_description(site.get("default_meta_description") or "")
+
+
 def load_pages(body_context: dict | None = None) -> list[dict]:
     """Load all Markdown pages from content/pages/."""
     pages_dir = CONTENT_DIR / "pages"
@@ -443,6 +488,7 @@ def main() -> None:
 
     # Load data
     print("  Loading content...")
+    site_config = load_site_config()
     epk_config = load_epk_config()
     gallery_config = load_gallery_config()
     pages = load_pages(
@@ -504,6 +550,7 @@ def main() -> None:
         template_index.render(
             base="",
             is_index=True,
+            meta_description=resolve_meta_description("home", None, site_config),
             **common,
             pages=pages,
             concerts=upcoming_shows[:5],
@@ -523,16 +570,23 @@ def main() -> None:
         print(f"  Writing {slug}/index.html...")
         out_dir = DIST_DIR / slug
         out_dir.mkdir(parents=True, exist_ok=True)
+        meta_desc = resolve_meta_description(slug, page, site_config)
         if slug == "about":
             template_about = env.get_template("about.html")
             (out_dir / "index.html").write_text(
-                template_about.render(page=page, band_members=band_members, reviews=reviews, **subdir_common),
+                template_about.render(
+                    page=page,
+                    band_members=band_members,
+                    reviews=reviews,
+                    meta_description=meta_desc,
+                    **subdir_common,
+                ),
                 encoding="utf-8",
             )
         else:
             template_page = env.get_template("page.html")
             (out_dir / "index.html").write_text(
-                template_page.render(page=page, **subdir_common),
+                template_page.render(page=page, meta_description=meta_desc, **subdir_common),
                 encoding="utf-8",
             )
 
@@ -541,7 +595,12 @@ def main() -> None:
     (DIST_DIR / "shows").mkdir(exist_ok=True)
     template_concerts = env.get_template("concerts.html")
     (DIST_DIR / "shows" / "index.html").write_text(
-        template_concerts.render(upcoming_shows=upcoming_shows, past_shows=past_shows, **subdir_common),
+        template_concerts.render(
+            upcoming_shows=upcoming_shows,
+            past_shows=past_shows,
+            meta_description=resolve_meta_description("shows", None, site_config),
+            **subdir_common,
+        ),
         encoding="utf-8",
     )
 
@@ -550,7 +609,11 @@ def main() -> None:
     (DIST_DIR / "albums").mkdir(exist_ok=True)
     template_albums = env.get_template("albums.html")
     (DIST_DIR / "albums" / "index.html").write_text(
-        template_albums.render(albums=albums, **subdir_common),
+        template_albums.render(
+            albums=albums,
+            meta_description=resolve_meta_description("albums", None, site_config),
+            **subdir_common,
+        ),
         encoding="utf-8",
     )
 
@@ -562,6 +625,7 @@ def main() -> None:
         template_photos.render(
             photo_albums=photo_albums,
             all_photos_ordered=all_photos_ordered,
+            meta_description=resolve_meta_description("photos", None, site_config),
             **subdir_common,
         ),
         encoding="utf-8",
@@ -601,6 +665,7 @@ def main() -> None:
             all_photos_ordered=all_photos_ordered,
             image_assets=image_assets,
             epk_press_photos=press_photos,
+            meta_description=resolve_meta_description("epk", None, site_config),
             **subdir_common,
         ),
         encoding="utf-8",
