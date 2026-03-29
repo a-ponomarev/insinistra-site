@@ -1,13 +1,33 @@
-# Gallery photo grid: vertical crop for portrait thumbnails (CSS object-position).
-# Allowed: top | center | bottom
+# Gallery: portrait crop, ordering, captions. Published photo URLs use opaque names (see build);
+# keys below always use the real path under photos/ (forward slashes).
+
+# Vertical crop for portrait thumbnails (CSS object-position). Allowed: top | center | bottom
 portrait_crop: top
 
-# Optional: override the default for specific files. Keys = path under photos/ (forward slashes),
-# same as shown in gallery / build output (e.g. Live/Insinistra Vocalist 1.jpeg).
-# Invalid values for a path are skipped (that photo uses the global default).
+# Optional: override portrait_crop for specific files (keys = path under photos/).
 # portrait_crop_overrides:
 #   "Live/Insinistra Vocalist 1.jpeg": center
 #   "Promo/foo.jpg": bottom
 
 portrait_crop_overrides:
   "Live/Insinistra Vocalist 1.jpeg": center
+
+# Optional: album section order (top-level folder names under photos/). Unlisted albums follow, sorted A–Z.
+# album_order:
+#   - Live
+#   - Promo
+
+# Photo order within each album (paths under photos/). Reorder freely; paths not listed sort at end.
+album_photos:
+  Live:
+    - "Live/Insinistra Live 1.jpg"
+    - "Live/Insinistra Live 2.jpeg"
+    - "Live/Insinistra Vocalist 2.jpg"
+    - "Live/Insinistra Drummer 1.jpeg"
+    - "Live/Insinistra Live 3.jpeg"
+    - "Live/Insinistra Guitarist 1.jpeg"
+  Promo:
+
+# Optional: alt text / lightbox label per file (keys = path under photos/). Default when omitted: "Photo".
+# photo_captions:
+#   "Live/Insinistra Vocalist 1.jpeg": "Live performance"

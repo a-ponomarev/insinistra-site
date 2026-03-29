@@ -5,6 +5,7 @@ Run: python build.py
 Output: dist/ (ready to deploy)
 """
 
+import hashlib
 import json
 import os
 import re
@@ -40,6 +41,23 @@ SOCIAL_SIDEBAR_WIDTH_PX = 56  # body padding-left reserved for .social-sidebar
 BANNER_HIDE_BREAKPOINT_DEFAULT = 576
 
 VALID_PORTRAIT_CROPS = frozenset({"top", "center", "bottom"})
+
+# Main gallery (photos/): default alt / lightbox label when photo_captions omits a path
+GALLERY_DEFAULT_CAPTION = "Photo"
+
+
+def _normalize_gallery_source_path(s: str) -> str:
+    return str(s).strip().replace("\\", "/")
+
+
+def _default_gallery_config() -> dict:
+    return {
+        "portrait_crop": "top",
+        "portrait_crop_overrides": {},
+        "album_order": [],
+        "album_photos": {},
+        "photo_captions": {},
+    }
 
 
 def _normalize_portrait_crop(value) -> str | None:
@@ -508,18 +526,15 @@ def load_epk_config() -> dict:
 
 
 def load_gallery_config() -> dict:
-    """Load gallery UI config from content/gallery.yaml (portrait thumb crop)."""
-    defaults = {
-        "portrait_crop": "top",
-        "portrait_crop_overrides": {},
-    }
+    """Load gallery UI config from content/gallery.yaml (crop, order, captions)."""
+    defaults = _default_gallery_config()
     path = CONTENT_DIR / "gallery.yaml"
     if not path.exists():
-        return {"portrait_crop": defaults["portrait_crop"], "portrait_crop_overrides": {}}
+        return defaults.copy()
     try:
         data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
         if not isinstance(data, dict):
-            return {"portrait_crop": defaults["portrait_crop"], "portrait_crop_overrides": {}}
+            return defaults.copy()
         for key, value in defaults.items():
             if key not in data:
                 data[key] = value
@@ -531,14 +546,50 @@ def load_gallery_config() -> dict:
             for k, v in raw_ov.items():
                 if k is None:
                     continue
-                key_norm = str(k).strip().replace("\\", "/")
+                key_norm = _normalize_gallery_source_path(str(k))
                 val = _normalize_portrait_crop(v)
                 if val:
                     overrides[key_norm] = val
         data["portrait_crop_overrides"] = overrides
+
+        album_order: list[str] = []
+        raw_album_order = data.get("album_order")
+        if isinstance(raw_album_order, list):
+            for x in raw_album_order:
+                if isinstance(x, str) and x.strip():
+                    album_order.append(x.strip())
+        data["album_order"] = album_order
+
+        album_photos: dict[str, list[str]] = {}
+        raw_ap = data.get("album_photos")
+        if isinstance(raw_ap, dict):
+            for k, v in raw_ap.items():
+                if k is None or not isinstance(k, str) or not k.strip():
+                    continue
+                key = k.strip()
+                if isinstance(v, list):
+                    paths = [
+                        _normalize_gallery_source_path(str(item))
+                        for item in v
+                        if item is not None and str(item).strip()
+                    ]
+                    album_photos[key] = paths
+        data["album_photos"] = album_photos
+
+        photo_captions: dict[str, str] = {}
+        raw_caps = data.get("photo_captions")
+        if isinstance(raw_caps, dict):
+            for k, v in raw_caps.items():
+                if k is None or not isinstance(k, str):
+                    continue
+                kn = _normalize_gallery_source_path(k)
+                if isinstance(v, str) and v.strip():
+                    photo_captions[kn] = v.strip()
+        data["photo_captions"] = photo_captions
+
         return data
     except (yaml.YAMLError, OSError):
-        return {"portrait_crop": defaults["portrait_crop"], "portrait_crop_overrides": {}}
+        return defaults.copy()
 
 
 def apply_gallery_portrait_overrides(photo_albums: list[dict], gallery_config: dict) -> None:
@@ -546,7 +597,9 @@ def apply_gallery_portrait_overrides(photo_albums: list[dict], gallery_config: d
     ov = gallery_config.get("portrait_crop_overrides") or {}
     for album in photo_albums:
         for p in album.get("photos", []):
-            norm = (p.get("portrait_source") or p.get("name") or "").replace("\\", "/")
+            norm = _normalize_gallery_source_path(
+                (p.get("portrait_source") or p.get("source_rel") or p.get("name") or "")
+            )
             if norm in ov:
                 val = _normalize_portrait_crop(ov.get(norm))
                 if val:
@@ -590,11 +643,18 @@ def band_members_gallery(band_members: list[dict]) -> tuple[list[dict], list[dic
     return [album], photos
 
 
-def process_images(src_dir: Path, dist_dir: Path, url_prefix: str) -> list[dict]:
+def process_images(
+    src_dir: Path,
+    dist_dir: Path,
+    url_prefix: str,
+    *,
+    obfuscate_public_paths: bool = False,
+) -> list[dict]:
     """
     Copy originals and create resized + thumbnail versions from src_dir into dist_dir.
     Skips any image whose target files already exist (already compressed last run).
     Returns list of asset info dicts (used for gallery rendering).
+    When obfuscate_public_paths is True (photos/ gallery), published paths use flat SHA-256-based names.
     """
     if not src_dir.exists():
         return []
@@ -614,18 +674,33 @@ def process_images(src_dir: Path, dist_dir: Path, url_prefix: str) -> list[dict]
         name = path.name
         base = path.stem
         subdir = rel.parent
+        source_rel = str(rel).replace("\\", "/")
 
-        resized_name = f"{base}-1600.jpg"
-        hero_name = f"{base}-3000.jpg"
-        thumb_name = f"{base}-thumb.jpg"
-        orig_dest = dist_dir / "original" / subdir / name
-        resized_dest = dist_dir / "1600" / subdir / resized_name
-        hero_dest = dist_dir / "3000" / subdir / hero_name
-        thumb_dest = dist_dir / "thumb" / subdir / thumb_name
-
-        orig_url = f"{url_prefix}/original/{rel.as_posix()}"
-        resized_url = f"{url_prefix}/1600/{(subdir / resized_name).as_posix()}"
-        thumb_url = f"{url_prefix}/thumb/{(subdir / thumb_name).as_posix()}"
+        if obfuscate_public_paths:
+            public_id = hashlib.sha256(rel.as_posix().encode("utf-8")).hexdigest()
+            orig_ext = path.suffix.lower()
+            orig_file = f"{public_id}{orig_ext}"
+            resized_file = f"{public_id}-1600.jpg"
+            thumb_file = f"{public_id}-thumb.jpg"
+            hero_file = f"{public_id}-3000.jpg"
+            orig_dest = dist_dir / "original" / orig_file
+            resized_dest = dist_dir / "1600" / resized_file
+            hero_dest = dist_dir / "3000" / hero_file
+            thumb_dest = dist_dir / "thumb" / thumb_file
+            orig_url = f"{url_prefix}/original/{orig_file}"
+            resized_url = f"{url_prefix}/1600/{resized_file}"
+            thumb_url = f"{url_prefix}/thumb/{thumb_file}"
+        else:
+            resized_name = f"{base}-1600.jpg"
+            hero_name = f"{base}-3000.jpg"
+            thumb_name = f"{base}-thumb.jpg"
+            orig_dest = dist_dir / "original" / subdir / name
+            resized_dest = dist_dir / "1600" / subdir / resized_name
+            hero_dest = dist_dir / "3000" / subdir / hero_name
+            thumb_dest = dist_dir / "thumb" / subdir / thumb_name
+            orig_url = f"{url_prefix}/original/{rel.as_posix()}"
+            resized_url = f"{url_prefix}/1600/{(subdir / resized_name).as_posix()}"
+            thumb_url = f"{url_prefix}/thumb/{(subdir / thumb_name).as_posix()}"
 
         is_hero = base in ("hero", "hero-mobile", "banner")
         skip = orig_dest.exists() and resized_dest.exists() and thumb_dest.exists()
@@ -636,14 +711,17 @@ def process_images(src_dir: Path, dist_dir: Path, url_prefix: str) -> list[dict]
                 "original": orig_url,
                 "resized": resized_url,
                 "thumb": thumb_url,
-                "name": str(rel),
+                "lightbox_src": orig_url,
+                "name": source_rel,
+                "source_rel": source_rel,
             })
             continue
 
-        (dist_dir / "original" / subdir).mkdir(parents=True, exist_ok=True)
-        (dist_dir / "1600" / subdir).mkdir(parents=True, exist_ok=True)
-        (dist_dir / "3000" / subdir).mkdir(parents=True, exist_ok=True)
-        (dist_dir / "thumb" / subdir).mkdir(parents=True, exist_ok=True)
+        if not obfuscate_public_paths:
+            (dist_dir / "original" / subdir).mkdir(parents=True, exist_ok=True)
+            (dist_dir / "1600" / subdir).mkdir(parents=True, exist_ok=True)
+            (dist_dir / "3000" / subdir).mkdir(parents=True, exist_ok=True)
+            (dist_dir / "thumb" / subdir).mkdir(parents=True, exist_ok=True)
 
         shutil.copy2(path, orig_dest)
 
@@ -679,32 +757,102 @@ def process_images(src_dir: Path, dist_dir: Path, url_prefix: str) -> list[dict]
             "original": orig_url,
             "resized": resized_url,
             "thumb": thumb_url,
-            "name": str(rel),
+            "lightbox_src": orig_url,
+            "name": source_rel,
+            "source_rel": source_rel,
         })
 
     return assets
 
 
-def group_photos_by_album(photos: list[dict]) -> tuple[list[dict], list[dict]]:
-    """
-    Group flat photo list by top-level folder (album). Returns (photo_albums, all_photos_ordered).
-    photo_albums: list of {"name": "Live", "photos": [...]}; all_photos_ordered: flat list with indices.
-    """
-    by_album = defaultdict(list)
+def collect_photos_by_album_folder(photos: list[dict]) -> dict[str, list[dict]]:
+    """Group flat gallery assets by top-level folder under photos/."""
+    by_album: dict[str, list[dict]] = defaultdict(list)
     for p in photos:
-        name = (p.get("name") or "").replace("\\", "/")
-        album_key = name.split("/")[0] if "/" in name else "Photos"
+        sr = _normalize_gallery_source_path(p.get("source_rel") or p.get("name") or "")
+        album_key = sr.split("/")[0] if "/" in sr else "Photos"
         by_album[album_key].append(p)
-    photo_albums = [{"name": k, "photos": v} for k, v in sorted(by_album.items())]
-    # Assign global index to each photo (for lightbox navigation)
+    return dict(by_album)
+
+
+def apply_gallery_order(
+    by_album: dict[str, list[dict]],
+    gallery_config: dict,
+) -> tuple[list[dict], list[dict]]:
+    """
+    Order albums (album_order + alpha remainder) and photos within each album (album_photos + alpha).
+    Assigns global lightbox index on each photo. Returns (photo_albums, all_photos_ordered).
+    """
+    album_order_raw = gallery_config.get("album_order") or []
+    album_photos_cfg: dict[str, list[str]] = gallery_config.get("album_photos") or {}
+
+    ordered_names: list[str] = []
+    seen: set[str] = set()
+    for a in album_order_raw:
+        if not isinstance(a, str) or not a.strip():
+            continue
+        key = a.strip()
+        if key in by_album and key not in seen:
+            ordered_names.append(key)
+            seen.add(key)
+    for key in sorted(k for k in by_album if k not in seen):
+        ordered_names.append(key)
+
+    photo_albums: list[dict] = []
+    for album_name in ordered_names:
+        photos = list(by_album[album_name])
+        explicit_raw = album_photos_cfg.get(album_name)
+        if isinstance(explicit_raw, list) and explicit_raw:
+            explicit_norm = [
+                _normalize_gallery_source_path(str(x))
+                for x in explicit_raw
+                if x is not None and str(x).strip()
+            ]
+            order_map: dict[str, int] = {}
+            for i, path in enumerate(explicit_norm):
+                order_map.setdefault(path, i)
+
+            def sort_key(p: dict) -> tuple:
+                sr = _normalize_gallery_source_path(p.get("source_rel") or p.get("name") or "")
+                pos = order_map.get(sr)
+                if pos is not None:
+                    return (0, pos)
+                return (1, sr)
+
+            photos = sorted(photos, key=sort_key)
+        else:
+            photos = sorted(
+                photos,
+                key=lambda p: _normalize_gallery_source_path(p.get("source_rel") or p.get("name") or ""),
+            )
+        photo_albums.append({"name": album_name, "photos": photos})
+
     idx = 0
-    all_photos_ordered = []
+    all_photos_ordered: list[dict] = []
     for album in photo_albums:
         for p in album["photos"]:
             p["index"] = idx
             all_photos_ordered.append(p)
             idx += 1
     return photo_albums, all_photos_ordered
+
+
+def apply_main_gallery_captions(photo_albums: list[dict], gallery_config: dict) -> None:
+    """Set photo['name'] to caption for public HTML/JSON (main gallery only)."""
+    caps = gallery_config.get("photo_captions") or {}
+    for album in photo_albums:
+        for p in album.get("photos", []):
+            sr = _normalize_gallery_source_path(p.get("source_rel") or "")
+            if not sr:
+                continue
+            p["name"] = caps.get(sr, GALLERY_DEFAULT_CAPTION)
+
+
+def sanitize_gallery_client_fields(photos: list[dict]) -> None:
+    """Remove internal path keys before template/JSON (shared dict refs with albums)."""
+    for p in photos:
+        p.pop("source_rel", None)
+        p.pop("portrait_source", None)
 
 
 def get_banner_hide_breakpoint(images_dist: Path) -> int:
@@ -759,9 +907,17 @@ def main() -> None:
 
     # Process photos (gallery)
     print("  Processing photos...")
-    photos = process_images(PHOTOS_DIR, DIST_DIR / "photos", "photos")
-    photo_albums, all_photos_ordered = group_photos_by_album(photos)
+    photos = process_images(
+        PHOTOS_DIR,
+        DIST_DIR / "photos",
+        "photos",
+        obfuscate_public_paths=True,
+    )
+    by_album = collect_photos_by_album_folder(photos)
+    photo_albums, all_photos_ordered = apply_gallery_order(by_album, gallery_config)
     apply_gallery_portrait_overrides(photo_albums, gallery_config)
+    apply_main_gallery_captions(photo_albums, gallery_config)
+    sanitize_gallery_client_fields(all_photos_ordered)
 
     # Process images (banner, artwork, etc.)
     print("  Processing images...")
@@ -769,6 +925,7 @@ def main() -> None:
     band_members = load_band_members(image_assets)
     band_photo_albums, band_photos_ordered = band_members_gallery(band_members)
     apply_gallery_portrait_overrides(band_photo_albums, gallery_config)
+    sanitize_gallery_client_fields(band_photos_ordered)
     for m in band_members:
         gi = m.get("gallery_index")
         if gi is None:
