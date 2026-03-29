@@ -643,6 +643,18 @@ def band_members_gallery(band_members: list[dict]) -> tuple[list[dict], list[dic
     return [album], photos
 
 
+def _image_aspect_ratio(path: Path) -> float | None:
+    """Width/height from an image file, or None if unreadable."""
+    try:
+        with Image.open(path) as im:
+            w, h = im.size
+        if w <= 0 or h <= 0:
+            return None
+        return w / h
+    except Exception:
+        return None
+
+
 def process_images(
     src_dir: Path,
     dist_dir: Path,
@@ -707,6 +719,7 @@ def process_images(
         if is_hero:
             skip = skip and hero_dest.exists()
         if skip:
+            ar = _image_aspect_ratio(resized_dest)
             assets.append({
                 "original": orig_url,
                 "resized": resized_url,
@@ -714,6 +727,7 @@ def process_images(
                 "lightbox_src": orig_url,
                 "name": source_rel,
                 "source_rel": source_rel,
+                "aspect_ratio": ar if ar is not None else 1.0,
             })
             continue
 
@@ -725,12 +739,15 @@ def process_images(
 
         shutil.copy2(path, orig_dest)
 
+        aspect_ratio_val: float | None = None
         try:
             with Image.open(path) as img:
                 img = img.convert("RGB") if img.mode in ("RGBA", "P") else img
                 w, h = img.size
                 if w == 0:
                     continue
+
+                aspect_ratio_val = w / h
 
                 if w > RESIZED_WIDTH:
                     resized = img.resize((RESIZED_WIDTH, int(h * RESIZED_WIDTH / w)), Image.Resampling.LANCZOS)
@@ -753,6 +770,9 @@ def process_images(
         except Exception as e:
             print(f"  Warning: could not process {name}: {e}")
 
+        if aspect_ratio_val is None:
+            aspect_ratio_val = _image_aspect_ratio(resized_dest) or _image_aspect_ratio(path) or 1.0
+
         assets.append({
             "original": orig_url,
             "resized": resized_url,
@@ -760,6 +780,7 @@ def process_images(
             "lightbox_src": orig_url,
             "name": source_rel,
             "source_rel": source_rel,
+            "aspect_ratio": aspect_ratio_val,
         })
 
     return assets

@@ -9,10 +9,10 @@
 {% for album in albums_to_render %}
 <div class="gallery-album layout">
     {% if gallery_limit is not defined or gallery_limit is none %}<h3 class="gallery-album-title">{{ album.name }}</h3>{% endif %}
-    <div class="photo-grid">
+    <div class="photo-grid photo-grid--justified">
         {% for photo in album.photos %}
         {# photo.name = caption (main gallery) or member name (band); not the source file path #}
-        <button type="button" class="photo-card gallery-thumb" data-index="{{ photo.index }}" data-resized="{% if base %}{{ base }}/{% endif %}{{ photo.resized }}" data-name="{{ photo.name }}" aria-label="View {{ photo.name }}">
+        <button type="button" class="photo-card gallery-thumb" data-index="{{ photo.index }}" data-aspect-ratio="{{ photo.aspect_ratio | default(1) }}" data-resized="{% if base %}{{ base }}/{% endif %}{{ photo.resized }}" data-name="{{ photo.name }}" aria-label="View {{ photo.name }}">
             <img src="{% if base %}{{ base }}/{% endif %}{{ photo.thumb }}" data-thumb="{% if base %}{{ base }}/{% endif %}{{ photo.thumb }}" data-resized="{% if base %}{{ base }}/{% endif %}{{ photo.resized }}" alt="{{ photo.name }}" loading="lazy"{% if photo.portrait_crop is defined %} style="--photo-crop: {{ photo.portrait_crop }}"{% endif %}>
         </button>
         {% endfor %}
@@ -39,13 +39,147 @@
 </div>
 <script type="application/json" id="gallery-photos">{{ all_photos_ordered | tojson }}</script>
 <script type="application/json" id="gallery-base">{{ (base or '') | tojson }}</script>
+{% if not gallery_embed_only %}
+<script src="{% if base %}{{ base }}/{% endif %}static/gallery-justified.js"></script>
+{% endif %}
 <script>
 (function () {
+    var __galleryDbgCnt = 0;
     var el = document.getElementById('gallery-photos');
     var photos = el ? JSON.parse(el.textContent) : [];
     var baseEl = document.getElementById('gallery-base');
     var base = baseEl ? JSON.parse(baseEl.textContent) : '';
     if (base && !base.endsWith('/')) base += '/';
+    function getJustifiedGalleryWidth(grid) {
+        var mainEl = document.querySelector('main.main');
+        var album = grid.parentElement;
+        if (!mainEl) {
+            if (!album) return grid.clientWidth;
+            var stF = window.getComputedStyle(album);
+            var padF = (parseFloat(stF.paddingLeft) || 0) + (parseFloat(stF.paddingRight) || 0);
+            return Math.max(0, album.clientWidth - padF) || grid.clientWidth;
+        }
+        if (!album) return grid.clientWidth;
+        var wAvail = mainEl.clientWidth;
+        var el = album;
+        var reachedMain = false;
+        while (el) {
+            if (el === mainEl) {
+                reachedMain = true;
+                break;
+            }
+            var st = window.getComputedStyle(el);
+            wAvail -= (parseFloat(st.paddingLeft) || 0) + (parseFloat(st.paddingRight) || 0);
+            el = el.parentElement;
+        }
+        if (!reachedMain) return grid.clientWidth;
+        return Math.max(0, wAvail);
+    }
+    function layoutJustifiedGalleryGrids() {
+        var jl = window.justifiedLayout;
+        var dbgGrids = [];
+        if (!jl) {
+            // #region agent log
+            if (__galleryDbgCnt < 8) {
+                __galleryDbgCnt++;
+                fetch('http://127.0.0.1:7941/ingest/968c5cbe-ced0-4794-9d35-b430f1244179', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '6673cc' }, body: JSON.stringify({ sessionId: '6673cc', runId: 'post-fix', hypothesisId: 'B', location: 'gallery_content.html:layoutJustifiedGalleryGrids', message: 'justifiedLayout missing', data: { pass: __galleryDbgCnt, path: typeof location !== 'undefined' ? location.pathname : '' }, timestamp: Date.now() }) }).catch(function () {});
+            }
+            // #endregion
+            return;
+        }
+        document.querySelectorAll('.photo-grid--justified').forEach(function (grid, gidx) {
+            var thumbs = grid.querySelectorAll('.gallery-thumb');
+            var layoutEl = grid.closest('.layout');
+            var par = grid.parentElement;
+            var rect = grid.getBoundingClientRect();
+            var stableW = getJustifiedGalleryWidth(grid);
+            var mainEl = document.querySelector('main.main');
+            var entry = {
+                gidx: gidx,
+                nThumbs: thumbs.length,
+                gridClientW: grid.clientWidth,
+                stableW: stableW,
+                mainClientW: mainEl ? mainEl.clientWidth : -1,
+                gridOffsetW: grid.offsetWidth,
+                gridRectW: rect.width,
+                parentTag: par ? par.tagName : '',
+                parentClientW: par ? par.clientWidth : -1,
+                layoutClientW: layoutEl ? layoutEl.clientWidth : -1,
+                sectionClientW: grid.closest('.section') ? grid.closest('.section').clientWidth : -1
+            };
+            if (!thumbs.length) {
+                entry.skip = 'noThumbs';
+                dbgGrids.push(entry);
+                return;
+            }
+            var w = stableW;
+            if (w <= 0) {
+                entry.skip = 'zeroStableWidth';
+                dbgGrids.push(entry);
+                return;
+            }
+            var ratios = [];
+            for (var i = 0; i < thumbs.length; i++) {
+                var r = parseFloat(thumbs[i].getAttribute('data-aspect-ratio'));
+                ratios.push(r > 0 ? r : 1);
+            }
+            var geometry = jl(ratios, {
+                containerWidth: w,
+                containerPadding: 0,
+                boxSpacing: { horizontal: 4, vertical: 4 },
+                targetRowHeight: 260,
+                fullWidthBreakoutRowCadence: false
+            });
+            entry.containerH = geometry.containerHeight;
+            entry.boxCount = geometry.boxes ? geometry.boxes.length : 0;
+            entry.box0 = geometry.boxes && geometry.boxes[0] ? { w: geometry.boxes[0].width, h: geometry.boxes[0].height, l: geometry.boxes[0].left, t: geometry.boxes[0].top } : null;
+            dbgGrids.push(entry);
+            grid.style.position = 'relative';
+            grid.style.height = geometry.containerHeight + 'px';
+            for (var j = 0; j < thumbs.length; j++) {
+                var box = geometry.boxes[j];
+                if (!box) continue;
+                var btn = thumbs[j];
+                btn.style.position = 'absolute';
+                btn.style.top = box.top + 'px';
+                btn.style.left = box.left + 'px';
+                btn.style.width = box.width + 'px';
+                btn.style.height = box.height + 'px';
+            }
+            if (thumbs[0]) {
+                var cs = window.getComputedStyle(thumbs[0]);
+                entry.afterThumb0 = { w: cs.width, h: cs.height, pos: cs.position };
+            }
+        });
+        // #region agent log
+        if (__galleryDbgCnt < 8) {
+            __galleryDbgCnt++;
+            fetch('http://127.0.0.1:7941/ingest/968c5cbe-ced0-4794-9d35-b430f1244179', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '6673cc' }, body: JSON.stringify({ sessionId: '6673cc', runId: 'post-fix', hypothesisId: 'verify-stableW', location: 'gallery_content.html:layoutJustifiedGalleryGrids:end', message: 'per-grid layout metrics', data: { pass: __galleryDbgCnt, path: typeof location !== 'undefined' ? location.pathname : '', grids: dbgGrids }, timestamp: Date.now() }) }).catch(function () {});
+        }
+        // #endregion
+    }
+    var layoutRaf = false;
+    function scheduleJustifiedLayout() {
+        if (layoutRaf) return;
+        layoutRaf = true;
+        requestAnimationFrame(function () {
+            layoutRaf = false;
+            layoutJustifiedGalleryGrids();
+        });
+    }
+    if (window.justifiedLayout) {
+        scheduleJustifiedLayout();
+        if (typeof ResizeObserver !== 'undefined') {
+            var mainObs = document.querySelector('main.main');
+            if (mainObs) {
+                new ResizeObserver(scheduleJustifiedLayout).observe(mainObs);
+            }
+        }
+    } else {
+        // #region agent log
+        fetch('http://127.0.0.1:7941/ingest/968c5cbe-ced0-4794-9d35-b430f1244179', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '6673cc' }, body: JSON.stringify({ sessionId: '6673cc', runId: 'post-fix', hypothesisId: 'B', location: 'gallery_content.html:init', message: 'no window.justifiedLayout at init', data: { path: typeof location !== 'undefined' ? location.pathname : '' }, timestamp: Date.now() }) }).catch(function () {});
+        // #endregion
+    }
     function setPortraitClass(img) {
         if (img.naturalWidth && img.naturalHeight && img.naturalHeight > img.naturalWidth) {
             img.classList.add('portrait');

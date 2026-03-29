@@ -1,0 +1,13 @@
+{
+  "name": "insinistra-site",
+  "private": true,
+  "dependencies": {
+    "justified-layout": "^4.1.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.2"
+  },
+  "scripts": {
+    "build:js": "esbuild scripts/gallery-justified-entry.js --bundle --outfile=static/gallery-justified.js --format=iife"
+  }
+}

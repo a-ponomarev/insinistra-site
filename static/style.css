@@ -843,6 +843,19 @@ h3 {
   gap: 4px;
 }
 
+/* Flickr justified-layout: geometry from JS (see gallery_content.html) */
+.photo-grid.photo-grid--justified {
+  display: block;
+  position: relative;
+  width: 100%;
+}
+
+.photo-grid.photo-grid--justified .photo-card {
+  flex: none;
+  max-width: none;
+  aspect-ratio: auto;
+}
+
 .photo-card {
   display: block;
   flex: 0 0 calc((100% - 8px) / 3);
@@ -873,6 +886,12 @@ h3 {
 }
 
 /* Gallery albums (nested folders) */
+.section--gallery .gallery-album,
+.epk-section.epk-photos .gallery-album {
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .section--gallery .gallery-album {
   padding-top: 0;
   padding-bottom: 16px;
@@ -1085,6 +1104,11 @@ body.lightbox-open {
   width: auto;
 }
 
+.photo-grid.photo-grid--justified .gallery-thumb {
+  width: auto;
+  max-width: none;
+}
+
 /* ─── Page content ───────────────────────────────────────── */
 
 .page {
@@ -1097,28 +1121,6 @@ body.lightbox-open {
 /* Shows page: reduced padding */
 .page:has(.shows-section) {
   padding: 40px;
-}
-
-/* Photos (gallery) page: tighter spacing */
-.page--gallery {
-  padding: 40px 32px;
-}
-
-.page--gallery h1 {
-  margin-bottom: 24px;
-}
-
-.page--gallery .section--gallery {
-  padding: 0;
-  border-bottom: none;
-}
-
-.page--gallery .section--gallery .gallery-album {
-  padding-bottom: 66px;
-}
-
-.page--gallery .section--gallery .gallery-album:last-child {
-  padding-bottom: 0;
 }
 
 .page h1 {
@@ -1981,14 +1983,6 @@ body:has(.epk-page) .nav-overlay .nav a:hover {
     padding: 40px 20px;
   }
 
-  .page--gallery {
-    padding: 40px 20px;
-  }
-
-  .page--gallery .section--gallery {
-    padding: 20px 0;
-  }
-
   .layout {
     padding-left: 20px;
     padding-right: 20px;
@@ -2022,6 +2016,11 @@ body:has(.epk-page) .nav-overlay .nav a:hover {
   .photo-card {
     flex: 0 0 calc((100% - 4px) / 2);
     max-width: calc((100% - 4px) / 2);
+  }
+
+  .photo-grid.photo-grid--justified .photo-card {
+    flex: none;
+    max-width: none;
   }
 
   .site-footer {
@@ -2070,14 +2069,6 @@ body:has(.epk-page) .nav-overlay .nav a:hover {
 
   .page:has(.shows-section) {
     padding: 40px 20px;
-  }
-
-  .page--gallery {
-    padding: 40px 20px;
-  }
-
-  .page--gallery .section--gallery {
-    padding: 16px 0;
   }
 
   .hero-inner {
@@ -2147,8 +2138,18 @@ body:has(.epk-page) .nav-overlay .nav a:hover {
     max-width: 100%;
   }
 
+  .photo-grid.photo-grid--justified .photo-card {
+    flex: none;
+    max-width: none;
+  }
+
   .photo-grid .gallery-thumb {
     width: 100%;
+  }
+
+  .photo-grid.photo-grid--justified .gallery-thumb {
+    width: auto;
+    max-width: none;
   }
 
   .band-members-grid {
