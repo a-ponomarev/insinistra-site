@@ -11,6 +11,9 @@ portrait_crop: top
 
 portrait_crop_overrides:
   "Live/Insinistra Vocalist 1.jpeg": center
+  "Promo/Boris Sergey.jpeg": center
+  "Promo/Band with skull.JPG": center
+  "Promo/Maria with skull.JPG": center
 
 # Optional: album section order (top-level folder names under photos/). Unlisted albums follow, sorted A–Z.
 # album_order:
@@ -27,6 +30,23 @@ album_photos:
     - "Live/Insinistra Live 3.jpeg"
     - "Live/Insinistra Guitarist 1.jpeg"
   Promo:
+    - "Promo/Band with skull.JPG"
+    - "Promo/Black 2.JPG"
+    - "Promo/Boris Maria.JPG"
+    - "Promo/Boris Sergey.jpeg"
+    - "Promo/Insinistra Band 2x3.jpg"
+    - "Promo/Insinistra Bassist .JPG"
+    - "Promo/Insinistra Drummer 1.JPG"
+    - "Promo/Insinistra Drummer 2.JPG"
+    - "Promo/Insinistra Guitarist.JPG"
+    - "Promo/Insinistra Vocalist 1.JPG"
+    - "Promo/Insinistra Vocalist 2.JPG"
+    - "Promo/Insinistra Vocalist 3.jpg"
+    - "Promo/Insinistra Vocalist 4.jpg"
+    - "Promo/Insinistra Vocalist 5.jpg"
+    - "Promo/Maria with skull.JPG"
+    - "Promo/Microphone.jpeg"
+    - "Promo/With Instruments.JPG"
 
 # Optional: alt text / lightbox label per file (keys = path under photos/). Default when omitted: "Photo".
 # photo_captions:
