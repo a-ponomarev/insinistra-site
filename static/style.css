@@ -191,6 +191,27 @@ a:hover {
   cursor: pointer;
   flex-direction: column;
   gap: 6px;
+  filter: drop-shadow(0 0 1.5px rgba(255, 255, 255, 0.45))
+    drop-shadow(0 0 2px rgba(0, 0, 0, 0.75))
+    drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4))
+    drop-shadow(0 4px 14px rgba(0, 0, 0, 0.28));
+}
+
+@media (prefers-contrast: more) {
+  .nav-toggle {
+    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.95))
+      drop-shadow(0 0 3px rgba(0, 0, 0, 0.95))
+      drop-shadow(0 3px 10px rgba(0, 0, 0, 0.55));
+  }
+
+  .nav-toggle-bar {
+    background: #fff;
+  }
+
+  .nav-toggle:hover .nav-toggle-bar,
+  .nav-toggle[aria-expanded="true"] .nav-toggle-bar {
+    background: #fff;
+  }
 }
 
 .nav-toggle-bar {
@@ -1596,15 +1617,40 @@ body.lightbox-open {
 
 /* Hamburger nav from 900px down */
 @media (max-width: 900px) {
+  .site-header {
+    pointer-events: none;
+    background: transparent;
+    border-bottom-color: transparent;
+    backdrop-filter: none;
+    padding: 0;
+    padding-top: 0;
+  }
+
+  .site-header.scrolled {
+    background: transparent;
+    border-bottom-color: transparent;
+    backdrop-filter: none;
+    padding: 0;
+    padding-top: 0;
+  }
+
+  .site-header .site-logo {
+    display: none;
+  }
+
   .site-header .layout {
     position: relative;
     z-index: 101;
+    justify-content: flex-end;
   }
 
   .nav-toggle {
     display: flex;
-    position: relative;
+    position: fixed;
+    top: calc(20px + env(safe-area-inset-top, 0));
+    right: calc(16px + env(safe-area-inset-right, 0));
     z-index: 102;
+    pointer-events: auto;
   }
 
   .nav-overlay {
@@ -1696,15 +1742,40 @@ body.lightbox-open {
 }
 
 /* EPK page: always show sandwich nav (same as narrow viewport) */
+body:has(.epk-page) .site-header {
+  pointer-events: none;
+  background: transparent;
+  border-bottom-color: transparent;
+  backdrop-filter: none;
+  padding: 0;
+  padding-top: 0;
+}
+
+body:has(.epk-page) .site-header.scrolled {
+  background: transparent;
+  border-bottom-color: transparent;
+  backdrop-filter: none;
+  padding: 0;
+  padding-top: 0;
+}
+
+body:has(.epk-page) .site-header .site-logo {
+  display: none;
+}
+
 body:has(.epk-page) .site-header .layout {
   position: relative;
   z-index: 101;
+  justify-content: flex-end;
 }
 
 body:has(.epk-page) .nav-toggle {
   display: flex;
-  position: relative;
+  position: fixed;
+  top: calc(20px + env(safe-area-inset-top, 0));
+  right: calc(16px + env(safe-area-inset-right, 0));
   z-index: 102;
+  pointer-events: auto;
 }
 
 body:has(.epk-page) .nav-overlay {
