@@ -2295,6 +2295,11 @@ body:has(.epk-page) .nav-overlay .nav a:hover {
   max-width: 1000px;
 }
 
+/* Match home Photo section width (global .layout, not 960px EPK default) */
+.epk-page .epk-section.epk-photos .layout {
+  max-width: 1300px;
+}
+
 .epk-section.epk-shows .layout > h2 {
   text-align: center;
   margin-top: 0;
@@ -2601,10 +2606,6 @@ body:has(.epk-page) .nav-overlay .nav a:hover {
 
 .epk-photo-note {
   margin-top: 16px;
-}
-
-.epk-photos-download {
-  margin: 24px 0 0;
 }
 
 .epk-band-grid {

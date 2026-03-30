@@ -15,6 +15,25 @@ portrait_crop_overrides:
   "Promo/Band with skull.JPG": center
   "Promo/Maria with skull.JPG": center
 
+# Home page photo strip: paths under photos/, order preserved. Lightbox includes only these.
+# If omitted or empty, first six photos of the first album are used (legacy).
+home_photos:
+  - "Live/Insinistra Live 1.jpg"
+  - "Live/Insinistra Live 2.jpeg"
+  - "Live/Insinistra Vocalist 2.jpg"
+  - "Live/Insinistra Drummer 1.jpeg"
+  - "Promo/Insinistra Band 2x3.jpg"
+  - "Live/Insinistra Guitarist 1.jpeg"
+
+# EPK press photos: same path rules. If omitted or empty, the EPK gallery block is hidden.
+epk_photos:
+  - "Live/Insinistra Live 1.jpg"
+  - "Live/Insinistra Live 2.jpeg"
+  - "Live/Insinistra Vocalist 2.jpg"
+  - "Live/Insinistra Drummer 1.jpeg"
+  - "Promo/Insinistra Band 2x3.jpg"
+  - "Live/Insinistra Guitarist 1.jpeg"
+
 # Optional: album section order (top-level folder names under photos/). Unlisted albums follow, sorted A–Z.
 # album_order:
 #   - Live

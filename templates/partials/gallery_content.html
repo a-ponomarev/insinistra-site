@@ -8,7 +8,7 @@
 {% endif %}
 {% for album in albums_to_render %}
 <div class="gallery-album layout">
-    {% if gallery_limit is not defined or gallery_limit is none %}<h3 class="gallery-album-title">{{ album.name }}</h3>{% endif %}
+    {% if gallery_limit is not defined or gallery_limit is none %}{% if album.name %}<h3 class="gallery-album-title">{{ album.name }}</h3>{% endif %}{% endif %}
     <div class="photo-grid photo-grid--justified">
         {% for photo in album.photos %}
         {# photo.name = caption (main gallery) or member name (band); not the source file path #}

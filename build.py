@@ -58,6 +58,8 @@ def _default_gallery_config() -> dict:
         "album_order": [],
         "album_photos": {},
         "photo_captions": {},
+        "home_photos": [],
+        "epk_photos": [],
     }
 
 
@@ -588,6 +590,18 @@ def load_gallery_config() -> dict:
                     photo_captions[kn] = v.strip()
         data["photo_captions"] = photo_captions
 
+        def _parse_path_list(raw) -> list[str]:
+            if not isinstance(raw, list):
+                return []
+            return [
+                _normalize_gallery_source_path(str(item))
+                for item in raw
+                if item is not None and str(item).strip()
+            ]
+
+        data["home_photos"] = _parse_path_list(data.get("home_photos"))
+        data["epk_photos"] = _parse_path_list(data.get("epk_photos"))
+
         return data
     except (yaml.YAMLError, OSError):
         return defaults.copy()
@@ -870,6 +884,51 @@ def apply_main_gallery_captions(photo_albums: list[dict], gallery_config: dict) 
             p["name"] = caps.get(sr, GALLERY_DEFAULT_CAPTION)
 
 
+def gallery_pick_ordered_subset(
+    all_photos_ordered: list[dict],
+    paths: list[str],
+    *,
+    context: str,
+) -> tuple[list[dict], list[dict]]:
+    """
+    Build a single pseudo-album and flat list for home/EPK. Call before
+    sanitize_gallery_client_fields; paths match photo source_rel. Copies dicts
+    and reassigns index so full-gallery indices stay unchanged.
+    """
+    by_sr: dict[str, dict] = {}
+    for p in all_photos_ordered:
+        sr = _normalize_gallery_source_path(p.get("source_rel") or "")
+        if sr:
+            by_sr[sr] = p
+    copies: list[dict] = []
+    for path in paths:
+        norm = _normalize_gallery_source_path(path)
+        src = by_sr.get(norm)
+        if src is None:
+            print(f"  Warning: {context}_photos path not found in gallery: {path}")
+            continue
+        c = dict(src)
+        c["index"] = len(copies)
+        copies.append(c)
+    return ([{"name": "", "photos": copies}], copies)
+
+
+def legacy_home_gallery_slice(
+    photo_albums: list[dict],
+    limit: int = 6,
+) -> tuple[list[dict], list[dict]]:
+    """First album, first N photos (same behavior as old gallery_limit on index)."""
+    if not photo_albums or not photo_albums[0].get("photos"):
+        return [], []
+    first_photos = photo_albums[0]["photos"][:limit]
+    copies: list[dict] = []
+    for p in first_photos:
+        c = dict(p)
+        c["index"] = len(copies)
+        copies.append(c)
+    return ([{"name": "", "photos": copies}], copies)
+
+
 def sanitize_gallery_client_fields(photos: list[dict]) -> None:
     """Remove internal path keys before template/JSON (shared dict refs with albums)."""
     for p in photos:
@@ -939,7 +998,31 @@ def main() -> None:
     photo_albums, all_photos_ordered = apply_gallery_order(by_album, gallery_config)
     apply_gallery_portrait_overrides(photo_albums, gallery_config)
     apply_main_gallery_captions(photo_albums, gallery_config)
+
+    home_paths = gallery_config.get("home_photos") or []
+    if home_paths:
+        home_photo_albums, home_photos_ordered = gallery_pick_ordered_subset(
+            all_photos_ordered, home_paths, context="home"
+        )
+    else:
+        home_photo_albums, home_photos_ordered = legacy_home_gallery_slice(photo_albums)
+
+    epk_paths = gallery_config.get("epk_photos") or []
+    if epk_paths:
+        epk_photo_albums, epk_photos_ordered = gallery_pick_ordered_subset(
+            all_photos_ordered, epk_paths, context="epk"
+        )
+    else:
+        epk_photo_albums, epk_photos_ordered = [], []
+
+    if not home_photos_ordered:
+        home_photo_albums, home_photos_ordered = [], []
+    if not epk_photos_ordered:
+        epk_photo_albums, epk_photos_ordered = [], []
+
     sanitize_gallery_client_fields(all_photos_ordered)
+    sanitize_gallery_client_fields(home_photos_ordered)
+    sanitize_gallery_client_fields(epk_photos_ordered)
 
     # Process images (banner, artwork, etc.)
     print("  Processing images...")
@@ -1023,8 +1106,8 @@ def main() -> None:
             featured_album=featured_album,
             albums_for_discography=albums_for_discography,
             videos=videos[:6],
-            photo_albums=photo_albums,
-            all_photos_ordered=all_photos_ordered,
+            photo_albums=home_photo_albums,
+            all_photos_ordered=home_photos_ordered,
             structured_data_json=structured_data_script_json(site_config),
         ),
         encoding="utf-8",
@@ -1186,8 +1269,8 @@ def main() -> None:
             videos=videos,
             upcoming_shows=upcoming_shows[:5],
             recent_shows=past_shows[:5],
-            photo_albums=photo_albums,
-            all_photos_ordered=all_photos_ordered,
+            photo_albums=epk_photo_albums,
+            all_photos_ordered=epk_photos_ordered,
             image_assets=image_assets,
             epk_press_photos=press_photos,
             meta_description=epk_desc,
