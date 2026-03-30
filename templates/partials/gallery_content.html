@@ -55,7 +55,14 @@
         document.querySelectorAll('.photo-grid--justified').forEach(function (grid) {
             var thumbs = grid.querySelectorAll('.gallery-thumb');
             if (!thumbs.length) return;
-            var w = grid.clientWidth;
+            var clientW = grid.clientWidth;
+            var rectW = Math.round(grid.getBoundingClientRect().width);
+            var albumEl = grid.closest('.gallery-album');
+            var albumW = 0;
+            if (albumEl) {
+                albumW = Math.max(albumEl.clientWidth, Math.round(albumEl.getBoundingClientRect().width));
+            }
+            var w = Math.max(clientW, rectW, albumW);
             if (w <= 0) return;
             var ratios = [];
             for (var i = 0; i < thumbs.length; i++) {
