@@ -10,6 +10,7 @@ import json
 import os
 import re
 import shutil
+import subprocess
 from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
@@ -959,6 +960,16 @@ def main() -> None:
             else:
                 m.pop("portrait_crop", None)
     reviews = load_reviews()
+
+    gallery_js_entry = ROOT / "scripts" / "gallery-justified-entry.js"
+    if gallery_js_entry.is_file():
+        print("  Bundling gallery JS...")
+        subprocess.run(
+            "npm run build:js",
+            cwd=ROOT,
+            shell=True,
+            check=True,
+        )
 
     # Copy static and inject build-time values (e.g. banner breakpoint) into CSS
     if STATIC_DIR.exists():
