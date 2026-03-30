@@ -460,6 +460,14 @@ a:hover {
   min-height: 0;
 }
 
+/* Flex column main: article.page is often the only child; without this it can shrink
+   to min-content width once gallery thumbs are position:absolute (narrow strip). */
+.site-content-wrap > .main > .page {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
 /* ─── Typography ─────────────────────────────────────────── */
 
 h1, h2, h3 {
@@ -889,6 +897,14 @@ h3 {
 .section--gallery .gallery-album {
   padding-top: 0;
   padding-bottom: 16px;
+}
+
+/* Avoid double .layout horizontal padding when an outer wrapper already sets it */
+.section--gallery > .gallery-album.layout,
+.section--gallery .layout > .gallery-album.layout,
+.epk-section.epk-photos .layout > .gallery-album.layout {
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .gallery-album-title {

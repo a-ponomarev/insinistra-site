@@ -3,13 +3,11 @@
 {% block title %}Photos{% endblock %}
 
 {% block content %}
-<article class="page">
+<article class="page page--gallery">
     <h1>Photos</h1>
     {% if photo_albums %}
     <section class="section section--gallery">
-        <div class="layout">
-            {% include "partials/gallery_content.html" with context %}
-        </div>
+        {% include "partials/gallery_content.html" with context %}
     </section>
     {% else %}
     <p class="page-body">No photos yet.</p>
