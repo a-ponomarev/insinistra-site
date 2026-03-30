@@ -127,3 +127,29 @@
 {% endif %}
 
 {% endblock %}
+
+{% block page_scripts %}
+<script>
+(function () {
+    function lockHeroMobile() {
+        var el = document.querySelector('.hero-mobile');
+        if (!el) return;
+        var h = window.innerHeight;
+        el.style.height = h + 'px';
+        el.style.minHeight = h + 'px';
+        el.style.maxHeight = h + 'px';
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', lockHeroMobile);
+    } else {
+        lockHeroMobile();
+    }
+    window.addEventListener('orientationchange', function () {
+        setTimeout(lockHeroMobile, 150);
+    });
+    window.addEventListener('pageshow', function (e) {
+        if (e.persisted) lockHeroMobile();
+    });
+})();
+</script>
+{% endblock %}
