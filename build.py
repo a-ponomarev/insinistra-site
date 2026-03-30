@@ -658,6 +658,12 @@ def band_members_gallery(band_members: list[dict]) -> tuple[list[dict], list[dic
     return [album], photos
 
 
+def _obfuscated_public_slug(source_rel_posix: str, salt: str) -> str:
+    """8 hex chars from SHA-256(source_rel + NUL + salt); distinct salt per derivative filename."""
+    key = f"{source_rel_posix}\0{salt}"
+    return hashlib.sha256(key.encode("utf-8")).hexdigest()[:8]
+
+
 def _image_aspect_ratio(path: Path) -> float | None:
     """Width/height from an image file, or None if unreadable."""
     try:
@@ -681,7 +687,8 @@ def process_images(
     Copy originals and create resized + thumbnail versions from src_dir into dist_dir.
     Skips any image whose target files already exist (already compressed last run).
     Returns list of asset info dicts (used for gallery rendering).
-    When obfuscate_public_paths is True (photos/ gallery), published paths use flat SHA-256-based names.
+    When obfuscate_public_paths is True (photos/ gallery), published paths use flat names:
+    first 8 hex chars of SHA-256 per file (distinct salt per variant), plus extension.
     """
     if not src_dir.exists():
         return []
@@ -704,12 +711,12 @@ def process_images(
         source_rel = str(rel).replace("\\", "/")
 
         if obfuscate_public_paths:
-            public_id = hashlib.sha256(rel.as_posix().encode("utf-8")).hexdigest()
+            rp = rel.as_posix()
             orig_ext = path.suffix.lower()
-            orig_file = f"{public_id}{orig_ext}"
-            resized_file = f"{public_id}-1600.jpg"
-            thumb_file = f"{public_id}-thumb.jpg"
-            hero_file = f"{public_id}-3000.jpg"
+            orig_file = f"{_obfuscated_public_slug(rp, 'orig')}{orig_ext}"
+            resized_file = f"{_obfuscated_public_slug(rp, '1600')}.jpg"
+            thumb_file = f"{_obfuscated_public_slug(rp, 'thumb')}.jpg"
+            hero_file = f"{_obfuscated_public_slug(rp, '3000')}.jpg"
             orig_dest = dist_dir / "original" / orig_file
             resized_dest = dist_dir / "1600" / resized_file
             hero_dest = dist_dir / "3000" / hero_file
