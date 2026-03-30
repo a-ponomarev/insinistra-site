@@ -36,6 +36,10 @@ RESIZED_WIDTH = 1600
 HERO_WIDTH = 3000  # Hero images (desktop + mobile) use this for better quality
 THUMB_WIDTH = 400
 
+# Progressive JPEG + optimizer for all PIL-written derivatives. Existing files under dist/ are
+# skipped until removed (see process_image_assets skip logic), so delete cached JPEGs to regenerate.
+_JPEG_SAVE_KWARGS: dict = {"optimize": True, "progressive": True}
+
 # Banner: fixed height in CSS (px); hide below viewport width = banner_display_width + sidebar
 BANNER_CSS_HEIGHT_PX = 320
 SOCIAL_SIDEBAR_WIDTH_PX = 56  # body padding-left reserved for .social-sidebar
@@ -775,20 +779,20 @@ def process_images(
                     resized = img.resize((RESIZED_WIDTH, int(h * RESIZED_WIDTH / w)), Image.Resampling.LANCZOS)
                 else:
                     resized = img
-                resized.save(resized_dest, "JPEG", quality=88)
+                resized.save(resized_dest, "JPEG", quality=88, **_JPEG_SAVE_KWARGS)
 
                 if is_hero:
                     if w > HERO_WIDTH:
                         hero_img = img.resize((HERO_WIDTH, int(h * HERO_WIDTH / w)), Image.Resampling.LANCZOS)
                     else:
                         hero_img = img
-                    hero_img.save(hero_dest, "JPEG", quality=88)
+                    hero_img.save(hero_dest, "JPEG", quality=88, **_JPEG_SAVE_KWARGS)
 
                 if w > THUMB_WIDTH:
                     thumb = img.resize((THUMB_WIDTH, int(h * THUMB_WIDTH / w)), Image.Resampling.LANCZOS)
                 else:
                     thumb = img
-                thumb.save(thumb_dest, "JPEG", quality=85)
+                thumb.save(thumb_dest, "JPEG", quality=85, **_JPEG_SAVE_KWARGS)
         except Exception as e:
             print(f"  Warning: could not process {name}: {e}")
 

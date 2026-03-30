@@ -1054,6 +1054,84 @@ body.lightbox-open {
   box-shadow: 0 8px 48px rgba(0, 0, 0, 0.6);
 }
 
+@keyframes photo-pending-breathe {
+  0%,
+  100% {
+    opacity: 1;
+    filter: brightness(1);
+  }
+
+  50% {
+    opacity: 0.88;
+    filter: brightness(0.92);
+  }
+}
+
+/* Percentages are relative to the pseudo-element’s width. A narrow travel range
+   keeps the sheen mostly inside the thumb; linear avoids ease-in-out “parking”
+   off-screen where overflow:hidden clips it entirely. */
+@keyframes gallery-thumb-shimmer {
+  0% {
+    transform: translateX(-28%) skewX(-6deg);
+  }
+
+  100% {
+    transform: translateX(118%) skewX(-6deg);
+  }
+}
+
+/* Sheen over grid / about-page thumbs while a higher-res source is loading (see gallery_content.html) */
+.gallery-thumb:has(img.photo-pending-upgrade) {
+  position: relative;
+}
+
+.gallery-thumb:has(img.photo-pending-upgrade)::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 72%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: inherit;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    transparent 28%,
+    rgba(255, 255, 255, 0.045) 40%,
+    rgba(255, 255, 255, 0.09) 48%,
+    rgba(255, 255, 255, 0.12) 50%,
+    rgba(255, 255, 255, 0.09) 52%,
+    rgba(255, 255, 255, 0.045) 60%,
+    transparent 72%,
+    transparent 100%
+  );
+  transform: translateX(-28%) skewX(-6deg);
+  animation: gallery-thumb-shimmer 2.75s linear infinite;
+}
+
+.lightbox-img.lightbox-img--pending-full {
+  animation: photo-pending-breathe 2.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery-thumb:has(img.photo-pending-upgrade)::after {
+    animation: none;
+    transform: none;
+    width: 100%;
+    opacity: 0.22;
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .lightbox-img.lightbox-img--pending-full {
+    animation: none;
+    opacity: 0.92;
+    filter: brightness(0.95);
+  }
+}
+
 .lightbox-close {
   position: absolute;
   top: -48px;
