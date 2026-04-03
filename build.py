@@ -973,7 +973,7 @@ def main() -> None:
     DIST_DIR.mkdir(parents=True, exist_ok=True)
     if DIST_DIR.exists():
         for item in DIST_DIR.iterdir():
-            if item.name not in ("photos", "images"):
+            if item.name not in ("photos", "images", "CNAME"):
                 if item.is_file():
                     item.unlink()
                 else:
