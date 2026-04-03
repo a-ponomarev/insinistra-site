@@ -2908,6 +2908,22 @@ body.nav-open {
   overflow: hidden;
 }
 
+/* Fullscreen nav only (< drawer breakpoint): blur page behind overlay for safe-area edges. Sidebar drawer: unchanged. */
+@media (max-width: 560px) {
+  .site-content-wrap,
+  .site-footer,
+  .social-sidebar {
+    transition: filter 220ms ease, -webkit-filter 220ms ease;
+  }
+
+  body.nav-open .site-content-wrap,
+  body.nav-open .site-footer,
+  body.nav-open .social-sidebar {
+    filter: blur(12px);
+    -webkit-filter: blur(12px);
+  }
+}
+
 a:focus-visible,
 button:focus-visible {
   outline: 2px solid var(--accent);
