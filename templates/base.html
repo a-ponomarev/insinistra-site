@@ -132,6 +132,35 @@
             }
         })();
     </script>
+    <script>
+        (function () {
+            function lockViewportShellAndFooter() {
+                var vh = window.innerHeight;
+                var wrap = document.querySelector('.site-content-wrap');
+                if (wrap) {
+                    wrap.style.minHeight = vh + 'px';
+                }
+                var footer = document.querySelector('.site-footer');
+                if (footer) {
+                    var fh = footer.getBoundingClientRect().height;
+                    fh = Math.ceil(fh);
+                    footer.style.minHeight = fh + 'px';
+                    footer.style.maxHeight = fh + 'px';
+                }
+            }
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', lockViewportShellAndFooter);
+            } else {
+                lockViewportShellAndFooter();
+            }
+            window.addEventListener('orientationchange', function () {
+                setTimeout(lockViewportShellAndFooter, 150);
+            });
+            window.addEventListener('pageshow', function (e) {
+                if (e.persisted) lockViewportShellAndFooter();
+            });
+        })();
+    </script>
     <script data-goatcounter="https://insinistra.goatcounter.com/count"
             async src="//gc.zgo.at/count.js"></script>
     {% block page_scripts %}{% endblock %}
