@@ -1725,7 +1725,7 @@ body.lightbox-open {
   .nav-toggle {
     display: flex;
     position: fixed;
-    top: calc(20px + env(safe-area-inset-top, 0));
+    top: calc(10px + env(safe-area-inset-top, 0));
     right: calc(16px + env(safe-area-inset-right, 0));
     z-index: 102;
     pointer-events: auto;
