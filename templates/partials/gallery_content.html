@@ -39,6 +39,7 @@
 </div>
 <script type="application/json" id="gallery-photos">{{ all_photos_ordered | tojson }}</script>
 <script type="application/json" id="gallery-base">{{ (base or '') | tojson }}</script>
+<script type="application/json" id="gallery-layout-config">{{ {"merge_singleton_rows": gallery_merge_singleton_rows|default(true) } | tojson }}</script>
 {% if not gallery_embed_only %}
 <script src="{% if base %}{{ base }}/{% endif %}static/gallery-justified.js"></script>
 {% endif %}
@@ -49,6 +50,89 @@
     var baseEl = document.getElementById('gallery-base');
     var base = baseEl ? JSON.parse(baseEl.textContent) : '';
     if (base && !base.endsWith('/')) base += '/';
+    var layoutCfgEl = document.getElementById('gallery-layout-config');
+    var layoutCfg = layoutCfgEl ? JSON.parse(layoutCfgEl.textContent) : {};
+    var mergeSingletonRowsEnabled = layoutCfg.merge_singleton_rows === true;
+    var GALLERY_H_GAP = 4;
+    var GALLERY_V_GAP = 4;
+    function clusterRowsFromBoxes(boxes, n) {
+        var idx = [];
+        for (var i = 0; i < n; i++) idx.push(i);
+        idx.sort(function (a, b) {
+            var d = boxes[a].top - boxes[b].top;
+            if (Math.abs(d) > 1) return d;
+            return boxes[a].left - boxes[b].left;
+        });
+        var rows = [];
+        var cur = [idx[0]];
+        for (var k = 1; k < idx.length; k++) {
+            var ii = idx[k];
+            if (Math.abs(boxes[ii].top - boxes[cur[0]].top) < 1) {
+                cur.push(ii);
+            } else {
+                cur.sort(function (a, b) { return a - b; });
+                rows.push(cur);
+                cur = [ii];
+            }
+        }
+        cur.sort(function (a, b) { return a - b; });
+        rows.push(cur);
+        return rows;
+    }
+    function mergeSingletonRows(rows) {
+        while (rows.length > 1) {
+            var si = -1;
+            for (var r = 0; r < rows.length; r++) {
+                if (rows[r].length === 1) {
+                    si = r;
+                    break;
+                }
+            }
+            if (si < 0) break;
+            if (si === rows.length - 1) {
+                var prev = rows[si - 1];
+                if (prev.length <= 1) {
+                    rows[si] = prev.concat(rows[si]);
+                    rows.splice(si - 1, 1);
+                } else {
+                    rows[si].unshift(prev.pop());
+                }
+            } else if (si === 0) {
+                rows[1] = rows[0].concat(rows[1]);
+                rows.shift();
+            } else {
+                var pr = rows[si - 1];
+                if (pr.length > 1) {
+                    rows[si].unshift(pr.pop());
+                } else {
+                    rows[si] = pr.concat(rows[si]);
+                    rows.splice(si - 1, 1);
+                }
+            }
+        }
+        return rows;
+    }
+    function layoutFromRowIndices(rows, ratios, width, hGap, vGap) {
+        var n = ratios.length;
+        var boxes = new Array(n);
+        var top = 0;
+        for (var r = 0; r < rows.length; r++) {
+            var idxs = rows[r].slice().sort(function (a, b) { return a - b; });
+            var sumR = 0;
+            for (var k = 0; k < idxs.length; k++) sumR += ratios[idxs[k]];
+            var innerW = width - (idxs.length - 1) * hGap;
+            var rowH = innerW / sumR;
+            var left = 0;
+            for (k = 0; k < idxs.length; k++) {
+                var j = idxs[k];
+                var rw = ratios[j] * rowH;
+                boxes[j] = { top: top, left: left, width: rw, height: rowH };
+                left += rw + hGap;
+            }
+            top += rowH + vGap;
+        }
+        return { boxes: boxes, containerHeight: top > 0 ? top - vGap : 0 };
+    }
     function layoutJustifiedGalleryGrids() {
         var jl = window.justifiedLayout;
         if (!jl) return;
@@ -72,10 +156,16 @@
             var geometry = jl(ratios, {
                 containerWidth: w,
                 containerPadding: 0,
-                boxSpacing: { horizontal: 4, vertical: 4 },
+                boxSpacing: { horizontal: GALLERY_H_GAP, vertical: GALLERY_V_GAP },
                 targetRowHeight: 260,
-                fullWidthBreakoutRowCadence: false
+                fullWidthBreakoutRowCadence: false,
+                widowLayoutStyle: 'center'
             });
+            if (mergeSingletonRowsEnabled && thumbs.length > 1) {
+                var rows = clusterRowsFromBoxes(geometry.boxes, thumbs.length);
+                mergeSingletonRows(rows);
+                geometry = layoutFromRowIndices(rows, ratios, w, GALLERY_H_GAP, GALLERY_V_GAP);
+            }
             grid.style.position = 'relative';
             grid.style.height = geometry.containerHeight + 'px';
             for (var j = 0; j < thumbs.length; j++) {

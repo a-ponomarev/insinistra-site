@@ -64,6 +64,7 @@ def _default_gallery_config() -> dict:
         "photo_captions": {},
         "home_photos": [],
         "epk_photos": [],
+        "merge_singleton_rows": True,
     }
 
 
@@ -606,6 +607,17 @@ def load_gallery_config() -> dict:
         data["home_photos"] = _parse_path_list(data.get("home_photos"))
         data["epk_photos"] = _parse_path_list(data.get("epk_photos"))
 
+        msr = data.get("merge_singleton_rows", True)
+        if isinstance(msr, str):
+            data["merge_singleton_rows"] = msr.strip().lower() in (
+                "1",
+                "true",
+                "yes",
+                "on",
+            )
+        else:
+            data["merge_singleton_rows"] = bool(msr)
+
         return data
     except (yaml.YAMLError, OSError):
         return defaults.copy()
@@ -1090,6 +1102,7 @@ def main() -> None:
         "current_year": current_year,
         "copyright_year": copyright_year,
         "gallery_portrait_crop": gallery_config["portrait_crop"],
+        "gallery_merge_singleton_rows": gallery_config["merge_singleton_rows"],
     }
     subdir_common = {**common, "base": ".."}
 

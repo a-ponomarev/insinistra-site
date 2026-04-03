@@ -1,6 +1,9 @@
 # Gallery: portrait crop, ordering, captions. Published photo URLs use opaque names (see build);
 # keys below always use the real path under photos/ (forward slashes).
 
+# Justified grid: merge rows so no row has a single photo (albums with 2+ images). Single-photo strip unchanged.
+merge_singleton_rows: true
+
 # Vertical crop for portrait thumbnails (CSS object-position). Allowed: top | center | bottom
 portrait_crop: top
 
