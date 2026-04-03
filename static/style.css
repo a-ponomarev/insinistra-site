@@ -68,9 +68,11 @@ a:hover {
   transition: color 150ms ease, transform 150ms ease;
 }
 
-.social-sidebar a:hover {
-  color: var(--accent);
-  transform: scale(1.1);
+@media (hover: hover) {
+  .social-sidebar a:hover {
+    color: var(--accent);
+    transform: scale(1.1);
+  }
 }
 
 .social-sidebar svg {
@@ -2061,8 +2063,10 @@ body:has(.epk-page) .nav-overlay .nav a:hover {
     transition: color 150ms ease;
   }
 
-  .hero-social-mobile a:hover {
-    color: var(--accent);
+  @media (hover: hover) {
+    .hero-social-mobile a:hover {
+      color: var(--accent);
+    }
   }
 
   .hero-social-mobile svg {
@@ -2103,8 +2107,10 @@ body:has(.epk-page) .nav-overlay .nav a:hover {
     transition: color 150ms ease;
   }
 
-  .footer-social-mobile a:hover {
-    color: var(--accent);
+  @media (hover: hover) {
+    .footer-social-mobile a:hover {
+      color: var(--accent);
+    }
   }
 
   .footer-social-mobile svg {
