@@ -1604,6 +1604,24 @@ body.lightbox-open {
   margin-top: 40px;
 }
 
+/* ─── Instagram (Tagembed) ───────────────────────────────── */
+
+.tagembed-widget-wrap {
+  width: 100%;
+  max-width: 720px;
+  margin-inline: auto;
+  min-height: 360px;
+  height: 420px;
+}
+
+.tagembed-widget-wrap .tagembed-widget {
+  min-height: 360px;
+}
+
+.section--instagram .tb_onsite_upload_btn_wrap {
+  display: none !important;
+}
+
 /* ─── Footer ─────────────────────────────────────────────── */
 
 .site-footer {
