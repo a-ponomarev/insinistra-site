@@ -508,7 +508,6 @@ def load_epk_config() -> dict:
     """Load EPK config from content/epk.yaml. Returns dict with defaults for missing keys."""
     defaults = {
         "one_liner": "Symphonic metal from Prague.",
-        "short_bio": "",
         "booking_email": "booking@insinistra.com",
         "press_email": "press@insinistra.com",
         "booking_contact_name": None,

@@ -2493,106 +2493,19 @@ body:has(.epk-page) .nav-overlay .nav a:hover {
   max-width: 640px;
 }
 
-.epk-short-bio {
+.epk-bio-block {
   margin-left: auto;
   margin-right: auto;
   max-width: 640px;
-}
-
-.epk-short-bio p {
-  color: var(--text-secondary);
-  margin: 0 auto 20px;
-  line-height: 1.65;
   text-align: center;
 }
 
-.epk-bio-block:has(.epk-full-bio[open]) .epk-short-bio {
-  display: none;
-}
-
-.epk-full-bio {
-  margin: 20px auto 0;
-  max-width: 640px;
-  text-align: center;
-}
-
-.epk-full-bio summary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  font-size: 13px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--accent);
-  cursor: pointer;
-  list-style: none;
-  user-select: none;
-  transition: color 0.2s ease, opacity 0.2s ease;
-}
-
-.epk-full-bio summary::-webkit-details-marker,
-.epk-full-bio summary::marker {
-  display: none;
-}
-
-.epk-full-bio summary:hover {
-  opacity: 0.85;
-}
-
-.epk-full-bio summary::before {
-  content: "";
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-right: 2px solid currentColor;
-  border-bottom: 2px solid currentColor;
-  transform: rotate(-45deg);
-  transition: transform 0.3s ease;
-  flex-shrink: 0;
-}
-
-.epk-full-bio[open] summary::before {
-  transform: rotate(135deg);
-}
-
-.epk-full-bio-label-collapse {
-  display: none;
-}
-
-.epk-full-bio[open] .epk-full-bio-label-expand {
-  display: none;
-}
-
-.epk-full-bio[open] .epk-full-bio-label-collapse {
-  display: inline;
-}
-
-.epk-full-bio-body {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 0.35s ease-out;
-  text-align: center;
-}
-
-.epk-full-bio[open] .epk-full-bio-body {
-  grid-template-rows: 1fr;
-}
-
-.epk-full-bio-inner {
-  overflow: hidden;
-  margin-top: 0;
+.epk-bio-inner {
   color: var(--text-secondary);
   line-height: 1.65;
-  text-align: center;
 }
 
-.epk-full-bio[open] .epk-full-bio-inner {
-  margin-top: 16px;
-  transition: margin-top 0.3s ease-out;
-}
-
-.epk-full-bio-inner p {
+.epk-bio-inner p {
   margin: 0 0 12px;
 }
 

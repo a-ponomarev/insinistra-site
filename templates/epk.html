@@ -18,24 +18,11 @@
     <section class="epk-section epk-headline">
         <div class="layout">
             <h2 class="epk-section-title">About</h2>
-            <div class="epk-bio-block">
-            {% if epk.short_bio %}
-            <div class="epk-short-bio">
-                <p>{{ epk.short_bio | trim | replace('\n', ' ') }}</p>
-            </div>
-            {% endif %}
             {% if about_page %}
-            <details class="epk-full-bio">
-                <summary>
-                    <span class="epk-full-bio-label epk-full-bio-label-expand">Full bio</span>
-                    <span class="epk-full-bio-label epk-full-bio-label-collapse">Short bio</span>
-                </summary>
-                <div class="epk-full-bio-body">
-                    <div class="epk-full-bio-inner">{{ about_page.content_html | safe }}</div>
-                </div>
-            </details>
-            {% endif %}
+            <div class="epk-bio-block">
+                <div class="epk-bio-inner">{{ about_page.content_html | safe }}</div>
             </div>
+            {% endif %}
         </div>
     </section>
 
