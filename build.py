@@ -98,12 +98,10 @@ def _external_links_new_tab(html: str) -> str:
     return re.sub(r'<a\s+[^>]*href="https?://[^"]*"[^>]*>', repl, html)
 
 
-def load_markdown_page(path: Path, body_context: dict | None = None) -> tuple[dict, str]:
+def load_markdown_page(path: Path) -> tuple[dict, str]:
     """Load a .md file; return (frontmatter dict, html body)."""
     raw = path.read_text(encoding="utf-8")
     data, body = parse_frontmatter(raw)
-    if body_context and data.get("jinja_body"):
-        body = Template(body).render(**body_context)
     data["content_html"] = _external_links_new_tab(markdown(body))
     return data, data.get("title", path.stem)
 
@@ -367,14 +365,14 @@ def write_robots_txt(dist_dir: Path, site_url: str) -> None:
     )
 
 
-def load_pages(body_context: dict | None = None) -> list[dict]:
+def load_pages() -> list[dict]:
     """Load all Markdown pages from content/pages/."""
     pages_dir = CONTENT_DIR / "pages"
     if not pages_dir.exists():
         return []
     pages = []
     for path in sorted(pages_dir.glob("*.md")):
-        data, title = load_markdown_page(path, body_context)
+        data, title = load_markdown_page(path)
         data["slug"] = path.stem
         data["title"] = title
         pages.append(data)
@@ -998,12 +996,7 @@ def main() -> None:
     site_config = load_site_config()
     epk_config = load_epk_config()
     gallery_config = load_gallery_config()
-    pages = load_pages(
-        {
-            "press_kit_url": epk_config.get("press_kit_url") or "",
-            "stage_plot_url": epk_config.get("stage_plot_url") or "",
-        }
-    )
+    pages = load_pages()
     upcoming_shows, past_shows = load_concerts()
     albums = load_albums()
     videos = load_videos()
@@ -1192,6 +1185,27 @@ def main() -> None:
                 encoding="utf-8",
             )
 
+    print("  Writing contact/index.html...")
+    (DIST_DIR / "contact").mkdir(parents=True, exist_ok=True)
+    contact_desc = resolve_meta_description("contact", None, site_config)
+    template_contact = env.get_template("contact.html")
+    (DIST_DIR / "contact" / "index.html").write_text(
+        template_contact.render(
+            press_kit_url=epk_config.get("press_kit_url") or "",
+            stage_plot_url=epk_config.get("stage_plot_url") or "",
+            meta_description=contact_desc,
+            structured_data_json=structured_data_script_json(site_config),
+            **social_meta_context(
+                site_config,
+                path_segment="contact",
+                title_part="Contact",
+                meta_description=contact_desc,
+            ),
+            **subdir_common,
+        ),
+        encoding="utf-8",
+    )
+
     # Shows page (past and upcoming, latest first)
     print("  Writing shows/index.html...")
     (DIST_DIR / "shows").mkdir(exist_ok=True)
@@ -1316,7 +1330,7 @@ def main() -> None:
             DIST_DIR,
             site_url,
             [p["slug"] for p in pages],
-            ["shows", "albums", "photos", "epk"],
+            ["shows", "albums", "photos", "epk", "contact"],
         )
         write_robots_txt(DIST_DIR, site_url)
 

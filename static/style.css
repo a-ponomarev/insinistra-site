@@ -1415,19 +1415,9 @@ body.lightbox-open {
   margin-right: auto;
 }
 
-/* Download icon for drive.google.com links (contact page) */
-.page-body a[href*="drive.google.com"]::before {
-  content: '';
-  display: inline-block;
-  width: 1em;
-  height: 1em;
-  margin-right: 0.35em;
-  vertical-align: -0.2em;
-  background-color: currentColor;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3v12m0 0l-4-4m4 4l4-4'/%3E%3Cpath d='M5 19h14'/%3E%3C/svg%3E") no-repeat center;
-  mask-size: contain;
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3v12m0 0l-4-4m4 4l4-4'/%3E%3Cpath d='M5 19h14'/%3E%3C/svg%3E") no-repeat center;
-  -webkit-mask-size: contain;
+.page-body ul.epk-technical-list {
+  padding-left: 0;
+  list-style: none;
 }
 
 .page-body strong {

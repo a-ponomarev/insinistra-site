@@ -159,15 +159,9 @@
     {% if epk.press_kit_url or epk.stage_plot_url %}
     <section class="epk-section epk-technical">
         <div class="layout">
-            <h2 class="epk-section-title">Downloads</h2>
-            <ul class="epk-technical-list">
-                {% if epk.press_kit_url %}
-                <li><a href="{{ epk.press_kit_url }}" target="_blank" rel="noopener noreferrer" class="epk-technical-link-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M5 19h14"/></svg><span>Press kit</span></a></li>
-                {% endif %}
-                {% if epk.stage_plot_url %}
-                <li><a href="{{ epk.stage_plot_url }}" target="_blank" rel="noopener noreferrer" class="epk-technical-link-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M5 19h14"/></svg><span>Stage plan</span></a></li>
-                {% endif %}
-            </ul>
+            {% with press_kit_url=epk.press_kit_url, stage_plot_url=epk.stage_plot_url %}
+            {% include "partials/downloads.html" %}
+            {% endwith %}
         </div>
     </section>
     {% endif %}
