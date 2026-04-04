@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Contact{% endblock %}
+
+{% block content %}
+<article class="page">
+    <h1>Contact</h1>
+    <div class="page-body">
+        <h2>Booking</h2>
+        <p><strong><a href="mailto:booking@insinistra.com">booking@insinistra.com</a></strong></p>
+
+        <h2>Info</h2>
+        <p><strong><a href="mailto:info@insinistra.com">info@insinistra.com</a></strong></p>
+
+        {% with downloads_epk_title_style=false %}
+        {% include "partials/downloads.html" %}
+        {% endwith %}
+    </div>
+</article>
+{% endblock %}

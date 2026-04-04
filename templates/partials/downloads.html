@@ -1,0 +1,15 @@
+{% if press_kit_url or stage_plot_url %}
+{% if downloads_epk_title_style|default(true) %}
+<h2 class="epk-section-title">Downloads</h2>
+{% else %}
+<h2>Downloads</h2>
+{% endif %}
+<ul class="epk-technical-list">
+    {% if press_kit_url %}
+    <li><a href="{{ press_kit_url }}" target="_blank" rel="noopener noreferrer" class="epk-technical-link-icon"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.71 3.5L1.15 15l3.43 6l6.55-11.5M9.73 15L6.3 21h13.12l3.43-6m-.57-1L15.42 2H8.57l6.86 12z"/></svg><span>Press kit</span></a></li>
+    {% endif %}
+    {% if stage_plot_url %}
+    <li><a href="{{ stage_plot_url }}" target="_blank" rel="noopener noreferrer" class="epk-technical-link-icon"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.71 3.5L1.15 15l3.43 6l6.55-11.5M9.73 15L6.3 21h13.12l3.43-6m-.57-1L15.42 2H8.57l6.86 12z"/></svg><span>Stage plan</span></a></li>
+    {% endif %}
+</ul>
+{% endif %}
