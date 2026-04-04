@@ -14,3 +14,7 @@ python build.py
 Run this from the project root (`c:\git\insinistra-site`). The build outputs to `dist/`.
 
 Do not skip this step after changes or undos unless the user explicitly asks to skip it.
+# Commit messages
+
+When suggesting **git commit messages** (or the same style of short summary), keep them **minimal: one sentence, at most two.** State what changed; avoid long paragraphs or exhaustive lists unless the user asks for more detail.
+
