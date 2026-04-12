@@ -79,18 +79,21 @@ concerts:
     venue: Česká 1
     location: Kutná Hora
     comment: "with Honoris Causa, Falcar"
+    tickets: "https://www.smsticket.cz/vstupenky/69396" 
     facebook: "https://www.facebook.com/events/1532997238827510"
 
   - date: "2026-05-09"
     venue: Klubovna
     location: Praha
     comment: "with After Evolution, Sarkonia"
+    tickets: "https://goout.net/cs/insinistra%2Bafter-evolution%2Bsarkonia/szhwgiy/" 
     facebook: "https://www.facebook.com/events/1384588453684994"
 
   - date: "2026-05-23"
     venue: Willax
     location: Mladá Boleslav
     comment: "with Emrei's, After Evolution"
+    tickets: "https://www.smsticket.cz/vstupenky/69397" 
     facebook: "https://www.facebook.com/events/949411454098552" 
 
   - date: "2026-05-30"
