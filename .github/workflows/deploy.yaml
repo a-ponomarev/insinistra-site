@@ -57,21 +57,7 @@ jobs:
           # region agent log
           LOG_FILE="${GITHUB_WORKSPACE}/debug-627acb.log"
           log_ndjson() {
-            python - "$1" "$2" "$3" "$4" <<'PY'
-import json, sys, time
-path, hyp, loc, msg = sys.argv[1:5]
-entry = {
-  "sessionId": "627acb",
-  "runId": "pre-fix",
-  "hypothesisId": hyp,
-  "location": loc,
-  "message": msg,
-  "data": {},
-  "timestamp": int(time.time() * 1000),
-}
-with open(path, "a", encoding="utf-8") as f:
-  f.write(json.dumps(entry) + "\n")
-PY
+            python -c 'import json,sys,time; path,hyp,loc,msg=sys.argv[1:5]; entry={"sessionId":"627acb","runId":"pre-fix","hypothesisId":hyp,"location":loc,"message":msg,"data":{},"timestamp":int(time.time()*1000)}; open(path,"a",encoding="utf-8").write(json.dumps(entry)+"\n")' "$1" "$2" "$3" "$4"
           }
           # endregion
           set -euo pipefail
