@@ -54,19 +54,66 @@ jobs:
         env:
           SITE_URL: https://beta.insinistra.com/dev
         run: |
+          # region agent log
+          LOG_FILE="${GITHUB_WORKSPACE}/debug-627acb.log"
+          log_ndjson() {
+            python - "$1" "$2" "$3" "$4" <<'PY'
+import json, sys, time
+path, hyp, loc, msg = sys.argv[1:5]
+entry = {
+  "sessionId": "627acb",
+  "runId": "pre-fix",
+  "hypothesisId": hyp,
+  "location": loc,
+  "message": msg,
+  "data": {},
+  "timestamp": int(time.time() * 1000),
+}
+with open(path, "a", encoding="utf-8") as f:
+  f.write(json.dumps(entry) + "\n")
+PY
+          }
+          # endregion
           set -euo pipefail
+          # region agent log
+          log_ndjson "$LOG_FILE" "H1" ".github/workflows/deploy.yaml:build-dev" "start build dev step"
+          # endregion
           rm -rf ../dev-src
           trap 'git worktree remove --force ../dev-src >/dev/null 2>&1 || true' EXIT
+          # region agent log
+          log_ndjson "$LOG_FILE" "H2" ".github/workflows/deploy.yaml:git-fetch" "before git fetch origin dev"
+          # endregion
           git fetch origin dev
+          # region agent log
+          log_ndjson "$LOG_FILE" "H2" ".github/workflows/deploy.yaml:git-fetch" "after git fetch origin dev"
+          # endregion
+          # region agent log
+          log_ndjson "$LOG_FILE" "H3" ".github/workflows/deploy.yaml:worktree-add" "before worktree add"
+          # endregion
           git worktree add --detach ../dev-src origin/dev
+          # region agent log
+          log_ndjson "$LOG_FILE" "H3" ".github/workflows/deploy.yaml:worktree-add" "after worktree add"
+          # endregion
           cd ../dev-src
+          # region agent log
+          log_ndjson "$LOG_FILE" "H4" ".github/workflows/deploy.yaml:dev-build" "before dev dependency install and build"
+          # endregion
           pip install -r requirements.txt
           npm install
           python build.py
+          # region agent log
+          log_ndjson "$LOG_FILE" "H4" ".github/workflows/deploy.yaml:dev-build" "after dev dependency install and build"
+          # endregion
           cd "${GITHUB_WORKSPACE}"
           rm -rf dist/dev
+          # region agent log
+          log_ndjson "$LOG_FILE" "H5" ".github/workflows/deploy.yaml:move-artifacts" "before mv dev dist to dist/dev"
+          # endregion
           mv ../dev-src/dist dist/dev
           rm -f dist/dev/CNAME
+          # region agent log
+          log_ndjson "$LOG_FILE" "H5" ".github/workflows/deploy.yaml:move-artifacts" "after mv dev dist to dist/dev"
+          # endregion
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
