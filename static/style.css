@@ -1478,7 +1478,6 @@ body.lightbox-open {
   overflow: hidden;
   background: var(--bg-card);
   margin-bottom: 16px;
-  border-radius: 4px;
 }
 
 .band-member-photo:has(.band-member-placeholder) {
@@ -1495,6 +1494,7 @@ body.lightbox-open {
 .band-member-photo .gallery-thumb {
   width: 100%;
   display: block;
+  overflow: hidden;
 }
 
 .band-member-photo-trigger img {
