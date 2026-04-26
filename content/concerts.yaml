@@ -100,12 +100,14 @@ concerts:
     venue: M13
     location: Brno
     comment: "with Rosa Nocturna, Stoker"
+    tickets: "https://www.smsticket.cz/vstupenky/70203" 
     facebook: "https://www.facebook.com/events/2789131134766896"
 
   - date: "2026-06-13"
     venue: Divadlo Pod Lampou
     location: Plzeň
     comment: "with Thanallian, Saint Mortal"
+    tickets: "https://goout.net/cs/laments-and-whispers/szsioiy/"
     facebook: "https://facebook.com/events/1846523289385860" 
 
   - date: "2026-06-27"
