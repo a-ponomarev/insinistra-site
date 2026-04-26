@@ -23,7 +23,7 @@ portrait_crop_overrides:
 home_photos:
   - "Live/Insinistra Live 1.jpg"
   - "Live/Insinistra Live 2.jpeg"
-  - "Live/Insinistra Vocalist 2.jpg"
+  - "Promo/Insinistra Vocalist 4.jpg"
   - "Live/Insinistra Drummer 1.jpeg"
   - "Promo/Insinistra Band 2x3.jpg"
   - "Live/Insinistra Guitarist 1.jpeg"
@@ -32,7 +32,7 @@ home_photos:
 epk_photos:
   - "Live/Insinistra Live 1.jpg"
   - "Live/Insinistra Live 2.jpeg"
-  - "Live/Insinistra Vocalist 2.jpg"
+  - "Promo/Insinistra Vocalist 4.jpg"
   - "Live/Insinistra Drummer 1.jpeg"
   - "Promo/Insinistra Band 2x3.jpg"
   - "Live/Insinistra Guitarist 1.jpeg"
@@ -47,7 +47,6 @@ album_photos:
   Live:
     - "Live/Insinistra Live 1.jpg"
     - "Live/Insinistra Live 2.jpeg"
-    - "Live/Insinistra Vocalist 2.jpg"
     - "Live/Insinistra Drummer 1.jpeg"
     - "Live/Insinistra Live 3.jpeg"
     - "Live/Insinistra Guitarist 1.jpeg"
@@ -68,14 +67,12 @@ album_photos:
     - "Promo/Insinistra Drummer 1.JPG"
     - "Promo/Insinistra Vocalist 2.JPG"
     - "Promo/Insinistra Guitarist.JPG"
-    - "Promo/Insinistra Vocalist 3.jpg"
     - "Promo/Insinistra Drummer 2.JPG"
-    - "Promo/Insinistra Vocalist 4.jpg"
     - "Promo/Insinistra Bassist .JPG"
-    - "Promo/Maria with skull.JPG"
+    - "Promo/Microphone.jpeg"
+    - "Promo/Insinistra Vocalist 3.jpg"
+    - "Promo/Insinistra Vocalist 4.jpg"
     - "Promo/Insinistra Vocalist 5.jpg"
-    - "Promo/Microphone.jpeg"    
-    - "Promo/Boris Sergey.jpeg"
 
 # Optional: alt text / lightbox label per file (keys = path under photos/). Default when omitted: "Photo".
 # photo_captions:
