@@ -15,18 +15,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           ref: main
           fetch-depth: 0
 
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.11"
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "20"
 
@@ -55,6 +55,8 @@ jobs:
           SITE_URL: https://beta.insinistra.com/dev
         run: |
           set -euo pipefail
+          rm -rf ../dev-src
+          trap 'git worktree remove --force ../dev-src >/dev/null 2>&1 || true' EXIT
           git fetch origin dev
           git worktree add --detach ../dev-src origin/dev
           cd ../dev-src
@@ -65,7 +67,6 @@ jobs:
           rm -rf dist/dev
           mv ../dev-src/dist dist/dev
           rm -f dist/dev/CNAME
-          git worktree remove --force ../dev-src
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
