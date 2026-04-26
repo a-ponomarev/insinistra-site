@@ -54,9 +54,9 @@ jobs:
         env:
           SITE_URL: https://beta.insinistra.com/dev
         run: |
-          set -eux
-          git fetch origin dev:dev
-          git worktree add ../dev-src dev
+          set -euo pipefail
+          git fetch origin dev
+          git worktree add --detach ../dev-src origin/dev
           cd ../dev-src
           pip install -r requirements.txt
           npm install
