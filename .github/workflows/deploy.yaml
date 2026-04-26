@@ -2,7 +2,7 @@ name: Build and Deploy
 
 on:
   push:
-    branches: [ main ]
+    branches: [main, dev]
   workflow_dispatch:
 
 permissions:
@@ -16,6 +16,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -27,14 +30,42 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Install dependencies
+      - name: Install dependencies (main)
         run: |
-          pip install -r requirements.txt || true
+          pip install -r requirements.txt
           npm install
 
-      - name: Build site
+      - name: Build main
+        env:
+          SITE_URL: https://beta.insinistra.com
+        run: python build.py
+
+      - name: Check if dev branch exists
+        id: dev_check
         run: |
+          if git ls-remote --exit-code --heads origin dev >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build dev into /dev
+        if: steps.dev_check.outputs.exists == 'true'
+        env:
+          SITE_URL: https://beta.insinistra.com/dev
+        run: |
+          set -eux
+          git fetch origin dev:dev
+          git worktree add ../dev-src dev
+          cd ../dev-src
+          pip install -r requirements.txt
+          npm install
           python build.py
+          cd "${GITHUB_WORKSPACE}"
+          rm -rf dist/dev
+          mv ../dev-src/dist dist/dev
+          rm -f dist/dev/CNAME
+          git worktree remove --force ../dev-src
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
