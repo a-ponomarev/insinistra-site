@@ -149,6 +149,7 @@
             <h2 class="epk-section-title">Press photos</h2>
             {% if photo_albums %}
             {% set more_photos_url = "photos/index.html" %}
+            {% set gallery_fixed_2x3 = true %}
             {% include "partials/gallery_content.html" with context %}
             {% else %}
             <p class="epk-muted">Press photos available on request.</p>

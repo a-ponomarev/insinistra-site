@@ -1,4 +1,4 @@
-{# Inner gallery: albums grid + lightbox. Pass gallery_limit to show only first N photos of first album (e.g. on index). Pass gallery_embed_only to ship only lightbox + script (triggers live elsewhere). No section wrapper. #}
+{# Inner gallery: albums grid + lightbox. Pass gallery_limit to show only first N photos of first album (e.g. on index). Pass gallery_fixed_2x3 for a strict 3-across grid (e.g. home / EPK). Pass gallery_embed_only to ship only lightbox + script (triggers live elsewhere). No section wrapper. #}
 {% set gallery_embed_only = gallery_embed_only | default(false) %}
 {% if not gallery_embed_only %}
 {% if gallery_limit is defined and gallery_limit is not none %}
@@ -9,7 +9,7 @@
 {% for album in albums_to_render %}
 <div class="gallery-album layout">
     {% if gallery_limit is not defined or gallery_limit is none %}{% if album.name %}<h3 class="gallery-album-title">{{ album.name }}</h3>{% endif %}{% endif %}
-    <div class="photo-grid photo-grid--justified">
+    <div class="photo-grid photo-grid--justified{% if gallery_fixed_2x3 %} photo-grid--fixed-2x3{% endif %}">
         {% for photo in album.photos %}
         {# photo.name = caption (main gallery) or member name (band); not the source file path #}
         <button type="button" class="photo-card gallery-thumb" data-index="{{ photo.index }}" data-aspect-ratio="{% if photo.aspect_ratio is defined and photo.aspect_ratio > 1 %}1.5{% else %}{{ photo.aspect_ratio | default(1) }}{% endif %}" data-resized="{% if base %}{{ base }}/{% endif %}{{ photo.resized }}" data-name="{{ photo.name }}" aria-label="View {{ photo.name }}">
@@ -135,10 +135,11 @@
     }
     function layoutJustifiedGalleryGrids() {
         var jl = window.justifiedLayout;
-        if (!jl) return;
         document.querySelectorAll('.photo-grid--justified').forEach(function (grid) {
             var thumbs = grid.querySelectorAll('.gallery-thumb');
             if (!thumbs.length) return;
+            var fixed2x3 = grid.classList.contains('photo-grid--fixed-2x3');
+            if (!fixed2x3 && !jl) return;
             var clientW = grid.clientWidth;
             var rectW = Math.round(grid.getBoundingClientRect().width);
             var albumEl = grid.closest('.gallery-album');
@@ -153,18 +154,31 @@
                 var r = parseFloat(thumbs[i].getAttribute('data-aspect-ratio'));
                 ratios.push(r > 0 ? r : 1);
             }
-            var geometry = jl(ratios, {
-                containerWidth: w,
-                containerPadding: 0,
-                boxSpacing: { horizontal: GALLERY_H_GAP, vertical: GALLERY_V_GAP },
-                targetRowHeight: 260,
-                fullWidthBreakoutRowCadence: false,
-                widowLayoutStyle: 'center'
-            });
-            if (mergeSingletonRowsEnabled && thumbs.length > 1) {
-                var rows = clusterRowsFromBoxes(geometry.boxes, thumbs.length);
-                mergeSingletonRows(rows);
+            var geometry;
+            if (fixed2x3) {
+                var rows = [];
+                for (var ri = 0; ri < ratios.length; ri += 3) {
+                    var row = [];
+                    for (var rk = 0; rk < 3 && ri + rk < ratios.length; rk++) {
+                        row.push(ri + rk);
+                    }
+                    rows.push(row);
+                }
                 geometry = layoutFromRowIndices(rows, ratios, w, GALLERY_H_GAP, GALLERY_V_GAP);
+            } else {
+                geometry = jl(ratios, {
+                    containerWidth: w,
+                    containerPadding: 0,
+                    boxSpacing: { horizontal: GALLERY_H_GAP, vertical: GALLERY_V_GAP },
+                    targetRowHeight: 260,
+                    fullWidthBreakoutRowCadence: false,
+                    widowLayoutStyle: 'center'
+                });
+                if (mergeSingletonRowsEnabled && thumbs.length > 1) {
+                    var rows = clusterRowsFromBoxes(geometry.boxes, thumbs.length);
+                    mergeSingletonRows(rows);
+                    geometry = layoutFromRowIndices(rows, ratios, w, GALLERY_H_GAP, GALLERY_V_GAP);
+                }
             }
             grid.style.position = 'relative';
             grid.style.height = geometry.containerHeight + 'px';
@@ -189,7 +203,7 @@
             layoutJustifiedGalleryGrids();
         });
     }
-    if (window.justifiedLayout) {
+    if (document.querySelector('.photo-grid--justified')) {
         scheduleJustifiedLayout();
         if (typeof ResizeObserver !== 'undefined') {
             document.querySelectorAll('.photo-grid--justified').forEach(function (grid) {
