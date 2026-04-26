@@ -128,10 +128,10 @@
     <section class="epk-section epk-shows">
         <div class="layout">
             {% if upcoming_shows %}
-            <h2>Upcoming Shows</h2>
+            <h2 class="epk-section-title">Upcoming Shows</h2>
             {% set shows = upcoming_shows %}{% include "partials/concert_list.html" %}
             {% else %}
-            <h2>Recent shows</h2>
+            <h2 class="epk-section-title">Recent shows</h2>
             {% if recent_shows %}
             {% set shows = recent_shows %}{% include "partials/concert_list.html" %}
             {% else %}
