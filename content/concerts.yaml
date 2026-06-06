@@ -119,19 +119,21 @@ concerts:
   - date: "2026-07-02"
     venue: The Stage
     location: Praha
-    comment: "with When Nothing Remains"
+    comment: "with When Nothing Remains, Arawn"
 
   - date: "2026-07-16"
     venue: TBA
     location: TBA
     
   - date: "2026-11-13"
-    venue: TBA
+    venue: Parliament
     location: Plzeň
+    comment: "with Prayers In Vain, Odraedir" 
     
   - date: "2026-11-28"
-    venue: TBA
+    venue: Modrá Vopice
     location: Praha
+    comment: "with Prayers In Vain" 
     
   - date: "2027-01-09"
     venue: TBA
