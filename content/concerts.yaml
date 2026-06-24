@@ -115,15 +115,15 @@ concerts:
     location: Praha
     tickets: "https://goout.net/en/i/szrwxey/" 
     facebook: "https://www.facebook.com/events/875390824962499"
-
-  - date: "2026-07-16"
-    venue: TBA
-    location: TBA
     
   - date: "2026-11-13"
     venue: Parlament
     location: Plzeň
     comment: "with Prayers In Vain, Odraedir" 
+ 
+  - date: "2026-11-27"
+    venue: TBA
+    location: Krakow 
     
   - date: "2026-11-28"
     venue: Modrá Vopice
