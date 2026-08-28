@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="refresh" content="0; url={{ target }}">
+    <meta name="robots" content="noindex">
+    {% if canonical_url %}
+    <link rel="canonical" href="{{ canonical_url }}">
+    {% endif %}
+    <title>Redirecting…</title>
+    <script>location.replace({{ target | tojson }})</script>
+</head>
+<body>
+    <p><a href="{{ target }}">Continue to Insinistra</a></p>
+</body>
+</html>

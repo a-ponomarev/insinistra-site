@@ -365,6 +365,28 @@ def write_robots_txt(dist_dir: Path, site_url: str) -> None:
     )
 
 
+def write_redirect_page(
+    env: Environment,
+    dist_dir: Path,
+    slug: str,
+    target: str,
+    site: dict,
+) -> None:
+    """Write dist/{slug}/index.html that redirects to target (e.g. /)."""
+    out_dir = dist_dir / slug
+    out_dir.mkdir(parents=True, exist_ok=True)
+    site_url = (site.get("site_url") or "").strip().rstrip("/")
+    canonical_url = f"{site_url}/" if site_url and target == "/" else ""
+    template = env.get_template("redirect.html")
+    (out_dir / "index.html").write_text(
+        template.render(
+            target=target,
+            canonical_url=canonical_url,
+        ),
+        encoding="utf-8",
+    )
+
+
 def load_pages() -> list[dict]:
     """Load all Markdown pages from content/pages/."""
     pages_dir = CONTENT_DIR / "pages"
@@ -1128,6 +1150,9 @@ def main() -> None:
         ),
         encoding="utf-8",
     )
+
+    print("  Writing bio/index.html (redirect)...")
+    write_redirect_page(env, DIST_DIR, "bio", "/", site_config)
 
     print("  Writing 404.html...")
     template_404 = env.get_template("404.html")
