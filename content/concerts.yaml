@@ -124,8 +124,9 @@ concerts:
   - date: "2026-11-27"
     venue: Gwarek
     location: Krakow 
-    tickets: "https://www.klubgwarek.pl/koncert/exA9MB/2026-11-27/" 
     comment: "with Inverne, Sacrimonia" 
+    tickets: "https://www.klubgwarek.pl/koncert/exA9MB/2026-11-27/" 
+    facebook: "https://facebook.com/events/2111194453136332"  
     
   - date: "2026-11-28"
     venue: Modrá Vopice
