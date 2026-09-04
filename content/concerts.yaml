@@ -122,8 +122,10 @@ concerts:
     comment: "with Prayers In Vain, Odraedir" 
  
   - date: "2026-11-27"
-    venue: TBA
+    venue: Gwarek
     location: Krakow 
+    tickets: "https://www.klubgwarek.pl/koncert/exA9MB/2026-11-27/" 
+    comment: "with Inverne, Sacrimonia" 
     
   - date: "2026-11-28"
     venue: Modrá Vopice
