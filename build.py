@@ -183,10 +183,13 @@ def social_meta_context(
     title_part: str,
     meta_description: str,
     og_image_rel: str | None = None,
+    full_title: str | None = None,
 ) -> dict:
     """
     Open Graph + Twitter Card + canonical URL for base.html.
     If site_url is empty, social_meta_enabled is False and canonical_url is empty (set site_url in site.yaml or SITE_URL env for production).
+    `full_title` overrides the default `f"{title_part} | Insinistra"` composition, for
+    pages (e.g. the homepage) whose title already starts with the band name.
     """
     site_url = (site.get("site_url") or "").strip().rstrip("/")
     if not site_url:
@@ -197,7 +200,7 @@ def social_meta_context(
     base = site_url + "/"
     og_url = urljoin(base, canonical)
     og_image = urljoin(base, img) if img else ""
-    title = f"{title_part} | Insinistra"
+    title = full_title or f"{title_part} | Insinistra"
     desc = meta_description or ""
     return {
         "social_meta_enabled": True,
@@ -1136,6 +1139,7 @@ def main() -> None:
                 path_segment="",
                 title_part="Home",
                 meta_description=home_desc,
+                full_title="Insinistra - Official Website",
             ),
             **common,
             pages=pages,
