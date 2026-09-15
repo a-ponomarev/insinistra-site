@@ -34,6 +34,15 @@ paragraphs or exhaustive bullet lists unless the user asks for more detail.
 - **Images**: Pillow, resizing originals from `photos/raw/` into multiple sizes under
   `dist/photos/`.
 
+## Buttons
+
+`.btn` (`static/style.css`) is the base button style (accent-colored outline, fills with
+accent color on hover) and is the default used across the site (CTAs in Featured Release,
+section "All/Full ..." links, 404 back-link, etc.). `.btn-ghost` is a muted variant (dimmer
+border/text, dimmer hover fill) — apply it *together with* `.btn` (`class="btn btn-ghost"`),
+never alone, since it only overrides colors and relies on `.btn` for layout/sizing. Currently
+used for all hero CTAs (`templates/index.html`) so they read as equal-weight actions.
+
 ## Page titles and meta descriptions
 
 This is easy to get wrong because the pieces are split across three files.
