@@ -66,6 +66,13 @@ The homepage has no Markdown/frontmatter file, so its description can only be ch
 has the band name at the front of its title — see the `full_title` param added for that).
 `og_description`/`twitter_description` always reuse the resolved `meta_description`.
 
+**`og:image`/`twitter:image`** — `social_meta_context()` accepts an `og_image_rel` param to
+override the image per page, but as of now no call site in `build.py` passes it, so every
+page (home, about, shows, albums, photos, contact, epk) falls back to the single sitewide
+`content/site.yaml` → `default_og_image` (currently `static/og-hero.jpg`, a 1200x630
+screenshot of the homepage hero section). Changing `default_og_image` changes the social
+share preview for the *entire site*, not just one page.
+
 **Per-page `title_part` / template mapping** (kept in sync manually — no single source of
 truth links a template's `{% block title %}` to its `build.py` render call):
 

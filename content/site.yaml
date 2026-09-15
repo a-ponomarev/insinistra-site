@@ -7,7 +7,7 @@
 # Override at build time: SITE_URL=https://example.com python build.py
 # default_og_image is a path under the site root.
 site_url: "https://insinistra.com"
-default_og_image: "images/1600/banner-1600.jpg"
+default_og_image: "static/og-hero.jpg"
 
 # JSON-LD MusicGroup sameAs — official profiles (keep in sync with templates/partials/social_links.html).
 same_as:
