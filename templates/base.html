@@ -34,6 +34,11 @@
     <script type="application/ld+json">{{ structured_data_json|safe }}</script>
     {% endif %}
     <title>{% block title %}Band{% endblock %}{% if not is_index %} | Insinistra{% endif %}</title>
+    <link rel="icon" href="/static/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
+    <link rel="manifest" href="/static/site.webmanifest">
     <link rel="stylesheet" href="{% if base %}{{ base }}/{% endif %}static/style.css">
     <style>:root { --gallery-portrait-crop: {{ gallery_portrait_crop|default('top') }}; }</style>
     {% block extra_head %}{% endblock %}
