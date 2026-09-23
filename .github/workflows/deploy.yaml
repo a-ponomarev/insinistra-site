@@ -37,7 +37,7 @@ jobs:
 
       - name: Build main
         env:
-          SITE_URL: https://beta.insinistra.com
+          SITE_URL: https://insinistra.com
         run: python build.py
 
       - name: Check if dev branch exists
@@ -52,7 +52,7 @@ jobs:
       - name: Build dev into /dev
         if: steps.dev_check.outputs.exists == 'true'
         env:
-          SITE_URL: https://beta.insinistra.com/dev
+          SITE_URL: https://insinistra.com/dev
         run: |
           set -euo pipefail
           rm -rf ../dev-src
