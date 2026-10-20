@@ -122,6 +122,7 @@ def load_site_config() -> dict:
         "meta_descriptions": {},
         "site_url": "",
         "default_og_image": "images/1600/banner-1600.jpg",
+        "links": {},
         "same_as": [],
     }
     path = CONTENT_DIR / "site.yaml"
@@ -137,18 +138,17 @@ def load_site_config() -> dict:
             return out
         merged = {
             **defaults,
-            **{k: v for k, v in data.items() if k not in ("meta_descriptions", "same_as")},
+            **{k: v for k, v in data.items() if k not in ("meta_descriptions", "links", "same_as")},
         }
         route_defaults = defaults["meta_descriptions"].copy()
         extra = data.get("meta_descriptions")
         if isinstance(extra, dict):
             route_defaults.update(extra)
         merged["meta_descriptions"] = route_defaults
-        sa = data.get("same_as")
-        if isinstance(sa, list):
-            merged["same_as"] = [str(x).strip() for x in sa if str(x).strip()]
-        else:
-            merged["same_as"] = list(defaults["same_as"])
+        links = data.get("links")
+        if isinstance(links, dict):
+            merged["links"] = {str(k): str(v).strip() for k, v in links.items() if str(v).strip()}
+        merged["same_as"] = list(merged["links"].values())
         _apply_site_url_env(merged)
         return merged
     except (yaml.YAMLError, OSError):
@@ -1019,6 +1019,7 @@ def main() -> None:
     # Load data
     print("  Loading content...")
     site_config = load_site_config()
+    env.globals["links"] = site_config["links"]
     epk_config = load_epk_config()
     gallery_config = load_gallery_config()
     pages = load_pages()

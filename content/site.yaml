@@ -9,16 +9,16 @@
 site_url: "https://insinistra.com"
 default_og_image: "static/og-hero.jpg"
 
-# JSON-LD MusicGroup sameAs — official profiles (keep in sync with templates/partials/social_links.html).
-same_as:
-  - "https://instagram.com/insinistra/"
-  - "https://facebook.com/insinistra/"
-  - "https://tiktok.com/@insinistra"
-  - "https://youtube.com/c/insinistra"
-  - "https://open.spotify.com/artist/7twKAgcyHaRn9LUqHMRE07"
-  - "https://music.youtube.com/channel/UCwGXJx49UkjujJKygLCLjSg"
-  - "https://music.apple.com/ru/artist/insinistra/1444116339"
-  - "https://insinistra.bandcamp.com/"
+# Official profiles. Used as {{ links.<key> }} in templates and as JSON-LD MusicGroup sameAs.
+links:
+  instagram: "https://instagram.com/insinistra/"
+  facebook: "https://facebook.com/insinistra/"
+  tiktok: "https://tiktok.com/@insinistra"
+  youtube: "https://youtube.com/c/insinistra"
+  spotify: "https://open.spotify.com/artist/7twKAgcyHaRn9LUqHMRE07"
+  youtube_music: "https://music.youtube.com/channel/UCwGXJx49UkjujJKygLCLjSg"
+  apple_music: "https://music.apple.com/artist/insinistra/1444116339"
+  bandcamp: "https://insinistra.bandcamp.com/"
 
 default_meta_description: >-
   Insinistra — symphonic metal from Prague. Official site: music, tour dates,
