@@ -12,6 +12,7 @@ concerts:
     venue: Modrá Vopice
     location: Praha
     comment: "with Prayers In Vain, Odraedir"
+    facebook: "https://facebook.com/events/4479544628971665"
 
   - date: "2026-11-27"
     venue: Gwarek
@@ -24,6 +25,7 @@ concerts:
     venue: Parlament
     location: Plzeň
     comment: "with Prayers In Vain, Odraedir"
+    facebook: "https://facebook.com/events/1819670279211541"
 
   - date: "2026-06-27"
     venue: Solstice Festival
