@@ -7,7 +7,7 @@
     <section class="shows-section">
         <h2>Upcoming Shows</h2>
         {% if upcoming_shows %}
-        {% set shows = upcoming_shows %}{% include "partials/concert_list.html" %}
+        {% set shows = upcoming_shows %}{% set kind = "upcoming" %}{% include "partials/concert_list.html" %}
         {% else %}
         <p class="page-body">No upcoming shows.</p>
         {% endif %}
@@ -16,7 +16,7 @@
     <section class="shows-section">
         <h2>Past Shows</h2>
         {% if past_shows %}
-        {% set shows = past_shows %}{% include "partials/concert_list.html" %}
+        {% set shows = past_shows %}{% set kind = "past" %}{% include "partials/concert_list.html" %}
         {% else %}
         <p class="page-body">No past shows.</p>
         {% endif %}

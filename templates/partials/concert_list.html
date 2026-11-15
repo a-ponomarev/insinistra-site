@@ -1,7 +1,7 @@
 {# Shared concert list markup — used by index.html (Upcoming Shows) and concerts.html (Upcoming + Past). Keep in sync. #}
-<ul class="concert-list">
+<ul class="concert-list" data-kind="{{ kind|default('') }}">
     {% for c in shows %}
-    <li>
+    <li data-date="{{ c.date[:10] if c.date else '' }}">
         <span class="col-date">{{ c.date_display }}</span>
         <span class="col-city-venue">
             <span class="col-city">{{ c.location if c.location else '' }}</span>

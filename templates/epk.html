@@ -133,7 +133,7 @@
             {% else %}
             <h2 class="epk-section-title">Recent shows</h2>
             {% if recent_shows %}
-            {% set shows = recent_shows %}{% include "partials/concert_list.html" %}
+            {% set shows = recent_shows %}{% set kind = "past" %}{% include "partials/concert_list.html" %}
             {% else %}
             <p class="epk-muted">See <a href="{{ base }}/shows/index.html">shows</a> for dates.</p>
             {% endif %}
