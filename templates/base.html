@@ -92,6 +92,11 @@
             <div class="footer-contact">
                 <a href="mailto:info@insinistra.com">info@insinistra.com</a>
             </div>
+            {% if meta_pixel_id %}
+            <p class="footer-legal">
+                <a href="{{ root }}privacy/">Privacy</a><span class="footer-sep">&middot;</span><a href="#" data-consent-settings hidden>Cookie settings</a>
+            </p>
+            {% endif %}
             <p class="footer-copy">&copy; {{ copyright_year }} Insinistra. All rights reserved.</p>
         </div>
     </footer>
@@ -169,6 +174,9 @@
     <script data-goatcounter="https://insinistra.goatcounter.com/count"
             async src="//gc.zgo.at/count.js"></script>
     <script src="{% if base %}{{ base }}/{% endif %}static/shows-by-date.js" defer></script>
+    {% if meta_pixel_id %}
+    <script src="{% if base %}{{ base }}/{% endif %}static/consent.js" data-pixel="{{ meta_pixel_id }}" data-privacy="{{ root }}privacy/" defer></script>
+    {% endif %}
     {% block page_scripts %}{% endblock %}
 </body>
 </html>

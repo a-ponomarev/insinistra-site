@@ -1686,6 +1686,64 @@ body.lightbox-open {
   margin: 0;
 }
 
+.footer-legal {
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  margin: 0;
+}
+
+.footer-legal a {
+  color: var(--text-muted);
+}
+
+.footer-legal a:hover {
+  color: var(--text-secondary);
+}
+
+/* ─── Cookie consent banner (static/consent.js) ───────────── */
+
+.consent-banner {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0));
+  z-index: 1000;
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 16px 24px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.consent-banner[hidden] {
+  display: none;
+}
+
+.consent-text {
+  flex: 1 1 320px;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.consent-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.consent-actions .btn {
+  cursor: pointer;
+  padding: 10px 22px;
+}
+
 /* ─── Responsive ─────────────────────────────────────────── */
 
 @media (max-width: 1100px) {

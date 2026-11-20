@@ -1020,6 +1020,7 @@ def main() -> None:
     print("  Loading content...")
     site_config = load_site_config()
     env.globals["links"] = site_config["links"]
+    env.globals["meta_pixel_id"] = str(site_config.get("meta_pixel_id") or "").strip()
     epk_config = load_epk_config()
     gallery_config = load_gallery_config()
     pages = load_pages()
