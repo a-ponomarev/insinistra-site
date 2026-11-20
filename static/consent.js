@@ -164,8 +164,8 @@
             banner.setAttribute('aria-label', 'Cookie consent');
             var privacy = script.getAttribute('data-privacy') || '/privacy/';
             banner.innerHTML =
-                '<p class="consent-text">We use the Meta Pixel (cookies) to measure how our ads work. ' +
-                'It is only switched on if you allow it. <a href="' + privacy + '">Privacy</a></p>' +
+                '<p class="consent-text">We\'re an independent band. Marketing cookies help us reach more people ' +
+                'like you on social media — only if you allow it. <a href="' + privacy + '">More info</a></p>' +
                 '<div class="consent-actions">' +
                 '<button type="button" class="btn btn-ghost" data-consent="denied">Decline</button>' +
                 '<button type="button" class="btn btn-ghost" data-consent="granted">Accept</button>' +
