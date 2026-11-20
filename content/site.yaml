@@ -11,7 +11,7 @@ default_og_image: "static/og-hero.jpg"
 
 # Meta Pixel ID (Events Manager -> Datasets). Empty = no Pixel, no cookie banner, no Privacy link in footer.
 # The Pixel loads only after the visitor accepts cookies (static/consent.js).
-meta_pixel_id: ""
+meta_pixel_id: "4625681034370558"
 
 # Official profiles. Used as {{ links.<key> }} in templates and as JSON-LD MusicGroup sameAs.
 links:
