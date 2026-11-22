@@ -8,6 +8,7 @@ concerts:
   - date: "2027-01-09"
     venue: Melodka
     location: Brno
+    facebook: "https://www.facebook.com/events/1018548730556047"
     comment: "with Inverne (PL)"
 
   - date: "2026-11-28"
