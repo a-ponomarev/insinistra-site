@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Insinistra - Official Website{% endblock %}
+{% block title %}{{ t.home_title }}{% endblock %}
 
 {% block hero %}
 <section class="hero hero--desktop" style="background-image: url('{% if base %}{{ base }}/{% endif %}images/3000/hero-3000.jpg')">
@@ -9,8 +9,8 @@
             <img src="{% if base %}{{ base }}/{% endif %}static/logo-embossed-lilac.png" alt="Insinistra" class="hero-logo">
         </div>
         <div class="hero-cta">
-            <a href="{{ links.bandcamp }}" class="btn btn-ghost" target="_blank" rel="noopener">Listen Now</a>
-            <a href="{% if base %}{{ base }}/{% endif %}shows/index.html" class="btn btn-ghost">Upcoming Shows</a>
+            <a href="{{ links.bandcamp }}" class="btn btn-ghost" target="_blank" rel="noopener">{{ t.listen_now }}</a>
+            <a href="{{ home }}shows/index.html" class="btn btn-ghost">{{ t.upcoming_shows }}</a>
         </div>
     </div>
 </section>
@@ -26,10 +26,10 @@
         </div>
         <div class="hero-mobile__bottom">
             <div class="hero-cta">
-                <a href="{{ links.bandcamp }}" class="btn btn-ghost" target="_blank" rel="noopener">Listen Now</a>
-                <a href="{% if base %}{{ base }}/{% endif %}shows/index.html" class="btn btn-ghost">Upcoming Shows</a>
+                <a href="{{ links.bandcamp }}" class="btn btn-ghost" target="_blank" rel="noopener">{{ t.listen_now }}</a>
+                <a href="{{ home }}shows/index.html" class="btn btn-ghost">{{ t.upcoming_shows }}</a>
             </div>
-            <div class="hero-social-mobile" aria-label="Social links">
+            <div class="hero-social-mobile" aria-label="{{ t.social_links }}">
                 {% include "partials/social_links.html" %}
             </div>
         </div>
@@ -42,7 +42,7 @@
 {% if featured_album %}
 <section class="section section--featured-release">
     <div class="layout">
-        <span class="section-label section-label--large">{{ "Upcoming release" if featured_album.is_upcoming else "Latest release" }}</span>
+        <span class="section-label section-label--large">{{ t.upcoming_release if featured_album.is_upcoming else t.latest_release }}</span>
         <div class="featured-release">
             <div class="featured-artwork">
                 {% if featured_album.artwork %}
@@ -54,7 +54,7 @@
                 <h2 class="featured-title">{{ featured_album.title }}</h2>
                 {% if featured_album.year %}<p class="featured-meta">{{ featured_album.year }}</p>{% endif %}
                 {% if featured_album.url %}
-                <a href="{{ featured_album.url }}" class="btn" target="_blank" rel="noopener">Listen Now</a>
+                <a href="{{ featured_album.url }}" class="btn" target="_blank" rel="noopener">{{ t.listen_now }}</a>
                 {% endif %}
             </div>
         </div>
@@ -65,9 +65,9 @@
 {% if concerts %}
 <section class="section">
     <div class="layout">
-        <h2>Upcoming Shows</h2>
+        <h2>{{ t.upcoming_shows }}</h2>
         {% set shows = concerts %}{% set kind = "upcoming" %}{% include "partials/concert_list.html" %}
-        <p class="section-link"><a href="{% if base %}{{ base }}/{% endif %}shows/index.html" class="btn">All Shows</a></p>
+        <p class="section-link"><a href="{{ home }}shows/index.html" class="btn">{{ t.all_shows }}</a></p>
     </div>
 </section>
 {% endif %}
@@ -75,14 +75,14 @@
 {% if albums %}
 <section class="section">
     <div class="layout">
-        <h2>Music</h2>
+        <h2>{{ t.music }}</h2>
         <div class="album-grid">
             {% for album in albums_for_discography %}
             <article class="album-card">
                 {% if album.url %}
                 <a href="{{ album.url }}" target="_blank" rel="noopener">
                 {% else %}
-                <a href="{% if base %}{{ base }}/{% endif %}albums/index.html">
+                <a href="{{ home }}albums/index.html">
                 {% endif %}
                     <div class="album-artwork">
                         {% if album.artwork %}
@@ -95,7 +95,7 @@
             </article>
             {% endfor %}
         </div>
-        <p class="section-link"><a href="{% if base %}{{ base }}/{% endif %}albums/index.html" class="btn">Full Discography</a></p>
+        <p class="section-link"><a href="{{ home }}albums/index.html" class="btn">{{ t.full_discography }}</a></p>
     </div>
 </section>
 {% endif %}
@@ -103,11 +103,11 @@
 {% if videos %}
 <section class="section" id="video">
     <div class="layout">
-        <h2>Video</h2>
+        <h2>{{ t.video }}</h2>
         <div class="video-grid">
             {% for video in videos %}
             <div class="video-embed">
-                <iframe src="https://www.youtube.com/embed/{{ video.id }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                <iframe src="https://www.youtube.com/embed/{{ video.id }}" title="{{ t.video_player }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                 {% if video.title %}<p class="video-caption">{{ video.title }}</p>{% endif %}
             </div>
             {% endfor %}
@@ -121,7 +121,7 @@
 {% set gallery_fixed_2x3 = true %}
 <section class="section section--gallery">
     <div class="layout">
-        <h2>Photo</h2>
+        <h2>{{ t.photo }}</h2>
         {% include "partials/gallery_content.html" with context %}
     </div>
 </section>

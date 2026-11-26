@@ -82,20 +82,46 @@ page (home, about, shows, albums, photos, contact, epk) falls back to the single
 screenshot of the homepage hero section). Changing `default_og_image` changes the social
 share preview for the *entire site*, not just one page.
 
-**Per-page `title_part` / template mapping** (kept in sync manually — no single source of
-truth links a template's `{% block title %}` to its `build.py` render call):
+**Per-page titles** now come from `content/i18n.yaml`: each template's `{% block title %}`
+and the matching `title_part=` in `build.py` read the same key, so they stay in sync per
+language.
 
-| Page | Template title block | `build.py` `title_part` |
-|---|---|---|
-| Home | `Insinistra - Official Website` (full title, no suffix) | n/a (`full_title=`) |
-| About | `{{ page.title }}` (frontmatter) | `page.get("title") or slug` |
-| Shows | `Shows` | `"Shows"` |
-| Discography | `Discography` | `"Discography"` |
-| Photos | `Photos` | `"Photos"` |
-| Contact | `Contact` | `"Contact"` |
-| EPK | `Electronic Press Kit` | `"Electronic Press Kit"` |
-| 404 | `Page not found` | n/a |
+| Page | i18n key (template block and `title_part`) |
+|---|---|
+| Home | `t.home_title` (full title, no suffix, `full_title=`) |
+| About | `page.title` (frontmatter of `content/pages/[cs/]about.md`) |
+| Shows | `t.nav_shows` |
+| Discography | `t.nav_albums` |
+| Photos | `t.nav_photos` |
+| Contact | `t.nav_contact` |
+| EPK | `t.epk_title` |
+| 404 | `t.not_found_title` (English only) |
 
-If you add a new page or change a title, update both the template's `{% block title %}`
-and the matching `title_part=` (or `full_title=`) in its `social_meta_context()` call in
-`build.py` — they don't derive from each other.
+If you add a new page, add its key to every language in `i18n.yaml` and use it in both
+places.
+
+## Languages (English + Czech)
+
+English is built at the site root, Czech under `/cs/` (`LANGUAGES` in `build.py`; the render
+section loops over them). The 404 page and the `bio/` redirect are English only.
+
+- **Interface strings**: `content/i18n.yaml`, one dict per language; templates use
+  `{{ t.<key> }}`. A key missing from `cs` falls back to `en`. Never hardcode visible text
+  in templates. When adding a string, add it to both languages.
+- **Data overrides**: any YAML item field `<field>_cs` replaces `<field>` on Czech pages
+  (`localize_items()`): `role_cs` in `band-members.yaml`, `one_liner_cs` in `epk.yaml`.
+  Album types are mapped through `release_types`. Concert dates use `months`. A concert
+  `comment` starting with `with ` gets `comment_with` instead (`Hrají také: ` in Czech).
+  Reviews and concert/venue names are not translated.
+- **Markdown pages**: `content/pages/cs/<slug>.md`. A missing one falls back to the English
+  page.
+- **Meta descriptions**: Czech ones live in `i18n.yaml` (`default_meta_description`,
+  `meta_descriptions`) and override `site.yaml` on Czech pages.
+- **Links**: `base` is the relative path to the site root (assets: `{{ base }}/static/...`),
+  `home` is the relative path to the current language's root (pages:
+  `{{ home }}shows/`). Keep both relative because the dev build is served from `/dev/`.
+- **SEO**: every page gets `hreflang` alternates (en, cs, x-default→en) and a nav link to the
+  other language (`.nav-lang`). The sitemap lists both languages. JSON-LD is the same on
+  both.
+- **Cookie banner**: `static/consent.js` takes its text from the `data-i18n` attribute on its
+  script tag (filled from `consent_*` keys).

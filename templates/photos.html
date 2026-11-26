@@ -1,16 +1,16 @@
 {% extends "base.html" %}
 
-{% block title %}Photos{% endblock %}
+{% block title %}{{ t.nav_photos }}{% endblock %}
 
 {% block content %}
 <article class="page page--gallery">
-    <h1>Photos</h1>
+    <h1>{{ t.nav_photos }}</h1>
     {% if photo_albums %}
     <section class="section section--gallery">
         {% include "partials/gallery_content.html" with context %}
     </section>
     {% else %}
-    <p class="page-body">No photos yet.</p>
+    <p class="page-body">{{ t.no_photos }}</p>
     {% endif %}
 </article>
 {% endblock %}

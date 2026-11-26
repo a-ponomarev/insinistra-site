@@ -2915,3 +2915,12 @@ button:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
+
+/* Language switch (EN / CZ) at the end of the main nav */
+.nav a.nav-lang {
+  color: var(--accent);
+}
+
+.nav a.nav-lang:hover {
+  color: var(--text-primary);
+}

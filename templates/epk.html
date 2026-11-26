@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 
-{% block title %}Electronic Press Kit{% endblock %}
+{% block title %}{{ t.epk_title }}{% endblock %}
 
 {% block hero %}
 <section class="epk-hero">
     <div class="epk-hero-inner layout">
         <h1 class="epk-hero-title">Insinistra</h1>
-        <p class="epk-hero-subtitle">Electronic Press Kit</p>
+        <p class="epk-hero-subtitle">{{ t.epk_title }}</p>
         {% if epk.one_liner %}<p class="epk-hero-tagline">{{ epk.one_liner }}</p>{% endif %}
     </div>
 </section>
@@ -17,7 +17,7 @@
 
     <section class="epk-section epk-headline">
         <div class="layout">
-            <h2 class="epk-section-title">About</h2>
+            <h2 class="epk-section-title">{{ t.epk_about }}</h2>
             {% if about_page %}
             <div class="epk-bio-block">
                 <div class="epk-bio-inner">{{ about_page.content_html | safe }}</div>
@@ -28,9 +28,9 @@
 
     <section class="epk-section epk-listen">
         <div class="layout">
-            <h2 class="epk-section-title">Listen</h2>
+            <h2 class="epk-section-title">{{ t.epk_listen }}</h2>
             <div class="epk-links-wrap">
-            <nav class="epk-links" aria-label="Stream on">
+            <nav class="epk-links" aria-label="{{ t.epk_stream_on }}">
                 <a href="{{ links.bandcamp }}" target="_blank" rel="noopener" title="Bandcamp">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M0 18.75l7.437-13.5h16.563l-7.438 13.5z"/></svg>
                     <span>Bandcamp</span>
@@ -50,39 +50,39 @@
             </nav>
             </div>
             {% set spotify_src = "https://open.spotify.com/embed/playlist/6vInRtMmEvOlk7DGdrN6zK?theme=0" %}
-            {% set spotify_title = "Insinistra Discography on Spotify" %}
+            {% set spotify_title = t.spotify_title %}
             {% include "partials/spotify_embed.html" %}
         </div>
     </section>
 
     <section class="epk-section epk-video">
         <div class="layout">
-            <h2 class="epk-section-title">Live performance</h2>
+            <h2 class="epk-section-title">{{ t.epk_live }}</h2>
             {% set video_id = epk.featured_video_id or (videos[0].id if videos else none) %}
             {% if video_id %}
             <div class="epk-video-embed">
-                <iframe src="https://www.youtube.com/embed/{{ video_id }}" title="Live performance video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
+                <iframe src="https://www.youtube.com/embed/{{ video_id }}" title="{{ t.epk_live_video }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
             </div>
             {% if videos and videos|length > 1 %}
             <p class="epk-more">
-                <a href="{{ base }}/index.html#video">More videos on homepage</a>
+                <a href="{{ home }}index.html#video">{{ t.epk_more_videos }}</a>
             </p>
             <p class="epk-more">
-                <a href="{{ links.youtube }}" target="_blank" rel="noopener" title="YouTube channel" class="epk-more-link-icon">
+                <a href="{{ links.youtube }}" target="_blank" rel="noopener" title="{{ t.epk_youtube_channel }}" class="epk-more-link-icon">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-                    <span>YouTube channel</span>
+                    <span>{{ t.epk_youtube_channel }}</span>
                 </a>
             </p>
             {% endif %}
             {% else %}
-            <p class="epk-muted">Video available on <a href="{{ links.youtube }}" target="_blank" rel="noopener">YouTube</a>.</p>
+            <p class="epk-muted">{{ t.epk_video_on }} <a href="{{ links.youtube }}" target="_blank" rel="noopener">YouTube</a>.</p>
             {% endif %}
         </div>
     </section>
 
     <section class="epk-section epk-band">
         <div class="layout">
-            <h2 class="epk-section-title">Line-up</h2>
+            <h2 class="epk-section-title">{{ t.epk_lineup }}</h2>
             {% if band_members %}
             <ul class="band-members-grid">
                 {% for member in band_members %}
@@ -107,7 +107,7 @@
 
     <section class="epk-section epk-reviews">
         <div class="layout">
-            <h2 class="epk-section-title">Press &amp; reviews</h2>
+            <h2 class="epk-section-title">{{ t.epk_press_reviews }}</h2>
             {% if reviews %}
             <ul class="epk-reviews-list">
                 {% for review in reviews[:4] %}
@@ -120,7 +120,7 @@
                 {% endfor %}
             </ul>
             {% else %}
-            <p class="epk-muted">Press quotes available on request.</p>
+            <p class="epk-muted">{{ t.epk_quotes_on_request }}</p>
             {% endif %}
         </div>
     </section>
@@ -128,31 +128,31 @@
     <section class="epk-section epk-shows">
         <div class="layout">
             {% if upcoming_shows %}
-            <h2 class="epk-section-title">Upcoming Shows</h2>
+            <h2 class="epk-section-title">{{ t.upcoming_shows }}</h2>
             {% set shows = upcoming_shows %}{% include "partials/concert_list.html" %}
             {% else %}
-            <h2 class="epk-section-title">Recent shows</h2>
+            <h2 class="epk-section-title">{{ t.recent_shows }}</h2>
             {% if recent_shows %}
             {% set shows = recent_shows %}{% set kind = "past" %}{% include "partials/concert_list.html" %}
             {% else %}
-            <p class="epk-muted">See <a href="{{ base }}/shows/index.html">shows</a> for dates.</p>
+            <p class="epk-muted">{{ t.epk_see }} <a href="{{ home }}shows/index.html">{{ t.epk_shows_link }}</a>{% if t.epk_for_dates != "." %} {% endif %}{{ t.epk_for_dates }}</p>
             {% endif %}
             {% endif %}
             {% if upcoming_shows or recent_shows %}
-            <p class="section-link"><a href="{{ base }}/shows/index.html" class="btn">All Shows</a></p>
+            <p class="section-link"><a href="{{ home }}shows/index.html" class="btn">{{ t.all_shows }}</a></p>
             {% endif %}
         </div>
     </section>
 
     <section class="epk-section epk-photos">
         <div class="layout">
-            <h2 class="epk-section-title">Press photos</h2>
+            <h2 class="epk-section-title">{{ t.epk_press_photos }}</h2>
             {% if photo_albums %}
             {% set more_photos_url = "photos/index.html" %}
             {% set gallery_fixed_2x3 = true %}
             {% include "partials/gallery_content.html" with context %}
             {% else %}
-            <p class="epk-muted">Press photos available on request.</p>
+            <p class="epk-muted">{{ t.epk_photos_on_request }}</p>
             {% endif %}
         </div>
     </section>
@@ -169,7 +169,7 @@
 
     <section class="epk-section epk-contact">
         <div class="layout">
-            <h2 class="epk-section-title">Booking &amp; contact</h2>
+            <h2 class="epk-section-title">{{ t.epk_booking_contact }}</h2>
             <p class="epk-contact-primary">
                 {% if epk.booking_contact_name %}<span class="epk-contact-name">{{ epk.booking_contact_name }}</span><br>{% endif %}
                 <a href="mailto:{{ epk.booking_email }}">{{ epk.booking_email }}</a>

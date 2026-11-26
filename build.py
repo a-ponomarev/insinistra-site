@@ -390,29 +390,74 @@ def write_redirect_page(
     )
 
 
-def load_pages() -> list[dict]:
-    """Load all Markdown pages from content/pages/."""
-    pages_dir = CONTENT_DIR / "pages"
-    if not pages_dir.exists():
-        return []
+def load_pages(lang_dir: str = "", fallback: list[dict] | None = None) -> list[dict]:
+    """Load all Markdown pages from content/pages/ (or content/pages/<lang_dir>/).
+    With `fallback` (the English pages), every fallback slug is kept and replaced by the
+    translated file when one exists."""
+    pages_dir = CONTENT_DIR / "pages" / lang_dir if lang_dir else CONTENT_DIR / "pages"
     pages = []
-    for path in sorted(pages_dir.glob("*.md")):
-        data, title = load_markdown_page(path)
-        data["slug"] = path.stem
-        data["title"] = title
-        pages.append(data)
+    if pages_dir.exists():
+        for path in sorted(pages_dir.glob("*.md")):
+            data, title = load_markdown_page(path)
+            data["slug"] = path.stem
+            data["title"] = title
+            pages.append(data)
+    if fallback is not None:
+        by_slug = {p["slug"]: p for p in pages}
+        pages = [by_slug.get(p["slug"], p) for p in fallback]
     return pages
 
 
-def format_date_display(date_str: str) -> str:
-    """Format YYYY-MM-DD as '07 Mar 2026'."""
+def format_date_display(date_str: str, months: list[str] | None = None) -> str:
+    """Format YYYY-MM-DD as '07 Mar 2026' (month names from `months` when given)."""
     if not date_str:
         return ""
     try:
         dt = datetime.strptime(date_str.strip()[:10], "%Y-%m-%d")
+        if months:
+            return f"{dt.day:02d} {months[dt.month - 1]} {dt.year}"
         return dt.strftime("%d %b %Y")
     except ValueError:
         return date_str
+
+
+LANGUAGES = ["en", "cs"]
+DEFAULT_LANGUAGE = "en"
+
+
+def load_i18n() -> dict:
+    """Interface strings per language from content/i18n.yaml (missing keys fall back to English)."""
+    data = yaml.safe_load((CONTENT_DIR / "i18n.yaml").read_text(encoding="utf-8")) or {}
+    en = data.get(DEFAULT_LANGUAGE) or {}
+    return {lang: {**en, **(data.get(lang) or {})} for lang in LANGUAGES}
+
+
+def localize_items(items: list[dict], lang: str) -> list[dict]:
+    """Copies of dicts where `<field>_<lang>` (e.g. role_cs) replaces `<field>`."""
+    if lang == DEFAULT_LANGUAGE:
+        return items
+    suffix = f"_{lang}"
+    out = []
+    for item in items:
+        c = dict(item)
+        for k, v in item.items():
+            if k.endswith(suffix) and v:
+                c[k[: -len(suffix)]] = v
+        out.append(c)
+    return out
+
+
+def localize_concerts(shows: list[dict], t: dict) -> list[dict]:
+    """Concert copies with localized date and the leading "with " of the comment translated."""
+    out = []
+    for c in shows:
+        c = dict(c)
+        c["date_display"] = format_date_display(c.get("date", ""), t.get("months"))
+        comment = c.get("comment") or ""
+        if comment.lower().startswith("with "):
+            c["comment"] = t.get("comment_with", "with ") + comment[5:]
+        out.append(c)
+    return out
 
 
 def _parse_date(date_str: str):
@@ -1123,192 +1168,7 @@ def main() -> None:
         "gallery_portrait_crop": gallery_config["portrait_crop"],
         "gallery_merge_singleton_rows": gallery_config["merge_singleton_rows"],
     }
-    subdir_common = {**common, "base": ".."}
 
-    # Render homepage
-    print("  Writing index.html...")
-    featured_album = next((a for a in albums if a.get("featured")), None)
-    albums_for_discography = [a for a in albums if not a.get("featured")][:4]
-    template_index = env.get_template("index.html")
-    home_desc = resolve_meta_description("home", None, site_config)
-    (DIST_DIR / "index.html").write_text(
-        template_index.render(
-            base="",
-            is_index=True,
-            meta_description=home_desc,
-            **social_meta_context(
-                site_config,
-                path_segment="",
-                title_part="Home",
-                meta_description=home_desc,
-                full_title="Insinistra - Official Website",
-            ),
-            **common,
-            pages=pages,
-            concerts=upcoming_shows[:5],
-            albums=albums,
-            featured_album=featured_album,
-            albums_for_discography=albums_for_discography,
-            videos=videos[:6],
-            photo_albums=home_photo_albums,
-            all_photos_ordered=home_photos_ordered,
-            structured_data_json=structured_data_script_json(site_config),
-        ),
-        encoding="utf-8",
-    )
-
-    print("  Writing bio/index.html (redirect)...")
-    write_redirect_page(env, DIST_DIR, "bio", "/", site_config)
-
-    print("  Writing 404.html...")
-    template_404 = env.get_template("404.html")
-    not_found_desc = "Page not found — Insinistra."
-    (DIST_DIR / "404.html").write_text(
-        template_404.render(
-            base="",
-            meta_description=not_found_desc,
-            social_meta_enabled=False,
-            canonical_url="",
-            **common,
-        ),
-        encoding="utf-8",
-    )
-
-    # Render each Markdown page (e.g. about -> about/index.html)
-    for page in pages:
-        slug = page["slug"]
-        print(f"  Writing {slug}/index.html...")
-        out_dir = DIST_DIR / slug
-        out_dir.mkdir(parents=True, exist_ok=True)
-        meta_desc = resolve_meta_description(slug, page, site_config)
-        sm = social_meta_context(
-            site_config,
-            path_segment=slug,
-            title_part=page.get("title") or slug,
-            meta_description=meta_desc,
-        )
-        if slug == "about":
-            template_about = env.get_template("about.html")
-            (out_dir / "index.html").write_text(
-                template_about.render(
-                    page=page,
-                    band_members=band_members,
-                    band_photo_albums=band_photo_albums,
-                    band_photos_ordered=band_photos_ordered,
-                    reviews=reviews,
-                    meta_description=meta_desc,
-                    structured_data_json=structured_data_script_json(site_config),
-                    **sm,
-                    **subdir_common,
-                ),
-                encoding="utf-8",
-            )
-        else:
-            template_page = env.get_template("page.html")
-            (out_dir / "index.html").write_text(
-                template_page.render(
-                    page=page,
-                    meta_description=meta_desc,
-                    structured_data_json=structured_data_script_json(site_config),
-                    **sm,
-                    **subdir_common,
-                ),
-                encoding="utf-8",
-            )
-
-    print("  Writing contact/index.html...")
-    (DIST_DIR / "contact").mkdir(parents=True, exist_ok=True)
-    contact_desc = resolve_meta_description("contact", None, site_config)
-    template_contact = env.get_template("contact.html")
-    (DIST_DIR / "contact" / "index.html").write_text(
-        template_contact.render(
-            press_kit_url=epk_config.get("press_kit_url") or "",
-            stage_plot_url=epk_config.get("stage_plot_url") or "",
-            meta_description=contact_desc,
-            structured_data_json=structured_data_script_json(site_config),
-            **social_meta_context(
-                site_config,
-                path_segment="contact",
-                title_part="Contact",
-                meta_description=contact_desc,
-            ),
-            **subdir_common,
-        ),
-        encoding="utf-8",
-    )
-
-    # Shows page (past and upcoming, latest first)
-    print("  Writing shows/index.html...")
-    (DIST_DIR / "shows").mkdir(exist_ok=True)
-    template_concerts = env.get_template("concerts.html")
-    shows_desc = resolve_meta_description("shows", None, site_config)
-    (DIST_DIR / "shows" / "index.html").write_text(
-        template_concerts.render(
-            upcoming_shows=upcoming_shows,
-            past_shows=past_shows,
-            meta_description=shows_desc,
-            structured_data_json=structured_data_script_json(
-                site_config, _music_events_nodes(site_config, upcoming_shows)
-            ),
-            **social_meta_context(
-                site_config,
-                path_segment="shows",
-                title_part="Shows",
-                meta_description=shows_desc,
-            ),
-            **subdir_common,
-        ),
-        encoding="utf-8",
-    )
-
-    # Albums page
-    print("  Writing albums/index.html...")
-    (DIST_DIR / "albums").mkdir(exist_ok=True)
-    template_albums = env.get_template("albums.html")
-    albums_desc = resolve_meta_description("albums", None, site_config)
-    (DIST_DIR / "albums" / "index.html").write_text(
-        template_albums.render(
-            albums=albums,
-            meta_description=albums_desc,
-            structured_data_json=structured_data_script_json(
-                site_config, _music_album_nodes(site_config, albums)
-            ),
-            **social_meta_context(
-                site_config,
-                path_segment="albums",
-                title_part="Discography",
-                meta_description=albums_desc,
-            ),
-            **subdir_common,
-        ),
-        encoding="utf-8",
-    )
-
-    # Photos page (full gallery)
-    print("  Writing photos/index.html...")
-    (DIST_DIR / "photos").mkdir(exist_ok=True)
-    template_photos = env.get_template("photos.html")
-    photos_desc = resolve_meta_description("photos", None, site_config)
-    (DIST_DIR / "photos" / "index.html").write_text(
-        template_photos.render(
-            photo_albums=photo_albums,
-            all_photos_ordered=all_photos_ordered,
-            meta_description=photos_desc,
-            structured_data_json=structured_data_script_json(site_config),
-            **social_meta_context(
-                site_config,
-                path_segment="photos",
-                title_part="Photos",
-                meta_description=photos_desc,
-            ),
-            **subdir_common,
-        ),
-        encoding="utf-8",
-    )
-
-    # EPK page (Electronic Press Kit)
-    print("  Writing epk/index.html...")
-    about_page = next((p for p in pages if p.get("slug") == "about"), None)
     # Press photos: from epk.yaml list (with URL resolution) or filter image_assets by promo/banner/hero
     def is_press_asset(a: dict) -> bool:
         n = (a.get("name") or "").replace("\\", "/").lower()
@@ -1324,45 +1184,202 @@ def main() -> None:
                 press_photos.append({"label": item.get("label") or name, "resized": a.get("resized"), "thumb": a.get("thumb"), "original": a.get("original")})
     else:
         press_photos = [{"label": (a.get("name") or "").split("/")[-1], "resized": a.get("resized"), "thumb": a.get("thumb"), "original": a.get("original")} for a in image_assets if is_press_asset(a)]
-    (DIST_DIR / "epk").mkdir(exist_ok=True)
-    template_epk = env.get_template("epk.html")
-    epk_desc = resolve_meta_description("epk", None, site_config)
-    (DIST_DIR / "epk" / "index.html").write_text(
-        template_epk.render(
-            epk=epk_config,
+
+    # Render every page once per language: English at the site root, others under /<code>/.
+    # Links stay relative (the dev build is served from /dev/): `base` points at the site root
+    # for assets, `home` at the current language's root for page links.
+    i18n = load_i18n()
+    page_segments = ["", *[p["slug"] for p in pages], "contact", "shows", "albums", "photos", "epk"]
+    sitemap_segments: list[str] = []
+    for lang in LANGUAGES:
+        t = i18n[lang]
+        prefix = "" if lang == DEFAULT_LANGUAGE else lang
+        out_root = DIST_DIR / prefix if prefix else DIST_DIR
+        out_root.mkdir(parents=True, exist_ok=True)
+        meta_site = {**site_config, **{k: t[k] for k in ("meta_descriptions", "default_meta_description") if k in t}}
+
+        def lang_ctx(seg: str) -> dict:
+            """Context shared by every page: language strings, relative roots, hreflang, switcher."""
+            full = "/".join(x for x in (prefix, seg) if x)
+            depth = len(full.split("/")) if full else 0
+            up = "../" * depth
+            alternates = []
+            switch = []
+            for other in LANGUAGES:
+                o_prefix = "" if other == DEFAULT_LANGUAGE else other
+                o_full = "/".join(x for x in (o_prefix, seg) if x)
+                href = page_canonical_url(site_config.get("site_url") or "", o_full)
+                if href:
+                    alternates.append({"hreflang": i18n[other]["html_lang"], "href": href})
+                    if other == DEFAULT_LANGUAGE:
+                        alternates.append({"hreflang": "x-default", "href": href})
+                if other != lang:
+                    switch.append({
+                        "href": (up + (o_full + "/" if o_full else "")) or "./",
+                        "label": i18n[other]["lang_short"],
+                        "name": i18n[other]["lang_name"],
+                        "hreflang": i18n[other]["html_lang"],
+                    })
+            return {
+                **common,
+                "t": t,
+                "lang": lang,
+                "base": "/".join([".."] * depth),
+                "home": "../" * (depth - (1 if prefix else 0)),
+                "hreflang_alternates": alternates,
+                "lang_switch": switch,
+            }
+
+        def seo(seg: str, slug: str, title_part: str, page: dict | None = None, **kw) -> dict:
+            desc = resolve_meta_description(slug, page, meta_site)
+            return {
+                "meta_description": desc,
+                **social_meta_context(
+                    site_config,
+                    path_segment="/".join(x for x in (prefix, seg) if x),
+                    title_part=title_part,
+                    meta_description=desc,
+                    **kw,
+                ),
+            }
+
+        def write(seg: str, html: str) -> None:
+            out_dir = out_root / seg if seg else out_root
+            out_dir.mkdir(parents=True, exist_ok=True)
+            (out_dir / "index.html").write_text(html, encoding="utf-8")
+
+        # Localized copies of the data
+        l_pages = load_pages(lang if prefix else "", fallback=pages) if prefix else pages
+        l_members = localize_items(band_members, lang)
+        l_albums = [
+            {**a, "description": t["release_types"].get(a.get("description"), a.get("description"))}
+            for a in albums
+        ]
+        l_upcoming = localize_concerts(upcoming_shows, t)
+        l_past = localize_concerts(past_shows, t)
+        l_epk = localize_items([epk_config], lang)[0]
+
+        # Homepage
+        print(f"  Writing {prefix + '/' if prefix else ''}index.html...")
+        featured_album = next((a for a in l_albums if a.get("featured")), None)
+        albums_for_discography = [a for a in l_albums if not a.get("featured")][:4]
+        write("", env.get_template("index.html").render(
+            is_index=True,
+            **seo("", "home", t["nav_home"], full_title=t["home_title"]),
+            **lang_ctx(""),
+            pages=l_pages,
+            concerts=l_upcoming[:5],
+            albums=l_albums,
+            featured_album=featured_album,
+            albums_for_discography=albums_for_discography,
+            videos=videos[:6],
+            photo_albums=home_photo_albums,
+            all_photos_ordered=home_photos_ordered,
+            structured_data_json=structured_data_script_json(site_config),
+        ))
+
+        if not prefix:
+            print("  Writing bio/index.html (redirect)...")
+            write_redirect_page(env, DIST_DIR, "bio", "/", site_config)
+
+            print("  Writing 404.html...")
+            (DIST_DIR / "404.html").write_text(
+                env.get_template("404.html").render(**{
+                    **lang_ctx(""),
+                    "meta_description": "Page not found — Insinistra.",
+                    "social_meta_enabled": False,
+                    "canonical_url": "",
+                    "hreflang_alternates": [],
+                    "lang_switch": [],
+                }),
+                encoding="utf-8",
+            )
+
+        # Markdown pages (e.g. about -> about/index.html)
+        for page in l_pages:
+            slug = page["slug"]
+            print(f"  Writing {prefix + '/' if prefix else ''}{slug}/index.html...")
+            ctx = {
+                "page": page,
+                **seo(slug, slug, page.get("title") or slug, page),
+                **lang_ctx(slug),
+                "structured_data_json": structured_data_script_json(site_config),
+            }
+            if slug == "about":
+                write(slug, env.get_template("about.html").render(
+                    **ctx,
+                    band_members=l_members,
+                    band_photo_albums=band_photo_albums,
+                    band_photos_ordered=band_photos_ordered,
+                    reviews=reviews,
+                ))
+            else:
+                write(slug, env.get_template("page.html").render(**ctx))
+
+        print(f"  Writing {prefix + '/' if prefix else ''}contact, shows, albums, photos, epk...")
+        write("contact", env.get_template("contact.html").render(
+            press_kit_url=epk_config.get("press_kit_url") or "",
+            stage_plot_url=epk_config.get("stage_plot_url") or "",
+            structured_data_json=structured_data_script_json(site_config),
+            **seo("contact", "contact", t["nav_contact"]),
+            **lang_ctx("contact"),
+        ))
+
+        # Shows page (past and upcoming, latest first)
+        write("shows", env.get_template("concerts.html").render(
+            upcoming_shows=l_upcoming,
+            past_shows=l_past,
+            structured_data_json=structured_data_script_json(
+                site_config, _music_events_nodes(site_config, upcoming_shows)
+            ),
+            **seo("shows", "shows", t["nav_shows"]),
+            **lang_ctx("shows"),
+        ))
+
+        write("albums", env.get_template("albums.html").render(
+            albums=l_albums,
+            structured_data_json=structured_data_script_json(
+                site_config, _music_album_nodes(site_config, albums)
+            ),
+            **seo("albums", "albums", t["nav_albums"]),
+            **lang_ctx("albums"),
+        ))
+
+        # Photos page (full gallery)
+        write("photos", env.get_template("photos.html").render(
+            photo_albums=photo_albums,
+            all_photos_ordered=all_photos_ordered,
+            structured_data_json=structured_data_script_json(site_config),
+            **seo("photos", "photos", t["nav_photos"]),
+            **lang_ctx("photos"),
+        ))
+
+        # EPK page (Electronic Press Kit)
+        about_page = next((p for p in l_pages if p.get("slug") == "about"), None)
+        write("epk", env.get_template("epk.html").render(
+            epk=l_epk,
             about_page=about_page,
-            band_members=band_members,
+            band_members=l_members,
             reviews=reviews,
-            albums=albums,
+            albums=l_albums,
             videos=videos,
-            upcoming_shows=upcoming_shows[:5],
-            recent_shows=past_shows[:5],
+            upcoming_shows=l_upcoming[:5],
+            recent_shows=l_past[:5],
             photo_albums=epk_photo_albums,
             all_photos_ordered=epk_photos_ordered,
             image_assets=image_assets,
             epk_press_photos=press_photos,
-            meta_description=epk_desc,
             structured_data_json=structured_data_script_json(site_config),
-            **social_meta_context(
-                site_config,
-                path_segment="epk",
-                title_part="Electronic Press Kit",
-                meta_description=epk_desc,
-            ),
-            **subdir_common,
-        ),
-        encoding="utf-8",
-    )
+            **seo("epk", "epk", t["epk_title"]),
+            **lang_ctx("epk"),
+        ))
+
+        sitemap_segments += ["/".join(x for x in (prefix, seg) if x) for seg in page_segments]
 
     site_url = (site_config.get("site_url") or "").strip()
     if site_url:
         print("  Writing sitemap.xml, robots.txt...")
-        write_sitemap_xml(
-            DIST_DIR,
-            site_url,
-            [p["slug"] for p in pages],
-            ["shows", "albums", "photos", "epk", "contact"],
-        )
+        write_sitemap_xml(DIST_DIR, site_url, [], [seg for seg in sitemap_segments if seg])
         write_robots_txt(DIST_DIR, site_url)
 
     print("Done. Site is in dist/")

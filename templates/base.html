@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ t.html_lang }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -9,9 +9,12 @@
     {% if canonical_url %}
     <link rel="canonical" href="{{ canonical_url }}">
     {% endif %}
+    {% for alt in hreflang_alternates|default([]) %}
+    <link rel="alternate" hreflang="{{ alt.hreflang }}" href="{{ alt.href }}">
+    {% endfor %}
     {% if social_meta_enabled %}
     <meta property="og:site_name" content="Insinistra">
-    <meta property="og:locale" content="en_US">
+    <meta property="og:locale" content="{{ t.og_locale }}">
     <meta property="og:type" content="{{ og_type }}">
     <meta property="og:title" content="{{ og_title }}">
     {% if og_description %}
@@ -44,27 +47,29 @@
     {% block extra_head %}{% endblock %}
 </head>
 <body>
-    <aside class="social-sidebar" aria-label="Social links">
+    <aside class="social-sidebar" aria-label="{{ t.social_links }}">
         {% include "partials/social_links.html" %}
     </aside>
     <header class="site-header" id="site-header">
-        {% set root = (base ~ '/') if base else '' %}
         <div class="layout">
-            <a href="{{ root if root else '.' }}" class="site-logo">
+            <a href="{{ home or './' }}" class="site-logo">
                 <img src="{% if base %}{{ base }}/{% endif %}static/logo-text.svg" alt="Insinistra" class="site-logo-img">
             </a>
             <div class="nav-overlay" id="nav-overlay">
                 <nav class="nav">
-                    <a href="{{ root if root else '.' }}">Home</a>
-                    <a href="{{ root }}about/">About</a>
-                    <a href="{{ root }}shows/">Shows</a>
-                    <a href="{{ root }}albums/">Discography</a>
-                    <a href="{{ root }}photos/">Photos</a>
-                    <a href="{{ root }}contact/">Contact</a>
-                    <a href="{{ root }}epk/">EPK</a>
+                    <a href="{{ home or './' }}">{{ t.nav_home }}</a>
+                    <a href="{{ home }}about/">{{ t.nav_about }}</a>
+                    <a href="{{ home }}shows/">{{ t.nav_shows }}</a>
+                    <a href="{{ home }}albums/">{{ t.nav_albums }}</a>
+                    <a href="{{ home }}photos/">{{ t.nav_photos }}</a>
+                    <a href="{{ home }}contact/">{{ t.nav_contact }}</a>
+                    <a href="{{ home }}epk/">{{ t.nav_epk }}</a>
+                    {% for sw in lang_switch|default([]) %}
+                    <a href="{{ sw.href }}" class="nav-lang" hreflang="{{ sw.hreflang }}" lang="{{ sw.hreflang }}" title="{{ sw.name }}">{{ sw.label }}</a>
+                    {% endfor %}
                 </nav>
             </div>
-            <button type="button" class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false">
+            <button type="button" class="nav-toggle" id="nav-toggle" aria-label="{{ t.menu_open }}" aria-expanded="false">
                 <span class="nav-toggle-bar"></span>
                 <span class="nav-toggle-bar"></span>
                 <span class="nav-toggle-bar"></span>
@@ -86,7 +91,7 @@
 
     <footer class="site-footer">
         <div class="footer-inner">
-            <div class="footer-social-mobile" aria-label="Social links">
+            <div class="footer-social-mobile" aria-label="{{ t.social_links }}">
                 {% include "partials/social_links.html" %}
             </div>
             <div class="footer-contact">
@@ -94,10 +99,10 @@
             </div>
             {% if meta_pixel_id %}
             <p class="footer-legal">
-                <a href="{{ root }}privacy/">Privacy</a><span class="footer-sep">&middot;</span><a href="#" data-consent-settings hidden>Cookie settings</a>
+                <a href="{{ home }}privacy/">{{ t.footer_privacy }}</a><span class="footer-sep">&middot;</span><a href="#" data-consent-settings hidden>{{ t.footer_cookies }}</a>
             </p>
             {% endif %}
-            <p class="footer-copy">&copy; {{ copyright_year }} Insinistra. All rights reserved.</p>
+            <p class="footer-copy">&copy; {{ copyright_year }} Insinistra. {{ t.footer_rights }}</p>
         </div>
     </footer>
 
@@ -116,13 +121,13 @@
             if (navToggle && navOverlay) {
                 function openMenu() {
                     navToggle.setAttribute('aria-expanded', 'true');
-                    navToggle.setAttribute('aria-label', 'Close menu');
+                    navToggle.setAttribute('aria-label', {{ t.menu_close|tojson }});
                     navOverlay.classList.add('nav-open');
                     document.body.classList.add('nav-open');
                 }
                 function closeMenu() {
                     navToggle.setAttribute('aria-expanded', 'false');
-                    navToggle.setAttribute('aria-label', 'Open menu');
+                    navToggle.setAttribute('aria-label', {{ t.menu_open|tojson }});
                     navOverlay.classList.remove('nav-open');
                     document.body.classList.remove('nav-open');
                 }
@@ -175,7 +180,7 @@
             async src="//gc.zgo.at/count.js"></script>
     <script src="{% if base %}{{ base }}/{% endif %}static/shows-by-date.js" defer></script>
     {% if meta_pixel_id %}
-    <script src="{% if base %}{{ base }}/{% endif %}static/consent.js" data-pixel="{{ meta_pixel_id }}" data-privacy="{{ root }}privacy/" defer></script>
+    <script src="{% if base %}{{ base }}/{% endif %}static/consent.js" data-pixel="{{ meta_pixel_id }}" data-privacy="{{ home }}privacy/" data-i18n="{{ {"label": t.consent_label, "text": t.consent_text, "more": t.consent_more, "decline": t.consent_decline, "accept": t.consent_accept}|tojson|forceescape }}" defer></script>
     {% endif %}
     {% block page_scripts %}{% endblock %}
 </body>

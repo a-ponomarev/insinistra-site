@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 
-{% block title %}Discography{% endblock %}
+{% block title %}{{ t.nav_albums }}{% endblock %}
 
 {% block content %}
 <article class="page">
-    <h1>Discography</h1>
+    <h1>{{ t.nav_albums }}</h1>
     {% if albums %}
     <div class="album-grid">
         {% for album in albums %}
@@ -26,10 +26,10 @@
         {% endfor %}
     </div>
     {% else %}
-    <p class="page-body">No releases yet.</p>
+    <p class="page-body">{{ t.no_releases }}</p>
     {% endif %}
     {% set spotify_src = "https://open.spotify.com/embed/playlist/6vInRtMmEvOlk7DGdrN6zK?theme=0" %}
-    {% set spotify_title = "Insinistra Discography on Spotify" %}
+    {% set spotify_title = t.spotify_title %}
     {% include "partials/spotify_embed.html" %}
 </article>
 {% endblock %}

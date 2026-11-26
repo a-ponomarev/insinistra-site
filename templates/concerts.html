@@ -1,24 +1,24 @@
 {% extends "base.html" %}
 
-{% block title %}Shows{% endblock %}
+{% block title %}{{ t.nav_shows }}{% endblock %}
 
 {% block content %}
 <article class="page">
     <section class="shows-section">
-        <h2>Upcoming Shows</h2>
+        <h2>{{ t.upcoming_shows }}</h2>
         {% if upcoming_shows %}
         {% set shows = upcoming_shows %}{% set kind = "upcoming" %}{% include "partials/concert_list.html" %}
         {% else %}
-        <p class="page-body">No upcoming shows.</p>
+        <p class="page-body">{{ t.no_upcoming_shows }}</p>
         {% endif %}
     </section>
 
     <section class="shows-section">
-        <h2>Past Shows</h2>
+        <h2>{{ t.past_shows }}</h2>
         {% if past_shows %}
         {% set shows = past_shows %}{% set kind = "past" %}{% include "partials/concert_list.html" %}
         {% else %}
-        <p class="page-body">No past shows.</p>
+        <p class="page-body">{{ t.no_past_shows }}</p>
         {% endif %}
     </section>
 </article>

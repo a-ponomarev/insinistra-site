@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 
-{% block title %}Contact{% endblock %}
+{% block title %}{{ t.nav_contact }}{% endblock %}
 
 {% block content %}
 <article class="page">
-    <h1>Contact</h1>
+    <h1>{{ t.nav_contact }}</h1>
     <div class="page-body">
-        <h2>Booking</h2>
+        <h2>{{ t.booking }}</h2>
         <p><strong><a href="mailto:booking@insinistra.com">booking@insinistra.com</a></strong></p>
 
-        <h2>Press</h2>
+        <h2>{{ t.press }}</h2>
         <p><strong><a href="mailto:press@insinistra.com">press@insinistra.com</a></strong></p>
 
         {% with downloads_epk_title_style=false %}

@@ -1,5 +1,5 @@
 {# Shared concert list markup — used by index.html (Upcoming Shows) and concerts.html (Upcoming + Past). Keep in sync. #}
-<ul class="concert-list" data-kind="{{ kind|default('') }}">
+<ul class="concert-list" data-kind="{{ kind|default('') }}" data-empty="{{ t.no_upcoming_shows }}">
     {% for c in shows %}
     <li data-date="{{ c.date[:10] if c.date else '' }}">
         <span class="col-date">{{ c.date_display }}</span>
@@ -9,7 +9,7 @@
         </span>
         <span class="col-comment">{{ c.comment if c.get('comment') else '' }}</span>
         <span class="col-links">
-            {% if c.tickets %}<a href="{{ c.tickets }}" target="_blank" rel="noopener">Tickets</a>{% endif %}
+            {% if c.tickets %}<a href="{{ c.tickets }}" target="_blank" rel="noopener">{{ t.tickets }}</a>{% endif %}
             {% if c.facebook %}<a href="{{ c.facebook }}" target="_blank" rel="noopener">Facebook</a>{% endif %}
         </span>
     </li>

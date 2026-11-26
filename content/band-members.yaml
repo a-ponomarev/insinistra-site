@@ -3,17 +3,21 @@
 members:
   - name: "Maria Shell"
     role: "Vocals, Orchestrations, Songwriter, Producer"
+    role_cs: "Zpěv, orchestrace, skladatelka, producentka"
     image: "members/maria.jpg"
 
   - name: "Alexander Ponomarev"
     role: "Drums, Growls, Mixing, Music\u00A0Co\u2011Writer"
+    role_cs: "Bicí, growling, mix, spoluautor\u00A0hudby"
     image: "members/alex.jpg"
 
   - name: "Serge Melnikov"
     role: "Guitar"
+    role_cs: "Kytara"
     image: "members/serge.jpg"
 
   - name: "Boris Gut"
     role: "Bass, Growls"
+    role_cs: "Baskytara, growling"
     image: "members/boris.jpg"
 

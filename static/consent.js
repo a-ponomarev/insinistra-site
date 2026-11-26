@@ -49,7 +49,7 @@
         }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
         window.fbq('init', PIXEL_ID);
         window.fbq('track', 'PageView');
-        if (/^\/shows\/?/.test(location.pathname)) {
+        if (/^\/(cs\/)?shows\/?/.test(location.pathname)) {
             window.fbq('track', 'ViewContent', { content_name: 'Shows' });
         }
     }
@@ -161,14 +161,16 @@
             banner = document.createElement('div');
             banner.className = 'consent-banner';
             banner.setAttribute('role', 'dialog');
-            banner.setAttribute('aria-label', 'Cookie consent');
+            var tx = {};
+            try { tx = JSON.parse(script.getAttribute('data-i18n') || '{}'); } catch (err) { tx = {}; }
+            banner.setAttribute('aria-label', tx.label || 'Cookie consent');
             var privacy = script.getAttribute('data-privacy') || '/privacy/';
             banner.innerHTML =
-                '<p class="consent-text">We\'re an independent band. Marketing cookies help us reach more people ' +
-                'like you on social media — only if you allow it. <a href="' + privacy + '">More info</a></p>' +
+                '<p class="consent-text">' + (tx.text || 'We\'re an independent band. Marketing cookies help us reach more people ' +
+                'like you on social media — only if you allow it.') + ' <a href="' + privacy + '">' + (tx.more || 'More info') + '</a></p>' +
                 '<div class="consent-actions">' +
-                '<button type="button" class="btn btn-ghost" data-consent="denied">Decline</button>' +
-                '<button type="button" class="btn btn-ghost" data-consent="granted">Accept</button>' +
+                '<button type="button" class="btn btn-ghost" data-consent="denied">' + (tx.decline || 'Decline') + '</button>' +
+                '<button type="button" class="btn btn-ghost" data-consent="granted">' + (tx.accept || 'Accept') + '</button>' +
                 '</div>';
             banner.addEventListener('click', function (e) {
                 var btn = e.target.closest('[data-consent]');

@@ -18,7 +18,7 @@
         var section = upcoming.closest('section');
         var msg = document.createElement('p');
         msg.className = 'page-body';
-        msg.textContent = 'No upcoming shows.';
+        msg.textContent = upcoming.getAttribute('data-empty') || 'No upcoming shows.';
         if (past) upcoming.parentNode.replaceChild(msg, upcoming);
         else if (section) section.style.display = 'none';
     }

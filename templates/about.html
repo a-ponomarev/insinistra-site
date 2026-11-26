@@ -10,14 +10,14 @@
     </div>
 
     {% if band_members %}
-    <section class="band-members" aria-label="Band members">
-        <h2 class="band-members-title">Band members</h2>
+    <section class="band-members" aria-label="{{ t.band_members }}">
+        <h2 class="band-members-title">{{ t.band_members }}</h2>
         <ul class="band-members-grid">
             {% for member in band_members %}
             <li class="band-member">
                 <div class="band-member-photo">
                     {% if member.image_thumb and member.gallery_index is defined %}
-                    <button type="button" class="gallery-thumb band-member-photo-trigger" data-index="{{ member.gallery_index }}" data-resized="{{ base }}/{{ member.image_resized }}" data-name="{{ member.name }}" aria-label="View larger photo of {{ member.name }}">
+                    <button type="button" class="gallery-thumb band-member-photo-trigger" data-index="{{ member.gallery_index }}" data-resized="{{ base }}/{{ member.image_resized }}" data-name="{{ member.name }}" aria-label="{{ t.view_member_photo }} {{ member.name }}">
                         <img src="{{ base }}/{{ member.image_thumb }}" data-thumb="{{ base }}/{{ member.image_thumb }}" data-resized="{{ base }}/{{ member.image_resized }}" alt="{{ member.name }}" loading="lazy"{% if member.portrait_crop is defined %} style="--photo-crop: {{ member.portrait_crop }}"{% endif %}>
                     </button>
                     {% elif member.image_thumb %}
@@ -43,7 +43,7 @@
     {% endif %}
 
     {% if reviews %}
-    <section class="reviews" aria-label="Reviews and citations">
+    <section class="reviews" aria-label="{{ t.reviews_label }}">
         <ul class="reviews-list">
             {% for review in reviews %}
             <li class="review-item">

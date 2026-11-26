@@ -1,0 +1,194 @@
+# Interface strings per language. English pages are built at the site root, other
+# languages under /<code>/ (e.g. /cs/). Templates read these as {{ t.<key> }}.
+# Data overrides live next to the data: `role_cs` in band-members.yaml, `one_liner_cs`
+# in epk.yaml, Markdown pages in content/pages/cs/ (falls back to the English page).
+# Page titles below double as `title_part` for og:title — keep them here, not in templates.
+
+en:
+  html_lang: en
+  og_locale: en_US
+  lang_name: English
+  lang_short: EN
+  months: [Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec]
+  home_title: "Insinistra - Official Website"
+  nav_home: Home
+  nav_about: About
+  nav_shows: Shows
+  nav_albums: Discography
+  nav_photos: Photos
+  nav_contact: Contact
+  nav_epk: EPK
+  epk_title: Electronic Press Kit
+  not_found_title: Page not found
+  menu_open: Open menu
+  menu_close: Close menu
+  social_links: Social links
+  listen_now: Listen Now
+  upcoming_shows: Upcoming Shows
+  past_shows: Past Shows
+  all_shows: All Shows
+  recent_shows: Recent shows
+  no_upcoming_shows: No upcoming shows.
+  no_past_shows: No past shows.
+  latest_release: Latest release
+  upcoming_release: Upcoming release
+  music: Music
+  full_discography: Full Discography
+  no_releases: No releases yet.
+  spotify_title: Insinistra Discography on Spotify
+  video: Video
+  video_player: YouTube video player
+  photo: Photo
+  more_photos: More photos
+  no_photos: No photos yet.
+  photo_gallery: Photo gallery
+  view_photo: View
+  view_member_photo: View larger photo of
+  close: Close
+  prev_photo: Previous photo
+  next_photo: Next photo
+  band_members: Band members
+  reviews_label: Reviews and citations
+  tickets: Tickets
+  booking: Booking
+  press: Press
+  downloads: Downloads
+  press_kit: Press kit
+  stage_plan: Stage plan
+  epk_about: About
+  epk_listen: Listen
+  epk_stream_on: Stream on
+  epk_live: Live performance
+  epk_live_video: Live performance video
+  epk_more_videos: More videos on homepage
+  epk_youtube_channel: YouTube channel
+  epk_video_on: "Video available on"
+  epk_lineup: Line-up
+  epk_press_reviews: "Press & reviews"
+  epk_quotes_on_request: Press quotes available on request.
+  epk_see: See
+  epk_shows_link: shows
+  epk_for_dates: for dates.
+  epk_press_photos: Press photos
+  epk_photos_on_request: Press photos available on request.
+  epk_booking_contact: "Booking & contact"
+  not_found_heading: "404 — Page not found"
+  not_found_lead: Nothing lives at this address.
+  back_home: Back to home
+  footer_privacy: Privacy
+  footer_cookies: Cookie settings
+  footer_rights: All rights reserved.
+  # Concert `comment` starting with "with " gets this prefix instead (other languages).
+  comment_with: "with "
+  release_types: {Single: Single, EP: EP, Album: Album}
+  consent_label: Cookie consent
+  consent_text: "We're an independent band. Marketing cookies help us reach more people like you on social media — only if you allow it."
+  consent_more: More info
+  consent_decline: Decline
+  consent_accept: Accept
+
+cs:
+  html_lang: cs
+  og_locale: cs_CZ
+  lang_name: Čeština
+  lang_short: CZ
+  months: [led, úno, bře, dub, kvě, čvn, čvc, srp, zář, říj, lis, pro]
+  home_title: "Insinistra – oficiální web"
+  nav_home: Domů
+  nav_about: O nás
+  nav_shows: Koncerty
+  nav_albums: Diskografie
+  nav_photos: Fotky
+  nav_contact: Kontakt
+  nav_epk: EPK
+  epk_title: Elektronický press kit
+  not_found_title: Stránka nenalezena
+  menu_open: Otevřít menu
+  menu_close: Zavřít menu
+  social_links: Sociální sítě
+  listen_now: Poslechnout
+  upcoming_shows: Nadcházející koncerty
+  past_shows: Minulé koncerty
+  all_shows: Všechny koncerty
+  recent_shows: Poslední koncerty
+  no_upcoming_shows: Žádné nadcházející koncerty.
+  no_past_shows: Žádné minulé koncerty.
+  latest_release: Nejnovější vydání
+  upcoming_release: Připravované vydání
+  music: Hudba
+  full_discography: Celá diskografie
+  no_releases: Zatím žádná vydání.
+  spotify_title: Diskografie Insinistry na Spotify
+  video: Video
+  video_player: Přehrávač videa YouTube
+  photo: Fotky
+  more_photos: Další fotky
+  no_photos: Zatím žádné fotky.
+  photo_gallery: Fotogalerie
+  view_photo: Zobrazit
+  view_member_photo: Zobrazit větší fotku –
+  close: Zavřít
+  prev_photo: Předchozí fotka
+  next_photo: Další fotka
+  band_members: Členové kapely
+  reviews_label: Recenze a citace
+  tickets: Vstupenky
+  booking: Booking
+  press: Média
+  downloads: Ke stažení
+  press_kit: Press kit
+  stage_plan: Stage plan
+  epk_about: O nás
+  epk_listen: Poslech
+  epk_stream_on: Streamovací služby
+  epk_live: Živé vystoupení
+  epk_live_video: Video ze živého vystoupení
+  epk_more_videos: Další videa na hlavní stránce
+  epk_youtube_channel: Kanál na YouTube
+  epk_video_on: "Video najdete na"
+  epk_lineup: Sestava
+  epk_press_reviews: Ohlasy a recenze
+  epk_quotes_on_request: Citace z tisku na vyžádání.
+  epk_see: Termíny najdete na stránce
+  epk_shows_link: koncerty
+  epk_for_dates: "."
+  epk_press_photos: Press fotky
+  epk_photos_on_request: Press fotky na vyžádání.
+  epk_booking_contact: Booking a kontakt
+  not_found_heading: "404 — Stránka nenalezena"
+  not_found_lead: Na této adrese nic nežije.
+  back_home: Zpět na hlavní stránku
+  footer_privacy: Ochrana soukromí
+  footer_cookies: Nastavení cookies
+  footer_rights: Všechna práva vyhrazena.
+  comment_with: "Hrají také: "
+  release_types: {Single: Singl, EP: EP, Album: Album}
+  consent_label: Souhlas s cookies
+  consent_text: "Jsme nezávislá kapela. Marketingové cookies nám pomáhají oslovit na sociálních sítích víc lidí, jako jste vy — jen pokud to dovolíte."
+  consent_more: Více informací
+  consent_decline: Odmítnout
+  consent_accept: Přijmout
+  default_meta_description: >-
+    Insinistra — symfonický metal z Prahy. Oficiální web: hudba, koncerty,
+    fotky, videa a press kit.
+  meta_descriptions:
+    home: >-
+      Zahalená ve tmavě fialové mlze, někde mezi ukolébavkou a noční můrou,
+      Insinistra sídlící v Praze nabízí symfometalový zážitek, ztemnělý a sladký zároveň.
+    shows: >-
+      Koncerty Insinistry — nadcházející i minulá vystoupení, s odkazy na vstupenky
+      a události, kde jsou k dispozici.
+    albums: >-
+      Diskografie Insinistry — singly, EP a další vydání. Poslouchejte na Bandcampu,
+      Spotify, Apple Music a dalších platformách.
+    photos: >-
+      Fotogalerie Insinistry — fotky z koncertů a promo snímky kapely.
+    epk: >-
+      Elektronický press kit Insinistry — krátké bio, odkazy na streamování, press
+      fotky, videa a kontakty na booking a média pro festivaly a novináře.
+    about: >-
+      O Insinistře — symfonický metal z Prahy. Biografie kapely, sestava a zvuk
+      mezi ukolébavkou a noční můrou.
+    contact: >-
+      Kontakt na Insinistru — booking, média a obecný e-mail. Ke stažení press kit
+      a stage plan.
